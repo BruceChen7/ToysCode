@@ -1,6 +1,5 @@
-#define CATCH_CONFIG_MAIN 
-#include "../catch.hpp"
 #include "re_to_nfa.cc"
+#include "../STL.h"
 
 TEST_CASE("Init NFA","Init NFA class ")
 {

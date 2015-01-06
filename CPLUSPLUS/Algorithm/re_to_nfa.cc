@@ -1,6 +1,5 @@
 #include "re_to_nfa.hpp"
 #include <iostream>
-#include "../catch.hpp"
 
 int NFA::get_final_status()
 {

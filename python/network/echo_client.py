@@ -6,6 +6,7 @@ import sys
 server_host = "localhost"
 server_port = 5007
 
+#message must be byte string
 message = [b'Hello Network world']
 
 if len(sys.argv) > 1:
