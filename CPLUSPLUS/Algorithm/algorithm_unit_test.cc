@@ -1,4 +1,5 @@
 #include "re_to_nfa.cc"
+#include "lexical_analyzer.h"
 #include "../STL.h"
 
 TEST_CASE("Init NFA","Init NFA class ")
@@ -12,4 +13,16 @@ TEST_CASE("Init NFA","Init NFA class ")
 	REQUIRE(test.get_final_status()==1);
 	test.display_nfa();
 	
+}
+
+TEST_CASE("lexical analyzer","[Test lexical]")
+{
+	using namespace ToysCode;
+	using namespace Token;
+
+	REQUIRE(code_token_type::String == code_token_type::String);
+
+	const string code = {" a:"}
+	
+
 }
