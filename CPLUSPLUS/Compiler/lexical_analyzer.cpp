@@ -3,11 +3,17 @@
 
 namespace ToysCode
 {
-	namespace Token
+	namespace Compiler
 	{
 		code_file::Ptr parse(const string &code)
 		{
+			enum class State 
+			{
+				InID, 
+				InString, 
+				
 			
+			}	
 
 
 		}
