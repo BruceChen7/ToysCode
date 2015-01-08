@@ -1,6 +1,6 @@
 #include "re_to_nfa.cc"
 #include "../STL.h"
-#include "get_first_follow.h"
+#include "get_first_follow.cc"
 #include <memory>
 
 
@@ -29,6 +29,12 @@ TEST_CASE("Init NFA","Init NFA class ")
 	
 }
 
+
+
+//##############################################
+//                                             #
+//											   #
+//##############################################
 TEST_CASE("GET first or follow set", "[Follow and first set]")
 {
 	separate_test("Test for Get first and follow set ");
@@ -62,6 +68,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	Expr new_expr5("M","");
 	expr_list.push_back(new_expr5);
 
+	//F==>(E)
 	Expr new_expr6("F","(E)");
 	expr_list.push_back(new_expr6);
 
@@ -70,12 +77,34 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	expr_list.push_back(new_expr7); 
 
 
-
+	//expression's number is 8
 	REQUIRE(expr_list.size() == 8);
-	
+
+	//init production_list
 	Productions production_list(expr_list);
+
+	separate_test("show productions");
+	//show the expressions
 	production_list.print_production();
 
+	Productions::StringList terminal;
+	terminal.push_back("+");
+	terminal.push_back("");
+	terminal.push_back("(");
+	terminal.push_back(")");
+	terminal.push_back("*");
+	terminal.push_back("-"); 
+
+	separate_test("show terminal symbols");
+	production_list.set_terminal_symbol(terminal);
+	production_list.show_terminal_symbol();
+
+	separate_test("show nullable set ");
+	production_list.show_nullable_set();
+
+	separate_test("get first set  of these productions");
+	production_list.get_first_set();
+	production_list.show_first_set();
 }
 
 
