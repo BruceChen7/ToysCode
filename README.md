@@ -2,7 +2,7 @@
 
 This is a code repository  for me to understand some conception and familiar with some API usage.
 
->	├── CPLUSPLUS
+	├── CPLUSPLUS
 	│   ├── Algorithm
 	│   │   ├── algorithm_unit_test
 	│   │   ├── algorithm_unit_test.cc
