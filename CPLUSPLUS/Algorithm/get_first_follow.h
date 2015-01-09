@@ -96,13 +96,13 @@ namespace Toyscode
 				void show_terminal_symbol()const ;
 				void show_non_terminal_symbol()const;
 				void show_nullable_set()const;
+				void get_nullable_set();
 				void get_first_set();
 				void show_first_set()const;
 
 				bool is_a_terminal(const std::string& sym);
 				bool is_in_null_sets(const std::string& sym);
 
-				void determin_symbo_null(const std::string& left_symbol,int pos);
 
 			private:
 				Expr::ExprList expressions_;
@@ -112,6 +112,7 @@ namespace Toyscode
 				StringMap follow_set_;
 				StringList nullable_set_; 
 				StringList non_terminal_;
+				bool determin_symbol_null(const std::string& left_symbol,int pos,bool is_left);
 		
 		};
 

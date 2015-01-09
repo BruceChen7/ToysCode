@@ -1,40 +1,31 @@
 #include "get_first_follow.h"
 #include <utility> // used for make_pair
-using namespace Toyscode;
-using namespace Algorithm;
 #include <map> // used for multimap
 
 using std::endl;
 using std::string;
 using std::cout;
 
-bool Productions::is_a_terminal(const string& sym) 
+bool is_belonged_to_a_set(const string& sym,Productions::StringList set)
 {
-	auto begin = terminal_.cbegin();
-	auto end = terminal_.cend();
+	auto begin = set.cbegin();
+	auto end = set.cend();
 
-	if(find(begin,end,sym) != end )
-	{
-		return true;
-	}
+	if(find(begin,end,sym) != end)
+		return true; 
 	else 
 		return false;
+
+}
+bool Productions::is_a_terminal(const string& sym) 
+{
+	return is_belonged_to_a_set(sym,terminal_);
 
 }
 
 bool Productions::is_in_null_sets(const string &symbol)
 {
-	auto begin = nullable_set_.cbegin();
-	auto end = nullable_set_.cend();
-
-	if(find(begin,end,symbol) != end)
-	{
-		return true;
-	}
-	else 
-		return false;
-
-
+	return is_belonged_to_a_set(symbol,nullable_set_);
 }
 
 
@@ -47,36 +38,74 @@ void Productions::show_non_terminal_symbol() const
 
 }
 //
-/* void Productions::determin_symbo_null(const  std::string& left_symbol,int pos) */ 
-/* { */ 	
-/* 	if(is_in_null_sets(left_symbol)) */
-/* 		return ; */
-/* 	if(is_a_terminal(left_symbol)) */
-/* 		return ; */
-/* 	else */ 
-/* 	{ */
-/* 		for(auto i = 0 ; i < expressions_.size(); i++) */
-/* 		{ */
-/* 			auto get_left_symbol = expressions_[i].get_left_production; */
+bool Productions::determin_symbol_null(const  std::string& left_symbol,int pos,bool is_left) 
+{ 	
+	if(is_in_null_sets(left_symbol))
+		return true;
+	if(is_a_terminal(left_symbol))
+		return false;
+	else 
+	{
+		for(auto i = 0 ; i < expressions_.size(); i++)
+		{			
+			auto new_left_symbol = expressions_[i].get_left_production();
 
-/* 			if(get_left_symbol == left_symbol */
-/* 			{ */
-				
-/* 			} */
-		
-/* 		} */
+			// find  the productions 
+			// whose left part of the productions is the same as left_symbol 
+			// but can't be the same production
+			if( new_left_symbol == left_symbol )
+			{
+
+				auto right_production  = expressions_[i].get_right_production();
+
+				for(auto j = 0 ; j < right_production.size(); j++)
+				{
+					//construct a string for right_production[j]
+					const char *tmp = &right_production[j];
+					string right_symbol(tmp);
+					
+					// the same production and the right part of production hass also left_symbol
+					// we can't determin whether if the left_symbol is a nullable symbol by this expression
+					if(right_symbol == new_left_symbol && i == pos)
+						break;
+					else 
+					{
+						if(determin_symbol_null(right_symbol,i,false) == true)
+							continue;
+						else 
+							return false; 
+					} 
+
+				 } //end of right_production  loop 
+			  } // end of if 
+		}
+
+		// it must be left symbol 
+		// can't be right productions' symbol
+		// so it can be pushed into nullable_set_
+		if(is_left == true)
+			nullable_set_.push_back(left_symbol) ; 
+		return true;
+
 			
 
-
-			
-
-/* 	} */
+	}
 
 
-/* } */
+}
+
+void Productions::get_nullable_set()
+{
+	for(auto i = 0 ; i < expressions_.size(); i++)
+	{	
+		determin_symbol_null(expressions_[i].get_left_production(),i,true);
+
+	}
+
+}
 
 
-//incomplete
+//Todo
 std::string get_first_set_helper(Expr::ExprList expressions)
 {
 

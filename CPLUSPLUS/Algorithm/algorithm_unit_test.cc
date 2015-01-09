@@ -48,6 +48,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	REQUIRE(new_expr.get_right_production() == "TY");
 
 
+
 	//Y==>+TY
 	Expr new_expr1("Y","+TY");
 	expr_list.push_back(new_expr1);
@@ -56,7 +57,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	Expr new_expr2("Y","");
 	expr_list.push_back(new_expr2);
 	
-	//T==>FM
+	/* /1* //T==>FM *1/ */
 	Expr new_expr3("T","FM");
 	expr_list.push_back(new_expr3);
 	
@@ -76,9 +77,12 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	Expr new_expr7("F","-");
 	expr_list.push_back(new_expr7); 
 
+	//T==>-
+	Expr new_expr8("T","");
+	expr_list.push_back(new_expr8);
 
 	//expression's number is 8
-	REQUIRE(expr_list.size() == 8);
+	REQUIRE(expr_list.size() == 9);
 
 	//init production_list
 	Productions production_list(expr_list);
@@ -100,6 +104,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	production_list.show_terminal_symbol();
 
 	separate_test("show nullable set ");
+	production_list.get_nullable_set();
 	production_list.show_nullable_set();
 
 	separate_test("get first set  of these productions");
