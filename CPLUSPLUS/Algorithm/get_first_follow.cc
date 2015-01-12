@@ -55,12 +55,10 @@ int Productions::get_left_sym_pos_in_set(const string& sym) const
 int Productions::find_first_nullable_sym(const string& right_production) const
 {
 	auto i = -1;
-	for(const auto& elem:right_production)
+	for(unsigned int j = 0 ; j < right_production.size();j++)
 	{
-		cout << "right symbol is " << elem << endl;
-		string temp(&elem);
-
-		if(is_in_null_sets(temp)==true)
+		string temp(1,right_production[j]);
+		if(is_in_null_sets(temp))
 			i++;
 		else 
 			break; 
@@ -231,12 +229,11 @@ void Productions::get_first_set_helper(const std::string& left_production,std::v
 	for(auto &i : pos)
 	{
 		auto right_production =  expressions_[i].get_right_production();
-		cout << right_production << std::endl;
-		auto num = find_first_nullable_sym(right_production);
-		cout << "expression num is " << num << endl;
+		auto num = find_first_nullable_sym(right_production); 
+
 		if(num == -1)
 		{
-			string right_symbol = string(&right_production[0]);
+			string right_symbol(1,right_production[0]);
 			
 			if(right_symbol == "")
 			{
@@ -267,7 +264,8 @@ void Productions::get_first_set_helper(const std::string& left_production,std::v
 			for(auto i = 0 ; i <= num+1 ; i++)
 			{
 				std::vector<std::string> right_first_set;
-				get_first_set_helper(string(&right_production[i]),right_first_set);
+				string right_symbol(1,right_production[i]);
+				get_first_set_helper(right_symbol,right_first_set);
 
 				for(const auto &elem:right_first_set)
 				{
