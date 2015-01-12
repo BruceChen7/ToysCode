@@ -1,3 +1,4 @@
 *.swp
 CPLUSPLUS/Algorithm/algorithm_unit_test
+*.ycm.*
 
