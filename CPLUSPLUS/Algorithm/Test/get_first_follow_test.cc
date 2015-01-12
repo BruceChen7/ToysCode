@@ -1,39 +1,20 @@
-#include "re_to_nfa.cc"
-#include "../STL.h"
-#include "get_first_follow.cc"
-#include <memory>
+#include "../../STL.h"
+#include "../get_first_follow.cc"
 
-
-using namespace Toyscode;
+using namespace Toyscode ;
 using namespace Algorithm;
 
-
-
-TEST_CASE("Init NFA","Init NFA class ")
+void separate_test(std::string test_name)
 {
+	std::cout <<"===============" << test_name << "======================" << std::endl;
 
-	separate_test("Init NFA");
-	NFA test;
-	NFA test1;
-	test.set_status(2);
-	test.set_transition(0,1,'a');
-	test.set_final_status(1);
-	//
-	REQUIRE(test.get_final_status()==1);
-	test.display_nfa();
-	
 }
 
-
-
-//##############################################
-//                                             #
-//											   #
-//##############################################
 TEST_CASE("GET first or follow set", "[Follow and first set]")
 {
+	separate_test("===================================");
 	separate_test("Test for Get first and follow set ");
-	Expr::ExprList expr_list;
+	Expr::ExprVec expr_list;
 
 	//E==> TY
 	Expr new_expr("E","TY");
@@ -86,7 +67,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	//show the expressions
 	production_list.print_production();
 
-	Productions::StringList terminal;
+	Productions::StringVec terminal;
 	terminal.push_back("+");
 	terminal.push_back("");
 	terminal.push_back("(");
@@ -102,11 +83,13 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	production_list.get_nullable_set();
 	production_list.show_nullable_set();
 
+	separate_test("show non terminal symbol:");
+	production_list.show_non_terminal_symbol();
+	
+	REQUIRE(production_list.is_in_null_sets("T") == true);
+	REQUIRE(production_list.is_in_null_sets("Y") == true);
+
 	separate_test("get first set  of these productions");
 	production_list.get_first_set();
 	production_list.show_first_set();
 }
-
-
-
-

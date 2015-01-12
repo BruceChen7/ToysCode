@@ -1,12 +1,12 @@
 #include "get_first_follow.h"
-#include <utility> // used for make_pair
-#include <map> // used for multimap
 
+using namespace Toyscode;
+using namespace Algorithm;
 using std::endl;
 using std::string;
 using std::cout;
 
-bool is_belonged_to_a_set(const string& sym,Productions::StringList set)
+bool is_belonged_to_a_set(const string& sym,const Productions::StringVec& set)
 {
 	auto begin = set.cbegin();
 	auto end = set.cend();
@@ -17,13 +17,66 @@ bool is_belonged_to_a_set(const string& sym,Productions::StringList set)
 		return false;
 
 }
+
+void Productions::find_begin_with_spec_symbol_expr(const string& left_symbol,std::vector<int>& location)
+{
+	for(unsigned int i = 0 ; i < expressions_.size();i++)
+	{
+		if(expressions_[i].get_left_production() == left_symbol)
+		{
+			location.push_back(i); 
+		}
+	}
+	
+}
+
+int Productions::get_left_sym_pos_in_set(const string& sym) const
+
+{
+	unsigned int  length = first_set_.size();
+
+	unsigned int i;
+	for( i  = 0 ; i < length; i++)
+	{
+		if(first_set_[i].symbol_name == sym)
+			break;
+	}
+
+	if( i == 0)
+		return -1;		
+	else 
+		return i;
+
+}
+
+
+//从右推导式子中找到第一个属于'nullabe set'的最后符号
+//返回其在右推导式的位置
+int Productions::find_first_nullable_sym(const string& right_production) const
+{
+	auto i = -1;
+	for(const auto& elem:right_production)
+	{
+		cout << "right symbol is " << elem << endl;
+		string temp(&elem);
+
+		if(is_in_null_sets(temp)==true)
+			i++;
+		else 
+			break; 
+	}
+	
+	return i; 
+}
+
+//判断该符号是否是终结符
 bool Productions::is_a_terminal(const string& sym) 
 {
 	return is_belonged_to_a_set(sym,terminal_);
 
 }
 
-bool Productions::is_in_null_sets(const string &symbol)
+bool Productions::is_in_null_sets(const string &symbol)const
 {
 	return is_belonged_to_a_set(symbol,nullable_set_);
 }
@@ -38,7 +91,7 @@ void Productions::show_non_terminal_symbol() const
 
 }
 //
-bool Productions::determin_symbol_null(const  std::string& left_symbol,int pos,bool is_left) 
+bool Productions::determin_symbol_null(const std::string& left_symbol,unsigned int pos,bool is_left) 
 { 	
 	if(is_in_null_sets(left_symbol))
 		return true;
@@ -46,7 +99,7 @@ bool Productions::determin_symbol_null(const  std::string& left_symbol,int pos,b
 		return false;
 	else 
 	{
-		for(auto i = 0 ; i < expressions_.size(); i++)
+		for(unsigned int  i = 0 ; i < expressions_.size(); i++)
 		{			
 			auto new_left_symbol = expressions_[i].get_left_production();
 
@@ -58,7 +111,7 @@ bool Productions::determin_symbol_null(const  std::string& left_symbol,int pos,b
 
 				auto right_production  = expressions_[i].get_right_production();
 
-				for(auto j = 0 ; j < right_production.size(); j++)
+				for(unsigned int j = 0 ; j < right_production.size(); j++)
 				{
 					//construct a string for right_production[j]
 					const char *tmp = &right_production[j];
@@ -96,7 +149,7 @@ bool Productions::determin_symbol_null(const  std::string& left_symbol,int pos,b
 
 void Productions::get_nullable_set()
 {
-	for(auto i = 0 ; i < expressions_.size(); i++)
+	for(unsigned int i = 0 ; i < expressions_.size(); i++)
 	{	
 		determin_symbol_null(expressions_[i].get_left_production(),i,true);
 
@@ -104,27 +157,30 @@ void Productions::get_nullable_set()
 
 }
 
-
-//Todo
-std::string get_first_set_helper(Expr::ExprList expressions)
+void Productions::get_first_set()
 {
+	std::vector<std::string> first;
 
-	for(auto& elem : expressions)
-	{
-		auto expression_right = elem.get_right_production(); 
+	auto i = 0;
+	for(const auto &left_symbol:non_terminal_)
+	{ 
+		get_first_set_helper(left_symbol,first); 
 
-		auto p_nonterminal = expression_right.c_str();
+		Set new_set;
+		new_set.symbol_name = left_symbol;
+		new_set.first_or_follow_set = first;
+		first_set_.push_back(new_set); 
 
-		for(auto i = 0 ; i < expression_right.size();i++)
-		{
-
-			//if Ti can be derived as epsilon 
-			
-		}
 	}
-	return "";
-
 	
+
+}
+
+void Productions::get_first_set(const string& non_terminal)
+{ 
+
+
+
 
 }
 
@@ -139,7 +195,7 @@ void Productions::print_production() const
 	
 }
 
-void Productions::set_terminal_symbol(Productions::StringList& terminals)
+void Productions::set_terminal_symbol(Productions::StringVec& terminals)
 {
 	this->terminal_ = terminals;	
 
@@ -163,28 +219,66 @@ void Productions::show_nullable_set() const
 
 }
 
-void Productions::get_first_set()
-{
-	//get terminal's first set which are themselves;
-	for(const auto& elem : terminal_)
-	{
-		
-		first_set_.insert(std::make_pair(elem,elem));
-	
-	}
 
-	//there is a production which can be derived as epsilon 
-	//here we use "" to stand for epsilon
-	for(auto &elem : expressions_)
+//找到所有的以left_production开始的文法
+//找到left_production对应的follow set
+//把它输出到first_set中
+void Productions::get_first_set_helper(const std::string& left_production,std::vector<std::string>& first_set)
+{
+	std::vector<int> pos;
+	find_begin_with_spec_symbol_expr(left_production,pos);
+	
+	for(auto &i : pos)
 	{
-		if(elem.get_right_production() == "")		
+		auto right_production =  expressions_[i].get_right_production();
+		cout << right_production << std::endl;
+		auto num = find_first_nullable_sym(right_production);
+		cout << "expression num is " << num << endl;
+		if(num == -1)
 		{
-			first_set_.insert(std::make_pair(elem.get_left_production(),elem.get_right_production()));
+			string right_symbol = string(&right_production[0]);
+			
+			if(right_symbol == "")
+			{
+				first_set.push_back(right_symbol);
+			}
+			else if(is_a_terminal(right_symbol))
+			{
+				first_set.push_back(right_symbol);
+			}
+			else if(right_symbol == left_production)
+				continue;
+			else 
+			{
+				std::vector<std::string>right_first_set;
+				get_first_set_helper(right_symbol,right_first_set); 
+
+				for(const auto &elem:right_first_set)
+				{
+					first_set.push_back(elem);
+
+				}
+			
+			}
+
+		} 
+		else 
+		{
+			for(auto i = 0 ; i <= num+1 ; i++)
+			{
+				std::vector<std::string> right_first_set;
+				get_first_set_helper(string(&right_production[i]),right_first_set);
+
+				for(const auto &elem:right_first_set)
+				{
+					first_set.push_back(elem);
+
+				}
+			} 
+		
 		}
 	}
 
-	//for production X ==> Y1Y2Y3Y4 
-	get_first_set_helper(expressions_);
 
 }
 
@@ -192,8 +286,11 @@ void Productions::show_first_set() const
 {
 	for(const auto& elem : first_set_)
 	{
-		std::cout << "FIRST("<< elem.first <<")" <<"===>" << elem.second << std::endl;
+		cout << "Symbol Name :" << elem.symbol_name; 
+
+		for(const auto& first_sym : elem.first_or_follow_set)
+			cout << "  ===> "<< first_sym; 
+		cout << endl;
 	}
-	
 
 }

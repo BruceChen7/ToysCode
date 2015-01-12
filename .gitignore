@@ -1,4 +1,7 @@
 *.swp
 CPLUSPLUS/Algorithm/algorithm_unit_test
-*.ycm.*
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
+te
+
 
