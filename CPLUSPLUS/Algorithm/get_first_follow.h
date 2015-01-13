@@ -14,9 +14,7 @@ namespace Toyscode
 
 				Expr(std::string left_production,std::string right_production)
 														:left_production_(left_production),
-														p_right_production_(std::make_shared<std::string>(right_production)),
-														is_first_computed_(false),
-														is_follow_computed_(false)
+														p_right_production_(std::make_shared<std::string>(right_production))
 				{
 				
 				}
@@ -37,30 +35,10 @@ namespace Toyscode
 				{
 					return *p_right_production_;
 				}
-				void set_first_compute()
-				{
-					is_first_computed_ = true;
-				}
-		
 				
-				void set_follow_compute()
-				{
-					is_follow_computed_ = true;
-				
-				}
-				bool get_first_flag()
-				{
-					return is_first_computed_;
-				}
-				bool get_follow_flag()
-				{
-					return is_follow_computed_;
-				}
 			private:
 					std::string left_production_;
 					Pstring p_right_production_; 
-					bool is_first_computed_;
-					bool is_follow_computed_; 
 		
 		};
 
@@ -142,6 +120,7 @@ namespace Toyscode
 				void add_to_first_set(const string& left_symbol,const string& terminal);
 			   	int find_first_nullable_sym(const string&right_production) const ;
 				bool determin_symbol_null(const string& left_symbol,unsigned int pos, bool is_left);
+				bool is_belonged_to_first_set(const string& symbol,StringVec& set);
 				int get_left_sym_pos_in_set(const string& sym) const;
 		
 		};

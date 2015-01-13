@@ -79,6 +79,10 @@ bool Productions::is_in_null_sets(const string &symbol)const
 	return is_belonged_to_a_set(symbol,nullable_set_);
 }
 
+bool Productions::is_belonged_to_first_set(const string& symbol, StringVec& set)
+{
+	return is_belonged_to_a_set(symbol,set);
+}
 
 void Productions::show_non_terminal_symbol() const
 {
@@ -136,13 +140,8 @@ bool Productions::determin_symbol_null(const std::string& left_symbol,unsigned i
 		// so it can be pushed into nullable_set_
 		if(is_left == true)
 			nullable_set_.push_back(left_symbol) ; 
-		return true;
-
-			
-
-	}
-
-
+		return true; 
+	} 
 }
 
 void Productions::get_nullable_set()
@@ -166,11 +165,13 @@ void Productions::get_first_set()
 
 		Set new_set;
 		new_set.symbol_name = left_symbol;
-		new_set.first_or_follow_set = first;
+		new_set.first_or_follow_set = first; 
+		cout << "the size of first " << first.size() << endl;
 		first_set_.push_back(new_set); 
-
+		first.clear(); 
 	}
 	
+
 
 }
 
@@ -233,15 +234,34 @@ void Productions::get_first_set_helper(const std::string& left_production,std::v
 
 		if(num == -1)
 		{
-			string right_symbol(1,right_production[0]);
 			
+			string right_symbol;
+
+			if(right_production.length() == 0)
+				right_symbol = "";
+			else 
+				//当right_production 为空字符串时
+				//下面的等式不是为空，其长度为1
+				//而空字符串的长度为0
+				right_symbol = string(1,right_production[0]);
+
 			if(right_symbol == "")
-			{
-				first_set.push_back(right_symbol);
+			{ 
+
+				if(!is_belonged_to_first_set(right_production,first_set))
+				{
+					first_set.push_back(right_production);
+				}
+					
 			}
+
 			else if(is_a_terminal(right_symbol))
 			{
-				first_set.push_back(right_symbol);
+				if(!is_belonged_to_first_set(right_symbol,first_set))
+				{
+					first_set.push_back(right_symbol);
+				}
+
 			}
 			else if(right_symbol == left_production)
 				continue;
@@ -250,9 +270,11 @@ void Productions::get_first_set_helper(const std::string& left_production,std::v
 				std::vector<std::string>right_first_set;
 				get_first_set_helper(right_symbol,right_first_set); 
 
+
 				for(const auto &elem:right_first_set)
 				{
-					first_set.push_back(elem);
+					if(!is_belonged_to_first_set(elem,first_set))
+						first_set.push_back(elem);
 
 				}
 			
@@ -261,15 +283,21 @@ void Productions::get_first_set_helper(const std::string& left_production,std::v
 		} 
 		else 
 		{
-			for(auto i = 0 ; i <= num+1 ; i++)
+			for(auto j = 0 ; j <= num+1 ; j++)
 			{
 				std::vector<std::string> right_first_set;
-				string right_symbol(1,right_production[i]);
+				string right_symbol(1,right_production[j]);
+
+				if(right_symbol == left_production)
+					break;
 				get_first_set_helper(right_symbol,right_first_set);
+
 
 				for(const auto &elem:right_first_set)
 				{
-					first_set.push_back(elem);
+					//避免重复的first集合
+					if(!is_belonged_to_first_set(elem,first_set))
+						first_set.push_back(elem);
 
 				}
 			} 
@@ -284,7 +312,7 @@ void Productions::show_first_set() const
 {
 	for(const auto& elem : first_set_)
 	{
-		cout << "Symbol Name :" << elem.symbol_name; 
+		cout << "Symbol Name : " << elem.symbol_name; 
 
 		for(const auto& first_sym : elem.first_or_follow_set)
 			cout << "  ===> "<< first_sym; 
