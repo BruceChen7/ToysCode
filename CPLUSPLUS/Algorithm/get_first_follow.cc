@@ -116,9 +116,7 @@ bool Productions::determin_symbol_null(const std::string& left_symbol,unsigned i
 				for(unsigned int j = 0 ; j < right_production.size(); j++)
 				{
 					//construct a string for right_production[j]
-					const char *tmp = &right_production[j];
-					string right_symbol(tmp);
-					
+					string right_symbol = string(1,right_production[j]);	
 					// the same production and the right part of production hass also left_symbol
 					// we can't determin whether if the left_symbol is a nullable symbol by this expression
 					if(right_symbol == new_left_symbol && i == pos)
@@ -166,7 +164,6 @@ void Productions::get_first_set()
 		Set new_set;
 		new_set.symbol_name = left_symbol;
 		new_set.first_or_follow_set = first; 
-		cout << "the size of first " << first.size() << endl;
 		first_set_.push_back(new_set); 
 		first.clear(); 
 	}
@@ -175,8 +172,29 @@ void Productions::get_first_set()
 
 }
 
-void Productions::get_first_set(const string& non_terminal)
+void Productions::show_first_set(const std::string& non_terminal)
 { 
+	if(is_a_terminal(non_terminal))
+		std::cout <<  non_terminal << " ====> " << non_terminal;
+	else 
+	{
+		for(const auto&set : first_set_)
+		{
+			if(set.symbol_name == non_terminal)
+			{
+				std::cout << non_terminal << " ====> ";
+
+				for(const auto &terminal : set.first_or_follow_set)
+					std::cout << terminal << " ";
+
+				std::cout << std::endl;
+				std ::cout << "the num of first set is " << set.first_or_follow_set.size()<< std::endl;
+			}
+				
+		}
+	
+	}
+
 
 
 

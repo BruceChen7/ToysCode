@@ -11,6 +11,7 @@ namespace Toyscode
 			public:
 				using Pstring = std::shared_ptr<std::string>;
 				using ExprVec = std::vector<Expr>;
+				Expr():left_production_(""),p_right_production_(nullptr){}
 
 				Expr(std::string left_production,std::string right_production)
 														:left_production_(left_production),
@@ -55,6 +56,8 @@ namespace Toyscode
 
 			public:
 				using StringVec = std::vector<std::string>; 
+				Productions() = default;
+			
 				Productions(Expr::ExprVec &expressions):expressions_(expressions)
 														,num_of_expression_(expressions_.size())
 				{
@@ -101,7 +104,7 @@ namespace Toyscode
 				void show_nullable_set()const;
 				void get_nullable_set();
 				void get_first_set(); 
-				void get_first_set(const string& non_terminal);
+				void show_first_set(const std::string& non_terminal);
 				void show_first_set()const; 
 				bool is_a_terminal(const std::string& sym);
 				bool is_in_null_sets(const std::string& sym) const ;

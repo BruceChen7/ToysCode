@@ -10,19 +10,16 @@ void separate_test(std::string test_name)
 
 }
 
-TEST_CASE("GET first or follow set", "[Follow and first set]")
+TEST_CASE("GET nullable set and first set ", "[nullable set and first set]")
 {
 	separate_test("===================================");
-	separate_test("Test for Get first and follow set ");
+	separate_test("Test for nullable first and follow set ");
 	Expr::ExprVec expr_list;
 
-	//E==> TY
 	Expr new_expr("E","TY");
-	expr_list.push_back(new_expr);
-
+	expr_list.push_back(new_expr); 
 	REQUIRE(new_expr.get_left_production() =="E");
 	REQUIRE(new_expr.get_right_production() == "TY"); 
-
 	//Y==>+TY
 	Expr new_expr1("Y","+TY");
 	expr_list.push_back(new_expr1);
@@ -30,8 +27,8 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	//Y==>"" means is a null string
 	Expr new_expr2("Y","");
 	expr_list.push_back(new_expr2);
-	
-	/* /1* //T==>FM *1/ */
+
+	//T==>FM
 	Expr new_expr3("T","FM");
 	expr_list.push_back(new_expr3);
 	
@@ -51,15 +48,9 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	Expr new_expr7("F","-");
 	expr_list.push_back(new_expr7); 
 
-	//T==>-
-	Expr new_expr8("T","");
-	expr_list.push_back(new_expr8);
-
-	Expr new_expr9("T","YT");
-	expr_list.push_back(new_expr9);
 
 	//expression's number is 8
-	REQUIRE(expr_list.size() == 10);
+	REQUIRE(expr_list.size() == 8);
 
 	//init production_list
 	Productions production_list(expr_list);
@@ -67,6 +58,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	separate_test("show productions");
 	//show the expressions
 	production_list.print_production();
+
 
 	Productions::StringVec terminal;
 	terminal.push_back("+");
@@ -77,6 +69,7 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 	terminal.push_back("-"); 
 
 	separate_test("show terminal symbols");
+
 	production_list.set_terminal_symbol(terminal);
 	production_list.show_terminal_symbol();
 
@@ -86,11 +79,11 @@ TEST_CASE("GET first or follow set", "[Follow and first set]")
 
 	separate_test("show non terminal symbol:");
 	production_list.show_non_terminal_symbol();
-	
-	REQUIRE(production_list.is_in_null_sets("T") == true);
 	REQUIRE(production_list.is_in_null_sets("Y") == true);
+	REQUIRE(production_list.is_in_null_sets("M") == true);
 
 	separate_test("get first set  of these productions");
 	production_list.get_first_set();
 	production_list.show_first_set();
+	production_list.show_first_set("Y");
 }
