@@ -1,6 +1,5 @@
-#include "../../STL.h"
-#include "../get_first_follow.cc"
-
+#include "STL.h"
+#include "get_first_follow.h" 
 using namespace Toyscode ;
 using namespace Algorithm;
 
@@ -86,4 +85,8 @@ TEST_CASE("GET nullable set and first set ", "[nullable set and first set]")
 	production_list.get_first_set();
 	production_list.show_first_set();
 	production_list.show_first_set("Y");
+
+	separate_test("get follow set of these productions:");
+	production_list.get_follow_set();
+
 }

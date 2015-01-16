@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+project(Algorithm) 
+set(CMAKE_CXX_FLAGS "-g -std=c++11")
+add_subdirectory(test)
+add_subdirectory(src)
+enable_testing()
+add_test(NAME Test COMMAND Test)

@@ -1,7 +1,7 @@
 #ifndef __CPLUSPLUS__ALGORITHM__GET_FIRST_FOLLOW_H_
 #define __CPLUSPLUS__ALGORITHM__GET_FIRST_FOLLOW_H_
 
-#include "../STL.h"
+#include "STL.h"
 namespace Toyscode 
 {
 	namespace Algorithm
@@ -59,7 +59,7 @@ namespace Toyscode
 				Productions() = default;
 			
 				Productions(Expr::ExprVec &expressions):expressions_(expressions)
-														,num_of_expression_(expressions_.size())
+														,num_of_expression_(expressions_.size()),is_first_set_filled_flag(false)
 				{
 					//init the nullable_set_;
 					//which can be derived as epsilon
@@ -104,16 +104,18 @@ namespace Toyscode
 				void show_nullable_set()const;
 				void get_nullable_set();
 				void get_first_set(); 
+				void get_follow_set();
 				void show_first_set(const std::string& non_terminal);
 				void show_first_set()const; 
 				bool is_a_terminal(const std::string& sym);
 				bool is_in_null_sets(const std::string& sym) const ;
-				void get_first_set_helper(const string& left_symbol,std::vector<std::string>& first_set);
+				bool is_first_set_filled();
 
 
 			private:
 				Expr::ExprVec expressions_;
 				int num_of_expression_;
+				bool is_first_set_filled_flag;
 				StringVec terminal_; 
 				StringVec nullable_set_; 
 				StringVec non_terminal_;
@@ -125,6 +127,8 @@ namespace Toyscode
 				bool determin_symbol_null(const string& left_symbol,unsigned int pos, bool is_left);
 				bool is_belonged_to_first_set(const string& symbol,StringVec& set);
 				int get_left_sym_pos_in_set(const string& sym) const;
+				void get_follow_set_helper(const Expr& expr,Set& follow_set);
+				void get_first_set_helper(const string& left_symbol,std::vector<std::string>& first_set);
 		
 		};
 

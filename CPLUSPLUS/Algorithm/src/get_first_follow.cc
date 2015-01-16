@@ -20,7 +20,7 @@ bool is_belonged_to_a_set(const string& sym,const Productions::StringVec& set)
 
 void Productions::find_begin_with_spec_symbol_expr(const string& left_symbol,std::vector<int>& location)
 {
-	for(unsigned int i = 0 ; i < expressions_.size();i++)
+	for(auto i = 0u ; i < expressions_.size();i++)
 	{
 		if(expressions_[i].get_left_production() == left_symbol)
 		{
@@ -33,10 +33,9 @@ void Productions::find_begin_with_spec_symbol_expr(const string& left_symbol,std
 int Productions::get_left_sym_pos_in_set(const string& sym) const
 
 {
-	unsigned int  length = first_set_.size();
-
+	auto length = first_set_.size();
 	unsigned int i;
-	for( i  = 0 ; i < length; i++)
+	for(i  = 0u; i < length; i++)
 	{
 		if(first_set_[i].symbol_name == sym)
 			break;
@@ -117,6 +116,7 @@ bool Productions::determin_symbol_null(const std::string& left_symbol,unsigned i
 				{
 					//construct a string for right_production[j]
 					string right_symbol = string(1,right_production[j]);	
+
 					// the same production and the right part of production hass also left_symbol
 					// we can't determin whether if the left_symbol is a nullable symbol by this expression
 					if(right_symbol == new_left_symbol && i == pos)
@@ -154,9 +154,11 @@ void Productions::get_nullable_set()
 
 void Productions::get_first_set()
 {
-	std::vector<std::string> first;
-
+	if(is_first_set_filled_flag)
+		return;
+	std::vector<std::string> first; 
 	auto i = 0;
+
 	for(const auto &left_symbol:non_terminal_)
 	{ 
 		get_first_set_helper(left_symbol,first); 
@@ -167,9 +169,8 @@ void Productions::get_first_set()
 		first_set_.push_back(new_set); 
 		first.clear(); 
 	}
-	
 
-
+	is_first_set_filled_flag = true; 
 }
 
 void Productions::show_first_set(const std::string& non_terminal)
@@ -324,6 +325,39 @@ void Productions::get_first_set_helper(const std::string& left_production,std::v
 	}
 
 
+}
+
+//将文法产生式子的follow 集合放到follow_set中
+void Productions::get_follow_set_helper(const Expr& expr,Set& follow_set)
+{
+
+	auto left_symbol = expr.get_left_production();
+	auto right_production = expr.get_right_production(); 
+
+
+
+}
+
+//获取follow set 
+void Productions::get_follow_set()
+{
+	if(!is_first_set_filled())
+		get_first_set();
+	
+	for(const auto &expr : expressions_)
+	{
+		Set follow_set;
+		get_follow_set_helper(expr,follow_set);
+		
+	}
+
+}
+
+
+
+bool Productions::is_first_set_filled()
+{ 
+	return is_first_set_filled_flag;
 }
 
 void Productions::show_first_set() const
