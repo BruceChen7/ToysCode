@@ -1,5 +1,7 @@
-#include "STL.h"
 #include "get_first_follow.h" 
+// use catch unit test which provides the main function
+#define CATCH_CONFIG_MAIN 
+#include "../../catch.hpp" 
 using namespace Toyscode ;
 using namespace Algorithm;
 

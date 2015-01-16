@@ -1,10 +1,8 @@
 #include "get_first_follow.h"
-
+#include "STL.h"
 using namespace Toyscode;
 using namespace Algorithm;
-using std::endl;
-using std::string;
-using std::cout;
+
 
 bool is_belonged_to_a_set(const string& sym,const Productions::StringVec& set)
 {
