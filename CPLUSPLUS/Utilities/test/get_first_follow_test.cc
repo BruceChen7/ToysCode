@@ -2,8 +2,9 @@
 // use catch unit test which provides the main function
 #define CATCH_CONFIG_MAIN 
 #include "../../catch.hpp" 
+
 using namespace Toyscode ;
-using namespace Algorithm;
+using namespace Utilities;
 
 void separate_test(std::string test_name)
 {

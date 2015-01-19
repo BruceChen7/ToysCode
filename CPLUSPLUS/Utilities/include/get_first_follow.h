@@ -1,9 +1,9 @@
-#ifndef __CPLUSPLUS__ALGORITHM__GET_FIRST_FOLLOW_H_
-#define __CPLUSPLUS__ALGORITHM__GET_FIRST_FOLLOW_H_ 
+#ifndef __CPLUSPLUS__Utilities__GET_FIRST_FOLLOW_H_
+#define __CPLUSPLUS__Utilities__GET_FIRST_FOLLOW_H_ 
 #include "STL.h"
 namespace Toyscode 
 {
-	namespace Algorithm
+	namespace Utilities
 	{
 		class Expr 
 		{ 

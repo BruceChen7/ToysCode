@@ -1,0 +1,10 @@
+add_executable(get_first_follow_unit_test get_first_follow_test.cc)
+target_link_libraries(get_first_follow_unit_test Toyscode)
+
+add_executable(log_unit_test log_unit_test.cc)
+target_link_libraries(log_unit_test Toyscode)
+
+
+add_executable(re_to_nfa_unit_test log_unit_test.cc)
+target_link_libraries(re_to_nfa_unit_test Toyscode)
+

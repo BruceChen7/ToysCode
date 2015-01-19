@@ -6,7 +6,7 @@
 
 namespace Toyscode
 {
-	namespace Algorithm
+	namespace Utilities
 	{
 		struct transition {
 			int begin_status;

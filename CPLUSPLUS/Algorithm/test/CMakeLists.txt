@@ -1,2 +1,0 @@
-add_executable(Test get_first_follow_test.cc)
-target_link_libraries(Test get_first_follow)

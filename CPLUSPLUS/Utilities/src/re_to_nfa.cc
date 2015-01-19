@@ -1,7 +1,9 @@
-#include "re_to_nfa.hpp" 
+#include "re_to_nfa.h" 
 #include <iostream>
+
 using  namespace Toyscode;
-using namespace Algorithm;
+using namespace Utilities;
+
 int NFA::get_final_status()
 {
 	return final_status_;
@@ -9,7 +11,7 @@ int NFA::get_final_status()
 
 int NFA::get_status_num()
 {
-	return status_.size(); 
+	return status_.size();
 }
 
 void NFA::set_final_status(int status)

@@ -1,7 +1,8 @@
 #include "get_first_follow.h"
 #include "STL.h"
+
 using namespace Toyscode;
-using namespace Algorithm;
+using namespace Utilities;
 
 
 bool is_belonged_to_a_set(const string& sym,const Productions::StringVec& set)
@@ -155,7 +156,6 @@ void Productions::get_first_set()
 	if(is_first_set_filled_flag)
 		return;
 	std::vector<std::string> first; 
-	auto i = 0;
 
 	for(const auto &left_symbol:non_terminal_)
 	{ 
