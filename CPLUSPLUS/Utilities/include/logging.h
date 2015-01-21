@@ -20,7 +20,6 @@ namespace Toyscode
 					LOG_WARN,
 					LOG_ERR,
 					LOG_FATAL,
-
 				}; 
 
 				Logging(const char* file,int line_num);
@@ -28,6 +27,7 @@ namespace Toyscode
 				// Logging(const char* file, int line,bool to_abort);
 				void set_log_level(Loglevel severity);
 				Loglevel get_log_level();
+				std::ostream& stream();
 				~Logging();
 			private: 
 				class LoggingImp; 
@@ -36,13 +36,7 @@ namespace Toyscode
 
 		};
 
-		// #define LOG_DEBUG do{   \
-		// 	if(Logging::get_log_level() <= LOG_DEBUG)  \
-		//  {					
-		// 		Logging(__FILE__,__LINE__,Logging::Loglevel::LOG_TRACE)\
-		// 	} 										  
-		//
-		// }while(0);
+		#define TRACE  Logging(__FILE__,__LINE__).stream()
 
 	}
 }

@@ -8,7 +8,7 @@ using namespace Utilities;
 
 TEST_CASE("log Utilities testing","[log]")
 {
-	Logging::Loglevel level = Logging::Loglevel::LOG_DEBUG;
+	Logging::Loglevel level = Logging::Loglevel::LOG_TRACE;
 
 	Logging log("log.c",1);
 	REQUIRE(log.get_log_level() == Logging::Loglevel::LOG_TRACE);
@@ -16,6 +16,6 @@ TEST_CASE("log Utilities testing","[log]")
 	level = Logging::Loglevel::LOG_WARN;
 	log.set_log_level(level);
 	REQUIRE(log.get_log_level()== Logging::Loglevel::LOG_WARN);
-
+	TRACE << "Hello world" ;
 
 } 
