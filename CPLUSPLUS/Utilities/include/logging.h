@@ -14,19 +14,19 @@ namespace Toyscode
 			public :
 				enum class Loglevel
 				{
-					LOG_TRACE,
-					LOG_DEBUG,
-					LOG_MSG,
-					LOG_WARN,
-					LOG_ERR,
-					LOG_FATAL,
+					TRACE,
+					DEBUG,
+					MSG,
+					WARN,
+					ERR,
+					FATAL,
 				}; 
 
 				Logging(const char* file,int line_num);
 				// Logging(const char* file ,int line,Loglevel level,const char* func); 
 				// Logging(const char* file, int line,bool to_abort);
-				void set_log_level(Loglevel severity);
-				Loglevel get_log_level();
+				static void set_log_level(Loglevel severity);
+				static Loglevel get_log_level();
 				std::ostream& stream();
 				~Logging();
 			private: 
@@ -36,8 +36,9 @@ namespace Toyscode
 
 		};
 
-		#define TRACE  Logging(__FILE__,__LINE__).stream()
-
+		#define LOG_TRACE  \
+			if(Logging::get_log_level() <= Logging::Loglevel::TRACE) \
+						Logging(__FILE__,__LINE__).stream() 
 	}
 }
 #endif

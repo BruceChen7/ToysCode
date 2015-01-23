@@ -8,14 +8,21 @@ using namespace Utilities;
 
 TEST_CASE("log Utilities testing","[log]")
 {
-	Logging::Loglevel level = Logging::Loglevel::LOG_TRACE;
+	Logging::Loglevel level = Logging::Loglevel::TRACE;
+	
+	SECTION("Test for api of LOG")
+	{
+		Logging log("log.c",1);
+		REQUIRE(log.get_log_level() == Logging::Loglevel::TRACE);
 
-	Logging log("log.c",1);
-	REQUIRE(log.get_log_level() == Logging::Loglevel::LOG_TRACE);
+		level = Logging::Loglevel::WARN;
+		log.set_log_level(level);
+		REQUIRE(log.get_log_level()== Logging::Loglevel::WARN);
+	}
 
-	level = Logging::Loglevel::LOG_WARN;
-	log.set_log_level(level);
-	REQUIRE(log.get_log_level()== Logging::Loglevel::LOG_WARN);
-	TRACE << "Hello world" ;
+	SECTION("Test for LOG_TRACE ")
+	{
+		LOG_TRACE << "Hello world" ;
+	}
 
 } 
