@@ -1,2 +1,0 @@
-/usr/bin/ar cr libToyscode.a  CMakeFiles/Toyscode.dir/get_first_follow.cc.o CMakeFiles/Toyscode.dir/logging.cc.o CMakeFiles/Toyscode.dir/re_to_nfa.cc.o
-/usr/bin/ranlib libToyscode.a

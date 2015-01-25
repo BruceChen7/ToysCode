@@ -1,1 +1,0 @@
-clang++   -std=c++11    CMakeFiles/log_unit_test.dir/log_unit_test.cc.o  -o log_unit_test -rdynamic ../src/libToyscode.a 

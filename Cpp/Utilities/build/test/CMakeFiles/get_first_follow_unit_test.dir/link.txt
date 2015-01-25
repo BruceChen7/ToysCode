@@ -1,1 +1,0 @@
-clang++   -std=c++11    CMakeFiles/get_first_follow_unit_test.dir/get_first_follow_test.cc.o  -o get_first_follow_unit_test -rdynamic ../src/libToyscode.a 

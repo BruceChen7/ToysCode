@@ -1,5 +1,0 @@
-get_first_follow_test 0 0
-log_unit_test 0 0
----
-get_first_follow_test
-log_unit_test
