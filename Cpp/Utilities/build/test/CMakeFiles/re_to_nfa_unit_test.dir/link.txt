@@ -1,0 +1,1 @@
+clang++   -std=c++11    CMakeFiles/re_to_nfa_unit_test.dir/log_unit_test.cc.o  -o re_to_nfa_unit_test -rdynamic ../src/libToyscode.a 

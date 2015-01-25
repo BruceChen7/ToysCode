@@ -1,0 +1,4 @@
+/home/bruce/ToysCode/Cpp/Utilities/build/src/CMakeFiles/Toyscode.dir
+/home/bruce/ToysCode/Cpp/Utilities/build/test/CMakeFiles/get_first_follow_unit_test.dir
+/home/bruce/ToysCode/Cpp/Utilities/build/test/CMakeFiles/log_unit_test.dir
+/home/bruce/ToysCode/Cpp/Utilities/build/test/CMakeFiles/re_to_nfa_unit_test.dir

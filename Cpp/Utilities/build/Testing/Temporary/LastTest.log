@@ -1,0 +1,35 @@
+Start testing: Jan 25 21:41 CST
+----------------------------------------------------------
+Unable to find executable: get_first_follow_test
+1/2 Testing: get_first_follow_test
+1/2 Test: get_first_follow_test
+Command: ""
+Directory: /home/bruce/ToysCode/Cpp/Utilities/build
+"get_first_follow_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"get_first_follow_test" end time: Jan 25 21:41 CST
+"get_first_follow_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+Unable to find executable: logTest
+2/2 Testing: log_unit_test
+2/2 Test: log_unit_test
+Command: ""
+Directory: /home/bruce/ToysCode/Cpp/Utilities/build
+"log_unit_test" start time: 
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"log_unit_test" end time: Jan 25 21:41 CST
+"log_unit_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Jan 25 21:41 CST
