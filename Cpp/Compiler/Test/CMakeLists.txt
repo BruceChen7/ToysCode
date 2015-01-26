@@ -1,0 +1,2 @@
+add_executable(lexical_unit_test lexical_unit_test.cc)
+target_link_libraries(lexical_unit_test ToysCompiler)
