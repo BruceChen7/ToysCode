@@ -5,6 +5,8 @@
 #include <stdarg.h>
 
 typedef  char* sds;
+#define SDS_HDR_SIZE sizeof(struct toys_sds_hdr)
+#define SDS_MAX_PRESIZE (1024 * 1024)
 
 struct toys_sds_hdr {
 	//the length of the c-style string 
@@ -26,6 +28,8 @@ sds toys_sds_empty(void);
 //obtain the length of sds 
 size_t toys_sds_len(const sds s);
 
+sds toys_sds_expand_size(sds s,size_t add_len);
+
 sds toys_sds_dup(const sds s); 
 
 // free the space 
@@ -34,7 +38,7 @@ void toys_sds_free(sds s);
 size_t toys_sds_avail(const sds s); 
 
 //concatenation of two sds
-sds toys_sds_cat(sds s,const char  *t);
+sds toys_sds_cat(sds s,const void  *t,size_t len);
 
 sds  toys_sds_free_splitres(sds *tokens, int count);
 

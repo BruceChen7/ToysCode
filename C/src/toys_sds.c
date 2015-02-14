@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/types.h> 
-#define SDS_HDR_SIZE sizeof(struct toys_sds_hdr)
-/* #define CHECK_SIZE(X) do{ }while(0) */
-/* #define  */
 
 // obtain the length of sds 
 size_t toys_sds_len(const sds s)
@@ -58,6 +55,35 @@ sds toys_sds_empty(void)
 }
 
 
+sds toys_sds_expand_size(sds s,size_t add_len)
+{
+	struct toys_sds_hdr* sh, *new_sh;
+	sh = (void *)(s-SDS_HDR_SIZE); 
+
+	size_t free_size = toys_sds_avail(s); 
+
+	//nothing to do if there are enough size
+	//
+	if(free_size >= add_len)
+		return s;
+
+	size_t len = toys_sds_len(s);
+	size_t new_len = (len+add_len);
+
+	if(new_len < SDS_MAX_PRESIZE)
+		new_len *= 2;
+	else 
+		new_len += SDS_MAX_PRESIZE;
+
+	new_sh = realloc(sh,new_len+SDS_HDR_SIZE+1); 
+
+	if(new_sh == NULL)
+		return NULL;
+
+	new_sh->free = new_len - len;
+	return new_sh->buf; 
+}
+
 void toys_sds_free(sds s)
 {
 	struct toys_sds_hdr *sh  = (void *)(s-SDS_HDR_SIZE);
@@ -70,9 +96,25 @@ size_t toys_sds_avail(const sds s)
 	return sh->free;	
 }
 
-sds toys_sds_cat(sds s,const char *t)
-{
+sds toys_sds_cat(sds s,const void *t,size_t len)
+{ 
+	size_t avail_len = toys_sds_avail(s); 
+	size_t s_len = toys_sds_len(s);
+	struct toys_sds_hdr *sh = (void *)(s-SDS_HDR_SIZE);
 
+	if(avail_len  < len) 
+	{
+		 s = toys_sds_expand_size(s,len); 
+		 if( s == NULL)
+			 return NULL;
+	}
+
+	memcpy(s+s_len,t,len);
+
+	sh->len = s_len + len;
+	sh->free = avail_len - len;
+	sh->buf[sh->len] = '\0'; 
+	return (sds)sh->buf ;
 }
 
 void toys_sds_clear(sds s)
@@ -104,7 +146,4 @@ void toys_sds_tolower(sds s)
 sds toys_sds_join(char **argv,int argc,char *sep)
 {
 
-}
-
-
-
+} 

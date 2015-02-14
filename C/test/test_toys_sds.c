@@ -8,32 +8,44 @@ START_TEST(test_toys_sds)
 	sds test_string= "Hello world";
 
 	//create the first 2 word string from the test_string 
-	sds new_string =  toys_sds_new_len(test_string,2); 
-	ck_assert_str_eq("He",new_string);
+	sds y =  toys_sds_new_len(test_string,2); 
+	ck_assert_str_eq("He",y);
 
 	//test for toys_sds_len
-	size_t len = toys_sds_len(new_string);
+	size_t len = toys_sds_len(y);
 	ck_assert_uint_eq(len,2);
 
 	//test for toys_sds_new
-	sds new_string2 = toys_sds_new(test_string);
-	ck_assert_str_eq(test_string,new_string2);
-	ck_assert_uint_eq(strlen(test_string),strlen(new_string2));
+	sds x = toys_sds_new(test_string);
+	ck_assert_str_eq(test_string,x);
+	ck_assert_uint_eq(strlen(test_string),toys_sds_len(x));
 
 	//test for toys_sds_empty
 	ck_assert_str_eq("",toys_sds_empty()); 
-	toys_sds_free(new_string);
 
 	//test for toys_sds_toupper 
-	toys_sds_toupper(new_string2);
-	ck_assert_str_eq(new_string2,"HELLO WORLD");
+	toys_sds_toupper(x);
+	ck_assert_str_eq(x,"HELLO WORLD");
 
 	//test for toys_sds_tolower
-	toys_sds_tolower(new_string2);
-	ck_assert_str_eq(new_string2,"hello world"); 
+	toys_sds_tolower(x);
+	ck_assert_str_eq(x,"hello world"); 
 
 	//test for toys_sds_avail
-	ck_assert_int_eq(toys_sds_avail(new_string2),0);
+	ck_assert_int_eq(toys_sds_avail(x),0);
+
+	//test for toys_sds_expand_size
+	//the size of "hello world" is 11
+	//then we expand the size of the new_string2 to (11+8)*2
+	//now the available free space is (11+8)*2 -11,which is 27
+	ck_assert_int_eq(toys_sds_len(x),11);
+	x = toys_sds_expand_size(x,8);
+	ck_assert_int_eq(toys_sds_avail(x),27);
+
+	//test for toys_sds_cat
+	y = toys_sds_new(" Bruce Chen");
+	x = toys_sds_cat(x,y,toys_sds_len(y));
+	ck_assert_str_eq(x,"hello world Bruce Chen"); 
 
 }
 END_TEST
