@@ -96,7 +96,7 @@ size_t toys_sds_avail(const sds s)
 	return sh->free;	
 }
 
-sds toys_sds_cat(sds s,const void *t,size_t len)
+sds toys_sds_cat_len(sds s,const void *t,size_t len)
 { 
 	size_t avail_len = toys_sds_avail(s); 
 	size_t s_len = toys_sds_len(s);
@@ -117,9 +117,36 @@ sds toys_sds_cat(sds s,const void *t,size_t len)
 	return (sds)sh->buf ;
 }
 
-void toys_sds_clear(sds s)
+sds toys_sds_cat(sds s,const void *t)
 {
+	return toys_sds_cat_len(s,t,strlen(t));
+}
 
+sds toys_sds_cpy_len(sds s,const void *t size_t len)
+{
+	size_t t_len = strlen(t);
+	size_t s_len = toys_sds_len(s);
+	size_t avail_len = toys_sds_avail(s);
+	
+	if(avail_len < t_len)
+		s = toys_sds_expand_size(s,t_len); 
+	
+}
+//duplicate s  
+sds toys_sds_dup(const sds s )
+{
+	return toys_sds_new(s);
+
+}
+
+//make the s's content is '\0'
+//update s's free space 
+void toys_sds_clear(sds s) 
+{
+	struct toys_sds_hdr* sh  = (void *)(s-SDS_HDR_SIZE);
+	sh->free = sh->len;
+	sh->len = 0; 
+	sh->buf[0] = '\0' ;
 }
 
 int toys_sds_cmp(const sds s1,const sds s2)
@@ -127,6 +154,7 @@ int toys_sds_cmp(const sds s1,const sds s2)
 
 }
 
+//convert all the letters to upper
 void toys_sds_toupper(sds s)
 {
 	int i ;

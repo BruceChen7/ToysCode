@@ -44,14 +44,11 @@ START_TEST(test_toys_sds)
 
 	//test for toys_sds_cat
 	y = toys_sds_new(" Bruce Chen");
-	x = toys_sds_cat(x,y,toys_sds_len(y));
+	x = toys_sds_cat_len(x,y,toys_sds_len(y));
 	ck_assert_str_eq(x,"hello world Bruce Chen"); 
 
 }
-END_TEST
-
-
-
+END_TEST 
 
 Suite* sds_suit(void)
 {
