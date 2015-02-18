@@ -17,12 +17,9 @@ sds toys_sds_new_len(const void *init,size_t init_len)
 {
 	struct toys_sds_hdr *new_sds  = NULL;
 
-	if(init)
-	{
+	if(init) {
 		new_sds = malloc(SDS_HDR_SIZE+init_len + 1); 
-	}
-	else 
-	{
+	} else {
 		new_sds = calloc(SDS_HDR_SIZE + init_len + 1,1);
 	}
 
@@ -32,8 +29,7 @@ sds toys_sds_new_len(const void *init,size_t init_len)
 	new_sds->len = init_len;
 	new_sds->free = 0;
 	
-	if(init_len && init)
-	{
+	if(init_len && init) {
 		memcpy(new_sds->buf,init,init_len);
 		new_sds->buf[init_len] 	= '\0';
 	}
@@ -102,8 +98,7 @@ sds toys_sds_cat_len(sds s,const void *t,size_t len)
 	size_t s_len = toys_sds_len(s);
 	struct toys_sds_hdr *sh = (void *)(s-SDS_HDR_SIZE);
 
-	if(avail_len  < len) 
-	{
+	if(avail_len  < len) {
 		 s = toys_sds_expand_size(s,len); 
 		 if( s == NULL)
 			 return NULL;
@@ -122,15 +117,31 @@ sds toys_sds_cat(sds s,const void *t)
 	return toys_sds_cat_len(s,t,strlen(t));
 }
 
-sds toys_sds_cpy_len(sds s,const void *t size_t len)
+sds toys_sds_cpy_len(sds s,const void *t ,size_t len)
 {
-	size_t t_len = strlen(t);
-	size_t s_len = toys_sds_len(s);
-	size_t avail_len = toys_sds_avail(s);
+	struct toys_sds_hdr *sh = (void *)(s - SDS_HDR_SIZE);
+	size_t t_len = len;
+	size_t s_total_len = sh->free + sh->len;
 	
-	if(avail_len < t_len)
-		s = toys_sds_expand_size(s,t_len); 
-	
+	if(s_total_len < t_len) { 
+		s = toys_sds_expand_size(s,t_len - s_total_len); 
+
+		if( s == NULL)
+			return NULL;
+		sh = (void *)(s - SDS_HDR_SIZE);
+		s_total_len = sh->len + sh->free;
+	}
+
+	memcpy(s,t,len);
+	s[len] = '\0';
+	sh->len = len;
+	sh->free = s_total_len -len;
+	return s; 
+}
+
+sds toys_sds_cpy(sds s,const void *t)
+{
+	return toys_sds_cpy_len(s,t,strlen(t)); 
 }
 //duplicate s  
 sds toys_sds_dup(const sds s )

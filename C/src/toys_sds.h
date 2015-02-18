@@ -66,6 +66,9 @@ int  toys_sds_cmp(const sds s1,const sds s2);
 sds toys_sds_map_chars(sds s,const char *from, const char *to,size_t set_len); 
 sds toys_sds_join(char **argv,int argc,char *sep); 
 
+//some utils like snprintf 
+sds toys_sds_snprintf(sds s, const char *fmt,...); 
+
 #endif
 
 

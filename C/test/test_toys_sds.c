@@ -28,7 +28,7 @@ START_TEST(test_toys_sds)
 	ck_assert_str_eq(x,"HELLO WORLD");
 
 	//test for toys_sds_tolower
-	toys_sds_tolower(x);
+toys_sds_tolower(x);
 	ck_assert_str_eq(x,"hello world"); 
 
 	//test for toys_sds_avail
@@ -46,6 +46,22 @@ START_TEST(test_toys_sds)
 	y = toys_sds_new(" Bruce Chen");
 	x = toys_sds_cat_len(x,y,toys_sds_len(y));
 	ck_assert_str_eq(x,"hello world Bruce Chen"); 
+
+	//to ensure y has enough space 
+	y = toys_sds_expand_size(y,14);
+	ck_assert_str_eq(y," Bruce Chen");
+
+	//when there is enough space 
+	//x is copied into y
+	toys_sds_cpy(y,x);
+	ck_assert_str_eq(y,x);
+	
+	//when there is not enough space
+	//the resturned sds is the copied x
+	y  = toys_sds_empty();
+	y = toys_sds_cpy(y,x);
+	ck_assert_str_eq(y,x);
+
 
 }
 END_TEST 
