@@ -28,7 +28,7 @@ START_TEST(test_toys_sds)
 	ck_assert_str_eq(x,"HELLO WORLD");
 
 	//test for toys_sds_tolower
-toys_sds_tolower(x);
+	toys_sds_tolower(x);
 	ck_assert_str_eq(x,"hello world"); 
 
 	//test for toys_sds_avail
@@ -63,21 +63,36 @@ toys_sds_tolower(x);
 	ck_assert_str_eq(y,x);
 
 
+
 }
 END_TEST 
 
-Suite* sds_suit(void)
-{
+START_TEST(advanced_test_sds) {
+	sds x = toys_sds_new("foo");
+	sds y = toys_sds_cat_snprintf(x,"%d %d %d",1,2,3);
+	ck_assert_str_eq(y,"foo1 2 3");
+	ck_assert_str_eq(x,"foo1 2 3");
+	
+	x = toys_sds_empty();
+	y = toys_sds_cat_snprintf(x,"%s %s %s","foo","bar","chen"); 
+	ck_assert_str_eq(x,"foo bar chen");
+	ck_assert_str_eq(y,"foo bar chen");
+
+
+}
+END_TEST
+
+Suite* sds_suit(void) {
 
 	Suite *s = suite_create("Toy SDS Basic Api Testing ");
 	TCase* tc_core = tcase_create("core case");
 	tcase_add_test(tc_core,test_toys_sds); 
+	tcase_add_test(tc_core,advanced_test_sds);
 	suite_add_tcase(s,tc_core);
 	return s; 
 }
 
-int main()
-{
+int main() {
 	int number_failed ;
 	// the new suit to be test
 	Suite* s =  sds_suit(); 

@@ -1,5 +1,6 @@
 #include "toys_sds.h" 
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/types.h> 
@@ -92,8 +93,7 @@ size_t toys_sds_avail(const sds s)
 	return sh->free;	
 }
 
-sds toys_sds_cat_len(sds s,const void *t,size_t len)
-{ 
+sds toys_sds_cat_len(sds s,const void *t,size_t len) { 
 	size_t avail_len = toys_sds_avail(s); 
 	size_t s_len = toys_sds_len(s);
 	struct toys_sds_hdr *sh = (void *)(s-SDS_HDR_SIZE);
@@ -160,14 +160,12 @@ void toys_sds_clear(sds s)
 	sh->buf[0] = '\0' ;
 }
 
-int toys_sds_cmp(const sds s1,const sds s2)
-{ 
+int toys_sds_cmp(const sds s1,const sds s2) { 
 
 }
 
 //convert all the letters to upper
-void toys_sds_toupper(sds s)
-{
+void toys_sds_toupper(sds s) {
 	int i ;
 	int len = toys_sds_len(s);
 	for(i = 0 ; i < len ;i++)
@@ -180,6 +178,62 @@ void toys_sds_tolower(sds s)
 	int len = toys_sds_len(s); 
 	for( j = 0 ; j < len ; j++)
 		s[j] = tolower(s[j]);
+}
+
+sds toys_sds_cat_snprintf(sds s, const char *fmt, ...) {
+	va_list ap;
+	char *t; 
+	va_start(ap,fmt);
+	t = toys_sds_cat_vprintf(s,fmt,ap);
+	va_end(ap);
+	return t;
+
+}
+
+static sds toys_sds_cat_vprintf(sds s, const char *fmt,va_list ap) {
+	va_list cpy; 
+	char s_buffer[1024];
+	char *buf = s_buffer; 
+	size_t buffer_len = strlen(fmt) * 2 ;
+
+	if (buffer_len > sizeof(s_buffer)) {
+		buf= malloc(buffer_len);
+
+		if(buf == NULL)
+			return NULL; 
+	} else { 
+		
+		buffer_len = sizeof(s_buffer);
+	}
+	
+	while(1) { 
+		
+		buf[buffer_len - 2] = '\0'; 
+		va_copy(cpy,ap);
+		vsnprintf(buf,buffer_len,fmt,cpy); 
+		va_end(cpy);
+
+		if(buf[buffer_len-2]  != '\0') {
+
+			if(buf != s_buffer) {
+				free(buf);
+				buffer_len *= 2;
+				buf = malloc(buffer_len);
+				
+				if(buf == NULL)
+					return NULL;
+				continue; 
+			} 
+		} 
+		break; 
+	}
+
+	sds t = toys_sds_cat(s,buf);
+
+	if(buf != s_buffer)
+		free(buf);
+	return t;
+
 }
 
 sds toys_sds_join(char **argv,int argc,char *sep)
