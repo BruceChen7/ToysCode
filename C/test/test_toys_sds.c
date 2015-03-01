@@ -60,14 +60,13 @@ START_TEST(test_toys_sds)
 	//the resturned sds is the copied x
 	y  = toys_sds_empty();
 	y = toys_sds_cpy(y,x);
-	ck_assert_str_eq(y,x);
-
-
+	ck_assert_str_eq(y,x); 
 
 }
 END_TEST 
 
-START_TEST(advanced_test_sds) {
+START_TEST(advanced_test_sds) 
+{
 	sds x = toys_sds_new("foo");
 	sds y = toys_sds_cat_snprintf(x,"%d %d %d",1,2,3);
 	ck_assert_str_eq(y,"foo1 2 3");
@@ -92,7 +91,8 @@ Suite* sds_suit(void) {
 	return s; 
 }
 
-int main() {
+int main() 
+{
 	int number_failed ;
 	// the new suit to be test
 	Suite* s =  sds_suit(); 

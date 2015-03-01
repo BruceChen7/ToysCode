@@ -18,9 +18,12 @@ sds toys_sds_new_len(const void *init,size_t init_len)
 {
 	struct toys_sds_hdr *new_sds  = NULL;
 
-	if(init) {
+	if(init) 
+	{
 		new_sds = malloc(SDS_HDR_SIZE+init_len + 1); 
-	} else {
+	} 
+	else 
+	{
 		new_sds = calloc(SDS_HDR_SIZE + init_len + 1,1);
 	}
 
@@ -30,7 +33,8 @@ sds toys_sds_new_len(const void *init,size_t init_len)
 	new_sds->len = init_len;
 	new_sds->free = 0;
 	
-	if(init_len && init) {
+	if(init_len && init) 
+	{
 		memcpy(new_sds->buf,init,init_len);
 		new_sds->buf[init_len] 	= '\0';
 	}
@@ -93,7 +97,8 @@ size_t toys_sds_avail(const sds s)
 	return sh->free;	
 }
 
-sds toys_sds_cat_len(sds s,const void *t,size_t len) { 
+sds toys_sds_cat_len(sds s,const void *t,size_t len) 
+{ 
 	size_t avail_len = toys_sds_avail(s); 
 	size_t s_len = toys_sds_len(s);
 	struct toys_sds_hdr *sh = (void *)(s-SDS_HDR_SIZE);

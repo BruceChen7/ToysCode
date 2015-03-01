@@ -7,4 +7,5 @@ add_subdirectory(test)
 
 enable_testing()
 add_test(NAME sds_test COMMAND sds_test)
+add_test(NAME list_test COMMAND list_test)
 
