@@ -1,6 +1,10 @@
 #include "toys_list.h"
 #include <stdlib.h>
 
+/*
+ * On error, NULL is returned 
+ * On Success,new 'struct toys_list *' pointer is returned 
+ */ 
 toys_list* toys_list_create(void)
 {
 	struct toys_list* list;
@@ -37,6 +41,14 @@ void toys_list_release(toys_list *list)
 	free(list); 
 }
 
+/*
+ * add a new node to the head of the list
+ *
+ * On error,NULL is returned and no operation is performed
+ *
+ * On success, the 'list' pointer you pass to the function is returned
+ * 
+ * */
 toys_list *toys_list_add_node_head(toys_list *list,void *value)
 {
 	toys_list_node *node;
@@ -91,6 +103,7 @@ toys_list *toys_list_add_node_tail(toys_list *list,void *value)
 
 }
 
+
 toys_list *toys_list_insert_node(toys_list* list,toys_list_node* old_node,void *value,int pos)
 {
 	toys_list_node *node = malloc(sizeof(*node));
@@ -106,8 +119,26 @@ toys_list *toys_list_insert_node(toys_list* list,toys_list_node* old_node,void *
 		node->next = list->head;
 		node->prev = NULL;
 		
-	}
-
-
-
+	} 
 }
+
+void toys_list_del_node(toys_list *list, toys_list_node *node)
+{
+	if(node->prev != NULL)
+		node->prev->next = node->next;
+	else 
+	/* if node is the first 'list node' */
+		list->head = node->next; 
+
+	if(node->next !=NULL)
+		node->next->prev = node->prev;
+	else
+		/* if node is the last 'list node' */
+		list->tail = node->prev;
+
+	if(list->free)
+		list->free(node->value);
+	free(node);
+	list->len--; 
+}
+

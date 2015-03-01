@@ -26,5 +26,7 @@ void toys_list_release(toys_list *list);
 toys_list* toys_list_add_node_head(toys_list* list,void *value); 
 toys_list* toys_list_add_node_tail(toys_list *list,void *value); 
 toys_list* toys_list_insert_node(toys_list *list, toys_list_node *old_node, void *value,int pos);
-toys_list* toys_list_del_node(toys_list *list,toys_list_node *node);
+
+//delete the specified node from the specified list
+void  toys_list_del_node(toys_list *list,toys_list_node *node);
 #endif 
