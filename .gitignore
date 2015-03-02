@@ -1,5 +1,6 @@
 *.swp
 Cpp/Utilities/build/*
-.ycm_extra_conf.py
-.ycm_extra_conf.pyc 
+C/.ycm_extra_conf.py
+C/.ycm_extra_conf.pyc 
+Cpp/.ycm_extra_conf.py
 tags
