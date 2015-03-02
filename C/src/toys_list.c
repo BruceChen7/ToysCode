@@ -1,5 +1,7 @@
 #include "toys_list.h"
+#include "toys_utils.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /*
  * On error, NULL is returned 
@@ -99,8 +101,7 @@ toys_list *toys_list_add_node_tail(toys_list *list,void *value)
 	}
 
 	list->len++; 
-	return list;
-
+	return list; 
 }
 
 
@@ -140,5 +141,58 @@ void toys_list_del_node(toys_list *list, toys_list_node *node)
 		list->free(node->value);
 	free(node);
 	list->len--; 
+}
+
+//support the negative index
+// eg : toys_list_index(list, -1) return the pointer of last element of the list;
+toys_list_node* toys_list_index(toys_list *list, long index)
+{
+
+	toys_list_node *node = NULL;
+	long len = list->len;
+	int i = index; 
+	node = index >= 0 ? list->head:list->tail;
+
+	if(i >= 0)
+	{
+		while(i--)	
+		{
+			node = node->next;
+		} 
+	}
+	else 
+	{
+		while(++i)
+		{
+			node = node->prev;
+		}
+	}
+	return node; 
+}
+
+toys_list_node* toys_list_search_key(toys_list *list,void *key)
+{
+	toys_list_node *node = list->head;
+	unsigned long len = list->len; 
+
+	while(len--)
+	{
+		if(list->match)
+		{
+			if(list->match(node->value,key))
+			{
+				return node;
+			}
+		}
+		else if(key == node->value)
+		{
+			return node; 
+		}
+		node = node->next; 
+	}
+
+	if(len == 0)
+		return NULL;
+
 }
 

@@ -17,13 +17,48 @@ END_TEST
 
 START_TEST(test_toys_list_add_node_head)
 {
-	int value = 4;
+	//7->5->4->8
+	int value1 = 4;
 	toys_list *list = toys_list_create();
-	toys_list_add_node_head(list,&value);
+	toys_list_add_node_head(list,&value1);
 
-	ck_assert_int_eq(list->len,1);
-	ck_assert_int_eq(*(int *)(list->head->value),4);
+	int value2 = 5;
+	toys_list_add_node_head(list,&value2);
+
+	int value3 = 7;
+	toys_list_add_node_head(list,&value3);
 	
+	int value4 = 8;
+	toys_list_add_node_tail(list,&value4);
+
+
+	ck_assert_int_eq(list->len,4);
+	ck_assert_int_eq(*(int *)(list->head->value),7);
+	ck_assert_int_eq(*(int *)(list->head->next->value),5);
+	ck_assert_int_eq(*(int *)(list->head->next->next->value),4);
+	ck_assert_int_eq(*(int *)(list->tail->value),8);
+
+	toys_list_node *node = toys_list_index(list,0); 
+	ck_assert_int_eq(*(int *)(node->value),7); 
+
+	node = toys_list_index(list,1);
+	ck_assert_int_eq(*(int *)(node->value),5); 
+	
+	node = toys_list_index(list,2);
+	ck_assert_int_eq(*(int *)(node->value),4); 
+
+	node = toys_list_index(list, -1);
+	ck_assert_int_eq(*(int *)(node->value),8); 
+
+	node = toys_list_index(list, -2);
+	ck_assert_int_eq(*(int *)(node->value),4); 
+
+	node = toys_list_index(list,-3);
+	ck_assert_int_eq(*(int *)(node->value),5); 
+
+	node = toys_list_search_key(list,&value2);
+	ck_assert_int_eq(*(int *)node->value,5);
+		
 }
 END_TEST
 
