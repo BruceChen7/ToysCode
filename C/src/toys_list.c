@@ -1,5 +1,6 @@
 #include "toys_list.h"
 #include "toys_utils.h"
+#include "toys_mem.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -11,7 +12,7 @@ toys_list* toys_list_create(void)
 {
 	struct toys_list* list;
 	
-	if((list = malloc(sizeof(*list))) == NULL)
+	if((list = TOYS_ALLOC(sizeof(*list))) == NULL)
 		return NULL;
 
 	list->head = list->tail = NULL;
@@ -40,7 +41,7 @@ void toys_list_release(toys_list *list)
 		cur = next;
 	}
 
-	free(list); 
+	TOYS_FREE(list); 
 }
 
 /*
@@ -55,7 +56,7 @@ toys_list *toys_list_add_node_head(toys_list *list,void *value)
 {
 	toys_list_node *node;
 
-	if((node = malloc(sizeof(*node))) == NULL)
+	if((node = TOYS_ALLOC(sizeof(*node))) == NULL)
 		return NULL;
 
 	node->value = value;
@@ -80,7 +81,7 @@ toys_list *toys_list_add_node_head(toys_list *list,void *value)
 
 toys_list *toys_list_add_node_tail(toys_list *list,void *value)
 {
-	toys_list_node *node = malloc(sizeof(*node)) ;
+	toys_list_node *node = TOYS_ALLOC(sizeof(*node)) ;
 
 	if(node == NULL)
 		return NULL;
@@ -107,7 +108,7 @@ toys_list *toys_list_add_node_tail(toys_list *list,void *value)
 
 toys_list *toys_list_insert_node(toys_list* list,toys_list_node* old_node,void *value,int pos)
 {
-	toys_list_node *node = malloc(sizeof(*node));
+	toys_list_node *node = TOYS_ALLOC(sizeof(*node));
 	
 	if(node == NULL)
 		return NULL;

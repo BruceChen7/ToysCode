@@ -29,11 +29,7 @@ toys_list* toys_list_add_node_tail(toys_list *list,void *value);
 toys_list* toys_list_insert_node(toys_list *list, toys_list_node *old_node, void *value,int pos); 
 
 //delete the specified node from the specified list
-void  toys_list_del_node(toys_list *list,toys_list_node *node);
-
-void toys_list_rotate(toys_list* list); 
-
-void toys_list_rewind(toys_list *list,toys_list_iter *li);
+void  toys_list_del_node(toys_list *list,toys_list_node *node); 
 
 
 toys_list_node* toys_list_index(toys_list* list,long index);
