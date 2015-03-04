@@ -70,8 +70,7 @@ toys_skiplist_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
 	toys_skip_list_node* x= sl->head;
 	toys_skip_list_node *update[TOYS_SKIP_LIST_MAX_LEVEL];
 
-	int i = TOYS_SKIP_LIST_MAX_LEVEL - 1;
-
+	int i = TOYS_SKIP_LIST_MAX_LEVEL - 1; 
 	
 	for(;i >= 0; i--)
 	{
