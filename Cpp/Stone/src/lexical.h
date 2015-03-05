@@ -2,7 +2,7 @@
 #define __STONE__SRC_LEXICAL__
 #include <string>
 #include <vector>
-
+#include <stdio.h>
 namespace Stone
 {
 	enum class Code_Token_Type
@@ -21,18 +21,17 @@ namespace Stone
 	class File {
 		public:
 			File(const char *filename);
-			int read_to_string(int max_size,std::string* content);
-			File(const File& another_file) = delete;
-
-			static int kBuferSize = 64 * 1024;
+			File(const File& another_file) = delete; 
+			File& operator=(const File&) = delete;
+			void read_to_string();
 		private:
-			int fd_;
-			char buf[kBuferSize]; 
-	
+			FILE *fd_;
+			std::vector<std::string> buffer; 
 	};
 
 	class Lexical { 
-		
+		public:
+			Lei 
 	
 		private:
 			std::vector<Token> token_list_;
