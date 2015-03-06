@@ -64,7 +64,7 @@ void toys_sl_free_list(toys_skip_list *sl)
 	TOYS_FREE(sl);
 }
 
-toys_skiplist_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
+toys_skip_list_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
 {
 	unsigned int  rank[TOYS_SKIP_LIST_MAX_LEVEL]; 
 	toys_skip_list_node* x= sl->head;
@@ -105,7 +105,7 @@ toys_skiplist_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
 	//insert the new node into the skip_list
 	x = toys_sl_create_node(level,score,value);
 	
-	for(i = 0 ;i < level i++)
+	for(i = 0 ;i < level; i++)
 	{
 		x->level[i].forward = update[i]->level[i].forward;
 		update[i]->level[i].forward = x;
@@ -114,7 +114,7 @@ toys_skiplist_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
 		update[i]->level[i].span = rank[0] - rank[i] + 1; 
 	}
 
-	for( i = level; i < sl->level, i++)
+	for( i = level; i < sl->level; i++)
 	{
 		update[i]->level[i].span++; 
 	}
@@ -129,4 +129,7 @@ toys_skiplist_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
 	return x; 
 }
 
-void toys_sl_delete_node(toys_skip_list* sl, toys_skiplist_node* node)
+void toys_sl_delete_node(toys_skip_list* sl, toys_skip_list_node* node)
+{
+
+}
