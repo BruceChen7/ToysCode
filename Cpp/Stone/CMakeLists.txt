@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 project(Compiler CXX)
 
 set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_COMPILER "clang++-3.5")
 
 include_directories(${PROJECT_SOURCE_DIR}/src/*.h)
 add_subdirectory(src)
+add_subdirectory(src/test)
  
 enable_testing()
-add_test(NAME lexical_unit_test COMMAND lexical_unit_test)
+add_test(NAME test_lexical COMMAND test_lexical)
 

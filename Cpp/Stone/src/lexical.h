@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 #include <stdio.h>
+#include <memory>
+
+
 namespace Stone
 {
 	enum class Code_Token_Type
@@ -23,20 +26,24 @@ namespace Stone
 			File(const char *filename);
 			File(const File& another_file) = delete; 
 			File& operator=(const File&) = delete;
-			void read_to_string();
+			void read2buffer();
+			std::shared_ptr<std::string >get_line(int pos);
+			~File();
 		private:
-			FILE *fd_;
-			std::vector<std::string> buffer; 
+			FILE *fp_;
+			std::vector<std::shared_ptr<std::string>> buffer_; 
 	};
 
 	class Lexical { 
 		public:
-			Lei 
-	
+			Lexical(File* source_code);
+			void parse();
+			bool is_string(std::string word) const;
+		   	bool is_number(std::string word) const;
+			bool is_interger(std::string word) const ;
 		private:
 			std::vector<Token> token_list_;
-			bool has_more_
-	
+			File* source_code_file_; 
 	};
 
 
