@@ -4,7 +4,19 @@
 #include <vector>
 #include <stdio.h>
 #include <memory>
+#include <stdio.h>
+
+
+//macros
 #define MAX_TOKEN_LEN 64
+#define ADD_ERROR_LIST(err_code_,err_vec_,line_num_) do \
+{														\
+	if(err_code_) {                                    \
+				::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s",line_num_,g_err_buf[err_code_]);\
+				err_vec_.push_back(g_status);\
+				err_code_ = 0;\
+	}\
+}while(0)
 
 namespace Stone
 {
@@ -13,7 +25,20 @@ namespace Stone
 	{
 		Identifier,
 		Integer,
-		String 
+		String,
+		While, 				//while
+		If,  				//if				
+		Add,				//+ 
+		Sub,  				//-
+		Mul,				// *
+		Div,				// /
+		Mod,				// %
+		LT,					// <
+		GT,					// >
+		LE,					// <=
+		GE,					// >=
+		EQ,					// == 
+		Assgin              // Assgin
 	};
 
 	struct Token{
@@ -44,7 +69,7 @@ namespace Stone
 			//each time get a token ,the 'src' points to next tokens to be get 
 			//and tokens is stored into dest
 			int get_next_token(const char **src, char *dest,int token_len);
-			void determin_token_type(const char *dest);
+			void determin_token_type(const char *dest,int line);
 			void parse();
 			bool is_string(const std::string& word) const;
 		   	bool is_number(const std::string& word) const;
@@ -53,8 +78,9 @@ namespace Stone
 		private:
 			std::vector<Token> token_list_;
 			File* source_code_file_; 
+			std::vector<std::string> err_vec_;
+			int err_code_; 
 	};
-
 
 }
 
