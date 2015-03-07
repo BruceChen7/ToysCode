@@ -31,7 +31,8 @@ toys_list* toys_list_insert_node(toys_list *list, toys_list_node *old_node, void
 //delete the specified node from the specified list
 void  toys_list_del_node(toys_list *list,toys_list_node *node); 
 
-
+//find the common node which both the lists have
+toys_list_node* toys_list_find_common_node(toys_list *list1,toys_list *list2);
 toys_list_node* toys_list_index(toys_list* list,long index);
 toys_list_node* toys_list_search_key(toys_list *list,void *key);
 

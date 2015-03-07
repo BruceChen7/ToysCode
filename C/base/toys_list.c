@@ -197,3 +197,36 @@ toys_list_node* toys_list_search_key(toys_list *list,void *key)
 
 }
 
+//find the common node both 'l1' and 'l2' have , not l1 and l2 has the same value but the same node in address space
+//the algorithm complexity is O(n)
+//
+toys_list_node* toys_list_find_common_node(toys_list *l1,toys_list *l2)
+{
+	int len1 = l1->len;
+	int len2 = l2->len;
+	
+	//p_long_head is the head which has more nodes;
+	toys_list_node* p_long_head = (len1 > len2 ? l1->head:l2->head);
+	toys_list_node* p_short_head = (len1 < len2 ? l1->head:l2->head);
+
+	int difflen = (len1 > len2 ? len1-len2 : len2-len1);
+	
+	toys_list_node * p_common_node = NULL;
+
+	while(difflen--)
+	{
+		p_long_head = p_long_head->next;
+	}
+
+	while(p_long_head && p_short_head && p_long_head != p_short_head)
+	{
+		p_long_head = p_long_head->next;	
+		p_short_head = p_short_head->next;
+	} 
+
+	if(p_long_head == p_short_head)
+		p_common_node = p_short_head;
+
+	return p_common_node; 
+
+}

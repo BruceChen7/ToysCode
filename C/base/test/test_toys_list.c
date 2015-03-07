@@ -57,8 +57,9 @@ START_TEST(test_toys_list_add_node_head)
 	ck_assert_int_eq(*(int *)(node->value),5); 
 
 	node = toys_list_search_key(list,&value2);
-	ck_assert_int_eq(*(int *)node->value,5);
-		
+	ck_assert_int_eq(*(int *)node->value,5); 
+
+
 }
 END_TEST
 
