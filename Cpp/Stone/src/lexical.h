@@ -8,11 +8,11 @@
 
 
 //macros
-#define MAX_TOKEN_LEN 64
-#define ADD_ERROR_LIST(err_code_,err_vec_,line_num_) do \
+#define MAX_TOKEN_LEN 128
+#define ADD_ERROR_LIST(_err_code,_err_vec,_line_num,_token) do \
 {														\
 	if(err_code_) {                                    \
-				::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s\n",line_num_,g_err_buf[err_code_]);\
+				::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s :: %s\n",_line_num,g_err_buf[_err_code],_token);\
 				err_vec_.push_back(g_status);\
 				err_code_ = 0;\
 	}\
@@ -76,6 +76,7 @@ namespace Stone
 			bool is_string(const std::string& word) const;
 			bool is_interger(const std::string& word) const ;
 			bool is_identifier(const std::string& word) const;
+			std::shared_ptr<struct Token> get_token_info(int pos);
 		private:
 			std::vector<Token> token_list_;
 			File* source_code_file_; 

@@ -64,43 +64,54 @@ Lexical::Lexical(File* source_code_file):source_code_file_(source_code_file),err
 
 bool Lexical::is_interger(const std::string& word) const 
 {
-	auto  len = word.length();
-	auto i = 0;
 	auto ptr = word.data(); 
 
-	while(i < len)
-	{
-		if(::isspace(*ptr))
-		{
-			ptr++;
-			continue;
-		}
-		else if(*ptr>='0' && *ptr <= '9')
-		{
-			ptr++;
-			continue;
-		}
-		else
-			return false;
-	}
-	return true; 
-}
+	//skip '-' or space  or '+'
+	if(*ptr == '-' || ::isspace(*ptr) || *ptr == '+' )
+		ptr++; 
 
+	while(*ptr != '\0')
+	{
+		if(*ptr >='0' && *ptr <= '9')
+			ptr++;
+		else 
+			return false; 
+	} 
+	return true;
+
+}
 bool Lexical::is_string(const std::string& word) const
 {
-
-	return false;
+	auto ptr = word.data(); 
+	auto len = word.length();
+	
+	if(ptr[0] == '"' && ptr[len-1] == '"')
+		return true;
+	else
+		return false; 
 }
 
 bool Lexical::is_identifier(const std::string& word)const
 {
+	auto ptr = word.data();
 
-	return false;
+	if(::isalpha(*ptr) || *ptr == '_')
+		ptr++;
+
+	while(*ptr != '\0')
+	{
+		if(::isalnum(*ptr) || *ptr == '_')
+		{
+			ptr++;
+		}
+		else 
+			return false; 
+	} 
+	return false; 
 }
 
 void Lexical::determin_token_type(const char *token,int line_num)
 { 
-	::fprintf(stdout,"%s\n",token);
 	assert(token != nullptr); 
 	auto str  =  std::string(token); 
 	
@@ -220,23 +231,35 @@ void Lexical::determin_token_type(const char *token,int line_num)
 		default:
 			if(::isalpha(*ptr) || *ptr == '_')
 			{
-				is_identifier(str);
-			
+				if(is_identifier(str))
+				{
+					tokens.type = Code_Token_Type::Identifier;
+				}
+
 			}
 			else if(::isdigit(*ptr))
-			{
-				
+			{	
+				if(is_interger(str))
+				{
+					tokens.type = Code_Token_Type::Integer;
+				}
+
 			} 
 			else if(*ptr == '"')
 			{
-				is_string(str);
+				if(is_string(str))
+				{
+					tokens.type = Code_Token_Type::String;
+				}
 			}
+			else
+				goto ERR;
+			break;
 		ERR:
 			err_code_ = 2;
-			ADD_ERROR_LIST(err_code_,err_vec_,line_num) ; 
+			ADD_ERROR_LIST(err_code_,err_vec_,line_num,ptr) ; 
 	}
-
-
+	token_list_.push_back(tokens); 
 }
 
 int Lexical::get_next_token(const char **src, char *dest,int token_length)
@@ -252,19 +275,14 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
 
 	auto cnt = 0;
 
+	//Fix Me 
+	// deal with a string with space 
 	while(!isspace(**src) && (**src) != '\0')
 	{
 		*dest = **src;
 		dest++;
 		(*src)++; 
 		cnt++; 
-		
-		if(cnt > MAX_TOKEN_LEN)	
-		{
-			//The Token is Too long
-			err_code_ = 1;
-			return -1;
-		} 
 	} 
 	//delete '\n'
 	if(dest[cnt-1] == '\n')
@@ -274,29 +292,33 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
 	return cnt; 
 }
 
+std::shared_ptr<struct Token> Lexical::get_token_info(int pos)
+{ 
+	return std::make_shared<struct Token>(token_list_.at(pos));
+}
 void Lexical::parse()
 {	
 	auto total_line_num = source_code_file_->get_file_line_num();
-	char tokens[MAX_TOKEN_LEN + 1];
+
+	char tokens[MAX_TOKEN_LEN * 2];
 	auto dest = tokens;
 
-	for(int i = 0 ; i < total_line_num; i++)
+	for(auto i = 1 ; i <= total_line_num; i++)
 	{
-		std::shared_ptr<std::string> line = source_code_file_->get_line(i); 
+		std::shared_ptr<std::string> line = source_code_file_->get_line(i-1); 
 		auto src = (*line).data();
 		
 		::memset(tokens,'\0',sizeof(tokens)); 
 		
 		while(get_next_token(&src,tokens,sizeof(tokens)) > 0)
 		{ 
-			ADD_ERROR_LIST(err_code_,err_vec_,i);
 
 			//skip the comment
 			if(::strncmp(tokens,"//",2) == 0)
 				break;
 
 			determin_token_type(tokens,i);
-			ADD_ERROR_LIST(err_code_,err_vec_,i);
+			ADD_ERROR_LIST(err_code_,err_vec_,i,tokens);
 
 			::memset(tokens,'\0',sizeof(tokens)); 
 		} 
@@ -306,6 +328,5 @@ void Lexical::parse()
 	// there will show something about error information
 	for(const auto& err_msg : err_vec_)
 		::fprintf(stderr,"%s",err_msg.data()); 
-
 }
 
