@@ -12,7 +12,7 @@
 #define ADD_ERROR_LIST(err_code_,err_vec_,line_num_) do \
 {														\
 	if(err_code_) {                                    \
-				::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s",line_num_,g_err_buf[err_code_]);\
+				::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s\n",line_num_,g_err_buf[err_code_]);\
 				err_vec_.push_back(g_status);\
 				err_code_ = 0;\
 	}\
@@ -26,10 +26,10 @@ namespace Stone
 		Identifier,
 		Integer,
 		String,
-		While, 				//while
-		If,  				//if				
-		Add,				//+ 
-		Sub,  				//-
+		While, 				// while
+		If,  				// if				
+		Add,				// + 
+		Sub,  				// -
 		Mul,				// *
 		Div,				// /
 		Mod,				// %
@@ -38,7 +38,9 @@ namespace Stone
 		LE,					// <=
 		GE,					// >=
 		EQ,					// == 
-		Assgin              // Assgin
+		Assgin,              // =
+		LBRACE,             // {
+		RBRACE,             // }
 	};
 
 	struct Token{
@@ -72,9 +74,8 @@ namespace Stone
 			void determin_token_type(const char *dest,int line);
 			void parse();
 			bool is_string(const std::string& word) const;
-		   	bool is_number(const std::string& word) const;
 			bool is_interger(const std::string& word) const ;
-			bool is_annotation(const std::string& word) const ;
+			bool is_identifier(const std::string& word) const;
 		private:
 			std::vector<Token> token_list_;
 			File* source_code_file_; 

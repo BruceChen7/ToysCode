@@ -6,9 +6,10 @@
 using namespace Stone;
 
 //global variables;
-const char * g_err_buf[1024] = {
+const char * g_err_buf[32] = {
 	"All is well",
 	"The Token Is Too Long",
+	"I Do Not know What The Symbol Is,May Be, You Should Use blank Character To Separate Them"
 }; 
 
 char g_status[1024];
@@ -61,7 +62,7 @@ Lexical::Lexical(File* source_code_file):source_code_file_(source_code_file),err
 { 
 }
 
-bool Lexical::is_number(const std::string& word) const 
+bool Lexical::is_interger(const std::string& word) const 
 {
 	auto  len = word.length();
 	auto i = 0;
@@ -85,8 +86,21 @@ bool Lexical::is_number(const std::string& word) const
 	return true; 
 }
 
+bool Lexical::is_string(const std::string& word) const
+{
+
+	return false;
+}
+
+bool Lexical::is_identifier(const std::string& word)const
+{
+
+	return false;
+}
+
 void Lexical::determin_token_type(const char *token,int line_num)
 { 
+	::fprintf(stdout,"%s\n",token);
 	assert(token != nullptr); 
 	auto str  =  std::string(token); 
 	
@@ -102,39 +116,61 @@ void Lexical::determin_token_type(const char *token,int line_num)
 			if(::strcmp(ptr,"+") == 0)
 			{
 				tokens.type	 =  Code_Token_Type::Add;
-				break; 
-			}
-			else 
+			} 
+			else
+				goto ERR;
+			break;
 
 		case '-':
 			if(::strcmp(ptr,"-") == 0)
 			{
 				tokens.type = Code_Token_Type::Sub;
-				break;
 			}
+			else
+				goto ERR;
+			break;
+
 		case '*': 
 			if(::strcmp(ptr,"*") == 0)
 			{
 				tokens.type = Code_Token_Type::Mul;
-				break;
 			}
+			else
+				goto ERR;
+			break;
+
 		case '/':
 			if(::strcmp(ptr,"/") == 0)
 			{ 
 				tokens.type = Code_Token_Type::Div;
-				break; 
 			}
+			else
+				goto ERR;
+			break;
+
+		case '%':
+			if(::strcmp(ptr,"%")==0)
+			{ 
+				tokens.type = Code_Token_Type::Div;
+			}
+			else 
+				goto ERR;
+			break;
+
 		case '=':
+
 			if(::strcmp(ptr,"=") == 0)
 			{
 				tokens.type = Code_Token_Type::Assgin;
-				break;
 			}
 			else if(::strcmp(ptr,"==") == 0)
 			{
 				tokens.type = Code_Token_Type::EQ;
 			}
-			
+			else 
+				goto ERR;
+			break; 
+
 		case '<':
 			if(::strcmp(ptr,"<") == 0)
 			{
@@ -144,18 +180,60 @@ void Lexical::determin_token_type(const char *token,int line_num)
 			else if(::strcmp(ptr,"<=") == 0)
 			{
 				tokens.type = Code_Token_Type::LE;
+				break;
 			}
+			else 
+				goto ERR;
+			break;
+
 		case '>':
 			if(::strcmp(ptr,">") == 0)
 			{
-				tokens.type = Code_Token_Type::Assgin;
-				break;
+				tokens.type = Code_Token_Type::GT;
 			}
 			else if(::strcmp(ptr,">=") == 0)
 			{
-				tokens.type = Code_Token_Type::EQ;
+				tokens.type = Code_Token_Type::GE;
 			} 
+			else 
+				goto ERR;
+			break;
 
+		case '{':
+			if(::strcmp(ptr,"{") == 0)
+			{
+				tokens.type = Code_Token_Type::LBRACE;
+			}
+			else 
+				goto ERR;
+			break;
+
+		case '}':
+			if(::strcmp(ptr,"}") == 0)
+			{
+				tokens.type = Code_Token_Type::RBRACE;
+			}
+			else 
+				goto ERR;
+			break; 
+			
+		default:
+			if(::isalpha(*ptr) || *ptr == '_')
+			{
+				is_identifier(str);
+			
+			}
+			else if(::isdigit(*ptr))
+			{
+				
+			} 
+			else if(*ptr == '"')
+			{
+				is_string(str);
+			}
+		ERR:
+			err_code_ = 2;
+			ADD_ERROR_LIST(err_code_,err_vec_,line_num) ; 
 	}
 
 
@@ -183,26 +261,21 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
 		
 		if(cnt > MAX_TOKEN_LEN)	
 		{
-			//there is something wrong with the token
+			//The Token is Too long
 			err_code_ = 1;
 			return -1;
-		}
-
-	}
-	
+		} 
+	} 
 	//delete '\n'
 	if(dest[cnt-1] == '\n')
 		dest[cnt-1] = '\0';
 
 	dest[cnt] = '\0';
-	return cnt;
-
-	
+	return cnt; 
 }
 
 void Lexical::parse()
 {	
-	source_code_file_->read2buffer();
 	auto total_line_num = source_code_file_->get_file_line_num();
 	char tokens[MAX_TOKEN_LEN + 1];
 	auto dest = tokens;
@@ -226,10 +299,13 @@ void Lexical::parse()
 			ADD_ERROR_LIST(err_code_,err_vec_,i);
 
 			::memset(tokens,'\0',sizeof(tokens)); 
-		}
-		
-	
+		} 
 	}
+
+	// if there is something wrong 
+	// there will show something about error information
+	for(const auto& err_msg : err_vec_)
+		::fprintf(stderr,"%s",err_msg.data()); 
 
 }
 
