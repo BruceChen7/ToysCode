@@ -75,7 +75,7 @@ namespace Stone
 			void parse();
 			bool is_string(const std::string& word) const;
 			bool is_interger(const std::string& word) const ;
-			bool is_identifier(const std::string& word) const;
+			bool is_identifier(const std::string& word);
 			std::shared_ptr<struct Token> get_token_info(int pos);
 		private:
 			std::vector<Token> token_list_;

@@ -84,6 +84,7 @@ bool Lexical::is_string(const std::string& word) const
 {
 	auto ptr = word.data(); 
 	auto len = word.length();
+
 	
 	if(ptr[0] == '"' && ptr[len-1] == '"')
 		return true;
@@ -91,9 +92,15 @@ bool Lexical::is_string(const std::string& word) const
 		return false; 
 }
 
-bool Lexical::is_identifier(const std::string& word)const
+bool Lexical::is_identifier(const std::string& word)
 {
 	auto ptr = word.data();
+
+	if(word.length() > MAX_TOKEN_LEN)
+	{
+		err_code_ = 1;
+		return false;
+	}
 
 	if(::isalpha(*ptr) || *ptr == '_')
 		ptr++;
@@ -107,7 +114,7 @@ bool Lexical::is_identifier(const std::string& word)const
 		else 
 			return false; 
 	} 
-	return false; 
+	return true; 
 }
 
 void Lexical::determin_token_type(const char *token,int line_num)
@@ -235,7 +242,9 @@ void Lexical::determin_token_type(const char *token,int line_num)
 				{
 					tokens.type = Code_Token_Type::Identifier;
 				}
-
+				else 
+					goto ERR; 
+				break;
 			}
 			else if(::isdigit(*ptr))
 			{	
@@ -243,7 +252,9 @@ void Lexical::determin_token_type(const char *token,int line_num)
 				{
 					tokens.type = Code_Token_Type::Integer;
 				}
-
+				else 
+					goto ERR;
+				break; 
 			} 
 			else if(*ptr == '"')
 			{
@@ -251,12 +262,15 @@ void Lexical::determin_token_type(const char *token,int line_num)
 				{
 					tokens.type = Code_Token_Type::String;
 				}
+				else 
+					goto ERR;
+				break;
 			}
 			else
 				goto ERR;
 			break;
 		ERR:
-			err_code_ = 2;
+			err_code_ = (err_code_ == 1 ? 1 : 2);
 			ADD_ERROR_LIST(err_code_,err_vec_,line_num,ptr) ; 
 	}
 	token_list_.push_back(tokens); 
@@ -305,7 +319,7 @@ void Lexical::parse()
 
 	for(auto i = 1 ; i <= total_line_num; i++)
 	{
-		std::shared_ptr<std::string> line = source_code_file_->get_line(i-1); 
+		auto line = source_code_file_->get_line(i-1); 
 		auto src = (*line).data();
 		
 		::memset(tokens,'\0',sizeof(tokens)); 
@@ -315,11 +329,8 @@ void Lexical::parse()
 
 			//skip the comment
 			if(::strncmp(tokens,"//",2) == 0)
-				break;
-
-			determin_token_type(tokens,i);
-			ADD_ERROR_LIST(err_code_,err_vec_,i,tokens);
-
+				break; 
+			determin_token_type(tokens,i); 
 			::memset(tokens,'\0',sizeof(tokens)); 
 		} 
 	}
