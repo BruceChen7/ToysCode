@@ -102,6 +102,7 @@ bool Lexical::is_identifier(const std::string& word)
 		return false;
 	}
 
+
 	if(::isalpha(*ptr) || *ptr == '_')
 		ptr++;
 
@@ -234,7 +235,19 @@ void Lexical::determin_token_type(const char *token,int line_num)
 			else 
 				goto ERR;
 			break; 
-			
+		case 'w':
+			if(::strcmp(ptr,"while")  == 0)
+			{
+				tokens.type = Code_Token_Type::While;
+				break;
+				
+			}
+		case 'i':
+			if(::strcmp(ptr,"if") == 0)
+			{
+				tokens.type = Code_Token_Type::If;
+				break;
+			} 
 		default:
 			if(::isalpha(*ptr) || *ptr == '_')
 			{

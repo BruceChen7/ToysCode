@@ -11,16 +11,11 @@ syntax  on
 filetype plugin  on
 filetype plugin indent on
 set t_Co=256
-"set hidden 
-"let g:solarized_termcolors=16
-"let g:solarized_termtrans = 1
-"set background=dark
-colorscheme atom-dark
+colorscheme seoul256
+set background=dark
 		 
  "Set mapleader
 let mapleader = ","
-" vundle
-filetype off
 set nocompatible 
 call plug#begin() 
 "plugins
@@ -29,8 +24,6 @@ Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/vimwiki' 
-Plug 'godlygeek/csapprox'
-"Bundle 'scrooloose/syntastic'
 Plug 'tomtom/tcomment_vim'
 Plug 'Valloric/YouCompleteMe' 
 Plug 'yonchu/accelerated-smooth-scroll'
@@ -38,8 +31,10 @@ Plug 'yonchu/accelerated-smooth-scroll'
 Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-fugitive' 
 "Bundle 'zhaocai/GoldenView.Vim'
+Plug 'junegunn/seoul256.vim'
 Plug 'jlanzarotta/bufexplorer'
 "Plug 'wincent/command-t'
+Plug 'vim-scripts/a.vim'
 call plug#end()            " required
 
 filetype plugin indent on 
@@ -58,17 +53,19 @@ map <leader>ss :e ~/.vimrc <cr>
 "Fast split the window
 noremap <leader>sp :split<cr>
 noremap <leader>v :vsp<CR>
+noremap <leader>a :A<CR>
+noremap <leader>as :AS<CR>
 nnoremap W :w<cr>
 nnoremap Q :q<cr>
 inoremap jj <ESC>
+
 """""" <ESC> mapping """"""""""
 
 " tab switch 
 noremap <C-H> :tabp<CR>
 noremap <C-L> :tabn<CR>
 noremap <C-J> :tabc<CR>
-noremap <C-K> :tabe<CR>
-
+noremap <C-K> :tabe<CR> 
 vnoremap < <gv 
 vnoremap > >gv
 " Fast convert to html
@@ -78,7 +75,10 @@ map tl :TagbarToggle<cr>
 let g:tagbar_width = 15
 
 " Ctrlp mapping
-map  cp :CtrlP<cr>
+nnoremap <leader>cp :CtrlP<cr>
+nnoremap <leader>mp :CtrlPMRUFiles<CR>
+nnoremap <leader>wp :CtrlPCurWD<CR>
+nnoremap <leader>bp :CtrlPBuffer<CR>
 
 
 """""""""""nerdtree """"""""""
