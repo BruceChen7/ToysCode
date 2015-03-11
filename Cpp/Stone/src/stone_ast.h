@@ -2,6 +2,7 @@
 #define __STONE_SRC_STONE_AST__
 #include <memory>
 #include <vector>
+#include "lexical.h"
 namespace Stone
 {
 	namespace Ast
@@ -42,7 +43,6 @@ namespace Stone
 				using Ptr = std::shared_ptr<AstNode>; 
 				virtual ~AstNode() = 0;
 				virtual void accept(AstVisitor *visitor) = 0;
-		
 		};
 		
 		class AstWithChildNode: public AstNode
@@ -57,9 +57,13 @@ namespace Stone
 		{
 			public:
 				using Ptr = std::shared_ptr<AstLeafNode> ;
-				virtual void accept(AstVisitor *visitor)  = 0;
+				virtual void accept(AstVisitor *visitor)  ;
+				AstLeafNode(struct Token* token);
 			private:
-				int line_num_;
+				std::string value_;
+				int line_num_; 
+				Code_Token_Type type_; 
+
 		};
 
 		class AstStatement:public AstWithChildNode
@@ -85,6 +89,12 @@ namespace Stone
 			public:
 				using Ptr = std::shared_ptr<AstPrimary>;
 				void accept(AstVisitor *visitor) override ;
+				AstPrimary(AstLeafNode* node);
+				AstPrimary(AstExpr::Ptr node);
+			private:
+				AstLeafNode::Ptr leaf_node_;
+				AstExpr::Ptr expr_node_; 
+
 		};
 		
 		class AstFactor:public AstWithChildNode 
@@ -98,6 +108,7 @@ namespace Stone
 		class AstNumber:public AstLeafNode
 		{
 			public:
+				AstNumber(struct Token* token);
 				using Ptr = std::shared_ptr<AstNumber>;
 				using WeakPtr = std::weak_ptr<AstNumber>;
 				void accept(AstVisitor *visitor)  override;
@@ -108,16 +119,24 @@ namespace Stone
 		{
 			public:
 				using Ptr= std::shared_ptr<AstIdentifier>;
-				using WeakPtr = std::weak_ptr<AstIdentifier>;
+				AstIdentifier(struct Token* token);
 				void accept(AstVisitor *visitor)  override;
-		
+			private:
+				std::string value_;
+				int line_num_; 
+				Code_Token_Type type_; 
 		};
-		class AstString:public AstNode 
+
+		class AstString:public AstLeafNode
 		{
 			public:
 				using Ptr = std::shared_ptr<AstString>;
-				using WeakPtr = std::shared_ptr<AstString>;
+				AstString(struct Token* token);
 				void accept(AstVisitor * vistor)  override;
+			private:
+				std::string value_;
+				int line_num_; 
+				Code_Token_Type type_; 
 		
 		};
 

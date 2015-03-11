@@ -30,14 +30,14 @@ namespace Stone
 	{
 		public:
 			Parser(Lexical *lex);
-			AstNode::Ptr parse_program();
+			AstProgram::Ptr parse_program();
 			AstNode::Ptr parse_statement();
 			AstNode::Ptr parse_simple();
-			AstNode::Ptr parse_expr();
+			AstExpr::Ptr parse_expr();
 			AstNode::Ptr parse_factor();
 			AstNode::Ptr parse_operation(); 
 			AstNode::Ptr parse_block();
-			AstNode::Ptr parse_primary(); 
+			AstPrimary::Ptr parse_primary(); 
 			struct Token* get_next_token();
 
 		private:

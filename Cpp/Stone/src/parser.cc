@@ -16,27 +16,26 @@ struct Token* Parser::get_next_token()
 	return p_token;
 }
 
-AstNode::Ptr Parser::parse_program()
+AstProgram::Ptr Parser::parse_program()
 { 
 	auto token = get_next_token();
 	return nullptr;
 }
 
-AstNode::Ptr Parser::parse_primary()
+AstPrimary::Ptr Parser::parse_primary()
 {
 	auto token = get_next_token();
 	auto ptr = token->value.data();
 
 	if(::strcmp(ptr,"(") == 0)
 	{
-		auto expr_node = parse_expr();
+		AstExpr::Ptr expr_node = parse_expr();
 
 		if(expr_node == nullptr)
 		{
 			LOG("Sytax Error",token->line_num);
 			return nullptr;
-		}
-
+		} 
 		else 
 		{
 			 token = get_next_token();
@@ -44,8 +43,9 @@ AstNode::Ptr Parser::parse_primary()
 
 			 if(::strcmp(ptr,")") == 0)
 			 {
-			 	
-			 
+
+			 	auto new_primary_node = new AstPrimary(expr_node);
+				return std::shared_ptr<AstPrimary>(new_primary_node);
 			 }
 			 else 
 			 {
@@ -58,12 +58,44 @@ AstNode::Ptr Parser::parse_primary()
 	}
 	else
 	{
+		AstPrimary *new_primary_node = nullptr;
+
+
 		if(token->type == Code_Token_Type::Identifier || token->type ==  Code_Token_Type::Integer || token->type == Code_Token_Type::String)
 		{
-			
-		
+			switch(token->type)
+			{
+				case Code_Token_Type::Identifier:
+				{
+
+					auto new_ast_identier_node  =  new AstIdentifier(token);
+					new_primary_node  = new AstPrimary(new_ast_identier_node); 
+					break;
+				}
+
+				case Code_Token_Type::Integer: 
+				{
+					auto new_ast_number_node  =  new AstNumber(token);
+					new_primary_node  = new AstPrimary(new_ast_number_node); 
+					break;
+				}
+
+				case Code_Token_Type::String:
+				{
+					auto new_ast_string_node = new AstString(token);
+					new_primary_node = new AstPrimary(new_ast_string_node);
+					break;
+				}
+				default:
+					break;
+			} 
+			return std::shared_ptr<AstPrimary>(new_primary_node);
 		}
-	
+		else 
+		{
+			LOG("Sytax Error",token->line_num);
+			return nullptr;
+		}
 	}
 		
 
@@ -79,7 +111,7 @@ AstNode::Ptr Parser::parse_factor()
 	return nullptr;
 }
 
-AstNode::Ptr  Parser::parse_expr()
+AstExpr::Ptr  Parser::parse_expr()
 {
 	return nullptr;
 }
