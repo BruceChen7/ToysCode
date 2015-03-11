@@ -31,12 +31,12 @@ namespace Stone
 		public:
 			Parser(Lexical *lex);
 			AstProgram::Ptr parse_program();
-			AstNode::Ptr parse_statement();
-			AstNode::Ptr parse_simple();
+			AstStatement::Ptr parse_statement();
+			AstSimple::Ptr parse_simple();
 			AstExpr::Ptr parse_expr();
-			AstNode::Ptr parse_factor();
+			AstFactor::Ptr parse_factor();
 			AstNode::Ptr parse_operation(); 
-			AstNode::Ptr parse_block();
+			AstBlock::Ptr parse_block();
 			AstPrimary::Ptr parse_primary(); 
 			struct Token* get_next_token();
 

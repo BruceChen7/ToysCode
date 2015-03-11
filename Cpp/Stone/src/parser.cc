@@ -16,32 +16,25 @@ struct Token* Parser::get_next_token()
 	return p_token;
 }
 
-AstProgram::Ptr Parser::parse_program()
-{ 
-	auto token = get_next_token();
-	return nullptr;
-}
 
 AstPrimary::Ptr Parser::parse_primary()
 {
 	auto token = get_next_token();
-	auto ptr = token->value.data();
 
-	if(::strcmp(ptr,"(") == 0)
+	if(token->type == Code_Token_Type::LBRACE)
 	{
 		AstExpr::Ptr expr_node = parse_expr();
 
 		if(expr_node == nullptr)
 		{
-			LOG("Sytax Error",token->line_num);
+			LOG("Syntax Error",token->line_num);
 			return nullptr;
 		} 
 		else 
 		{
 			 token = get_next_token();
-			 ptr = token->value.data();
 
-			 if(::strcmp(ptr,")") == 0)
+			 if(token->type == Code_Token_Type::RBRACE)
 			 {
 
 			 	auto new_primary_node = new AstPrimary(expr_node);
@@ -49,7 +42,7 @@ AstPrimary::Ptr Parser::parse_primary()
 			 }
 			 else 
 			 {
-				LOG("Sytax Error",token->line_num);
+				LOG("Syntax Error",token->line_num);
 				return nullptr;
 			 
 			 }
@@ -93,7 +86,7 @@ AstPrimary::Ptr Parser::parse_primary()
 		}
 		else 
 		{
-			LOG("Sytax Error",token->line_num);
+			LOG("Syntax Error",token->line_num);
 			return nullptr;
 		}
 	}
@@ -101,11 +94,21 @@ AstPrimary::Ptr Parser::parse_primary()
 
 }
 
-AstNode::Ptr Parser::parse_factor()
+AstStatement::Ptr Parser::parse_statement()
+{
+	return nullptr;
+
+}
+
+AstFactor::Ptr Parser::parse_factor()
 {
 	struct Token* token = get_next_token();
 	
 	if(::strcmp((token->value).data(),"-")) 
+	{
+
+	}
+	else
 	{
 	}
 	return nullptr;
@@ -113,12 +116,38 @@ AstNode::Ptr Parser::parse_factor()
 
 AstExpr::Ptr  Parser::parse_expr()
 {
-	return nullptr;
+	auto new_factor_node = parse_factor(); 
+	
+
+
 }
 
-AstNode::Ptr Parser::parse_block() 
+AstBlock::Ptr Parser::parse_block() 
 {
 
 	return nullptr;
 }
 
+AstProgram::Ptr Parser::parse_program()
+{
+
+	AstPrimary* new_ast_program_node; 
+
+	while(1)
+	{
+		auto new_ast_statement_node = parse_statement(); 
+		
+		if(new_ast_statement_node != nullptr)
+		{
+			
+		}
+		else 
+		{ 
+
+			
+		}
+	}
+	
+	
+
+}

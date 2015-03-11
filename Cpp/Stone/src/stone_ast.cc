@@ -27,11 +27,6 @@ void AstIdentifier::accept(AstVisitor* visitor)
 
 }
 
-AstIdentifier::AstIdentifier()
-{
-
-}
-
 AstString::AstString(struct Token* token):AstLeafNode(token)
 {
 
@@ -60,4 +55,14 @@ AstPrimary::AstPrimary(AstLeafNode *node):expr_node_(nullptr),leaf_node_(std::sh
 AstPrimary::AstPrimary(AstExpr::Ptr node):expr_node_(node),leaf_node_(nullptr)
 {
 
+}
+
+AstProgram::AstProgram():statement_{}
+{
+
+}
+void AstProgram::add_statement(AstStatement::Ptr node)
+{
+	statement_.push_back(node);
+	
 }
