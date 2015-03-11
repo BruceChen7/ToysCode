@@ -1,9 +1,9 @@
-#include "../lexical.h"
+#include "../parser.h"
 #define CATCH_CONFIG_MAIN 
 #include "../../../catch.hpp"
 using namespace Stone;
 
-TEST_CASE("File Unit Test && Lexical Unit test")
+TEST_CASE("Parser Unit")
 {
 	File* source_file = new File("while.st");
 	source_file->read2buffer();
@@ -24,7 +24,11 @@ TEST_CASE("File Unit Test && Lexical Unit test")
 	REQUIRE(lex->get_token_info(8)->type == Code_Token_Type::LT);
 	REQUIRE(lex->get_token_info(9)->type == Code_Token_Type::Integer);
 	REQUIRE(lex->get_token_info(10)->type == Code_Token_Type::LBRACE);
+
+	auto parser = std::make_shared<class Parser> (lex);
+	REQUIRE(parser->get_next_token()->type == Code_Token_Type::Identifier); 
 	delete lex;
 }
+
 
 

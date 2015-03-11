@@ -55,6 +55,7 @@ std::shared_ptr<std::string> File::get_line(int pos)
 File::~File()
 {
 	::fclose(fp_);
+	buffer_.~vector();
 }
 
 
@@ -319,9 +320,9 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
 	return cnt; 
 }
 
-std::shared_ptr<struct Token> Lexical::get_token_info(int pos)
+struct Token* Lexical::get_token_info(int pos)
 { 
-	return std::make_shared<struct Token>(token_list_.at(pos));
+	return &(token_list_.at(pos));
 }
 void Lexical::parse()
 {	
@@ -354,3 +355,6 @@ void Lexical::parse()
 		::fprintf(stderr,"%s",err_msg.data()); 
 }
 
+Lexical::~Lexical()
+{ 
+}

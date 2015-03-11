@@ -39,7 +39,7 @@ namespace Stone
 		class AstNode
 		{	
 			public:
-				using Ptr = std::shared_ptr<AstNode>;
+				using Ptr = std::shared_ptr<AstNode>; 
 				virtual ~AstNode() = 0;
 				virtual void accept(AstVisitor *visitor) = 0;
 		
@@ -58,6 +58,8 @@ namespace Stone
 			public:
 				using Ptr = std::shared_ptr<AstLeafNode> ;
 				virtual void accept(AstVisitor *visitor)  = 0;
+			private:
+				int line_num_;
 		};
 
 		class AstStatement:public AstWithChildNode
@@ -123,7 +125,6 @@ namespace Stone
 		{ 
 			public:
 				using Ptr = std::shared_ptr<AstBlock>;
-				using WeakPtr = std::weak_ptr<AstBlock>;
 				void accept(AstVisitor* visitor)  override;
 		};
 		class AstOperation:public AstLeafNode
@@ -132,13 +133,16 @@ namespace Stone
 				using Ptr = std::shared_ptr<AstOperation>;
 				using WeakPtr = std::weak_ptr<AstOperation>;
 				void accept(AstVisitor* visitor)  override;
+			private:
+				std::string operator_;
+
+			
 		};
 
 		class AstSimple:public AstWithChildNode
 		{
 			public:
 				using Ptr = std::shared_ptr<AstSimple>;
-				using WeakPtr = std::weak_ptr<AstSimple>;
 				void accept(AstVisitor* visitor) override;
 
 		};
@@ -147,8 +151,11 @@ namespace Stone
 		{
 			public:
 				using Ptr = std::shared_ptr<AstProgram>;
-				using WeakPtr = std::weak_ptr<AstProgram>;
 				void accept(AstVisitor* visitor)  override;
+			private:
+				AstStatement::Ptr statement_;
+
+
 		};
 
 		//A General Vistor
@@ -187,11 +194,11 @@ namespace Stone
 			public:
 				virtual void visit(AstWithChildNode *node) override;
 		};
-		class AstPrimary : public AstVisitor
+		class AstPrimaryVisitor : public AstVisitor
 		{
 			public:
-				virtual void visit(AstWithChildNode *node)
-		}
+				virtual void visit(AstWithChildNode *node) override;
+		};
 		class AstBlockVisitor:public AstVisitor
 		{
 			public:

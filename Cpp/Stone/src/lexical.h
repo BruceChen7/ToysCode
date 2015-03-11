@@ -47,7 +47,7 @@ namespace Stone
 		int line_num; 
 	 	Code_Token_Type type; 
 		std::string value;
-	};
+	}; 
 	
 	class File {
 		public:
@@ -56,7 +56,7 @@ namespace Stone
 			File& operator=(const File&) = delete;
 			void read2buffer();
 			int get_file_line_num() const;
-			std::shared_ptr<std::string >get_line(int pos);
+			std::shared_ptr<std::string>get_line(int pos);
 			~File();
 		private:
 			FILE *fp_;
@@ -76,7 +76,9 @@ namespace Stone
 			bool is_string(const std::string& word) const;
 			bool is_interger(const std::string& word) const ;
 			bool is_identifier(const std::string& word);
-			std::shared_ptr<struct Token> get_token_info(int pos);
+			struct Token* get_token_info(int pos);
+			Lexical& operator=(const Lexical&)  = delete;
+			~Lexical();
 		private:
 			std::vector<Token> token_list_;
 			File* source_code_file_; 
