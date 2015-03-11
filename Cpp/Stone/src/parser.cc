@@ -1,18 +1,22 @@
 #include "parser.h"
 #include "lexical.h"
 #include <string.h>
+#include <assert.h>
 using namespace Stone;
 using namespace Ast;
 
-Parser::Parser(Lexical* lex):lex_(std::make_shared<Lexical>(*lex)),parserd_token_num_(0)
+Parser::Parser(Lexical* lex):lex_(std::make_shared<Lexical>(*lex)),parsed_token_num_(0)
 { 
 
 }
 
 struct Token* Parser::get_next_token()
 { 
-	auto p_token = lex_->get_token_info(parserd_token_num_);
-	parserd_token_num_++;
+
+	auto token_num = lex_->get_token_num();
+	assert(parsed_token_num_ <= token_num);
+	auto p_token = lex_->get_token_info(parsed_token_num_);
+	parsed_token_num_++;
 	return p_token;
 }
 
@@ -118,6 +122,7 @@ AstExpr::Ptr  Parser::parse_expr()
 {
 	auto new_factor_node = parse_factor(); 
 	
+	return nullptr;
 
 
 }
@@ -131,7 +136,7 @@ AstBlock::Ptr Parser::parse_block()
 AstProgram::Ptr Parser::parse_program()
 {
 
-	AstPrimary* new_ast_program_node; 
+	AstProgram* new_ast_program_node = nullptr;
 
 	while(1)
 	{
@@ -139,15 +144,19 @@ AstProgram::Ptr Parser::parse_program()
 		
 		if(new_ast_statement_node != nullptr)
 		{
-			
+			new_ast_program_node->add_statement(new_ast_statement_node);
 		}
 		else 
-		{ 
+			break;
+	} 
+	struct Token *token = get_next_token();
 
-			
-		}
+	if(token->type == Code_Token_Type::Eof ||Code_Token_Type::Semicolon)
+	{
+		return new_ast_program_node;
 	}
-	
-	
-
+	else 
+	{
+		LOG("Syntax Error",token->line_num);	
+	} 
 }

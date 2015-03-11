@@ -345,7 +345,6 @@ void Lexical::parse()
 		
 		while(get_next_token(&src,tokens,sizeof(tokens)) > 0)
 		{ 
-
 			//skip the comment
 			if(::strncmp(tokens,"//",2) == 0)
 				break; 
@@ -353,11 +352,25 @@ void Lexical::parse()
 			::memset(tokens,'\0',sizeof(tokens)); 
 		} 
 	}
+	
+	//add Eof Token to represent the end of file
+	struct Token eof_token;
+	eof_token.type = Code_Token_Type::Eof;
+	eof_token.line_num = total_line_num; 
+	eof_token.value = std::string("");
+	token_list_.push_back(eof_token);
+
+
 
 	// if there is something wrong 
 	// there will show something about error information
 	for(const auto& err_msg : err_vec_)
 		::fprintf(stderr,"%s",err_msg.data()); 
+}
+
+size_t Lexical::get_token_num()
+{
+	return token_list_.size(); 
 }
 
 Lexical::~Lexical()

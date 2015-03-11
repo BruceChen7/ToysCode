@@ -41,6 +41,8 @@ namespace Stone
 		Assgin,              // =
 		LBRACE,             // {
 		RBRACE,             // }
+		Eof,					//stand for the end of file
+		Semicolon           //
 	};
 
 	struct Token{
@@ -49,7 +51,8 @@ namespace Stone
 		std::string value;
 	}; 
 	
-	class File {
+	class File 
+	{
 		public:
 			File(const char *filename);
 			File(const File* another_file);
@@ -76,6 +79,7 @@ namespace Stone
 			bool is_string(const std::string& word) const;
 			bool is_interger(const std::string& word) const ;
 			bool is_identifier(const std::string& word);
+			size_t get_token_num();
 			struct Token* get_token_info(int pos);
 			Lexical& operator=(const Lexical&)  = delete;
 			~Lexical();

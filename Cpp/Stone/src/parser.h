@@ -42,7 +42,7 @@ namespace Stone
 
 		private:
 			std::shared_ptr<Lexical> lex_; 
-			int parserd_token_num_;
+			int parsed_token_num_;
 
 	};
 }
