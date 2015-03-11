@@ -23,7 +23,8 @@ TEST_CASE("File Unit Test && Lexical Unit test")
 	REQUIRE(lex->get_token_info(7)->type == Code_Token_Type::Identifier);
 	REQUIRE(lex->get_token_info(8)->type == Code_Token_Type::LT);
 	REQUIRE(lex->get_token_info(9)->type == Code_Token_Type::Integer);
-	REQUIRE(lex->get_token_info(10)->type == Code_Token_Type::LBRACE);
+	REQUIRE(lex->get_token_info(10)->type == Code_Token_Type::LBRACE); 
+	delete source_file;
 	delete lex;
 }
 

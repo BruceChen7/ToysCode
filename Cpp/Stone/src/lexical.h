@@ -52,7 +52,7 @@ namespace Stone
 	class File {
 		public:
 			File(const char *filename);
-			File(const File& another_file) = delete; 
+			File(const File* another_file);
 			File& operator=(const File&) = delete;
 			void read2buffer();
 			int get_file_line_num() const;
@@ -81,7 +81,7 @@ namespace Stone
 			~Lexical();
 		private:
 			std::vector<Token> token_list_;
-			File* source_code_file_; 
+			std::shared_ptr<File> source_code_file_; 
 			std::vector<std::string> err_vec_;
 			int err_code_; 
 	};

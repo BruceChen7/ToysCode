@@ -52,14 +52,19 @@ std::shared_ptr<std::string> File::get_line(int pos)
 }
 
 
+File::File(const File* another_file)
+{ 
+	line_num_ = another_file->line_num_;
+	fp_ = another_file->fp_;
+	buffer_ = another_file->buffer_;
+}
+
 File::~File()
 {
-	::fclose(fp_);
-	buffer_.~vector();
 }
 
 
-Lexical::Lexical(File* source_code_file):source_code_file_(source_code_file),err_code_(0)
+Lexical::Lexical(File* source_code_file):source_code_file_(std::make_shared<File>(source_code_file)),err_code_(0)
 { 
 }
 
