@@ -66,6 +66,28 @@ namespace Stone
 
 		};
 
+		class AstNumber:public AstLeafNode
+		{
+			public:
+				AstNumber(struct Token* token);
+				using Ptr = std::shared_ptr<AstNumber>;
+				using WeakPtr = std::weak_ptr<AstNumber>;
+				void accept(AstVisitor *visitor) ;
+		
+		};
+
+		class AstOperation:public AstLeafNode
+		{
+			public:
+				using Ptr = std::shared_ptr<AstOperation>;
+				AstOperation(struct Token *token);
+				void accept(AstVisitor* visitor)  ;
+			private:
+				std::string operator_;
+
+			
+		};
+
 		class AstStatement:public AstWithChildNode
 		{
 			public:
@@ -75,44 +97,34 @@ namespace Stone
 				std::vector<AstNode::Ptr> child_;
 		};
 
-		class AstExpr:public AstWithChildNode
-		{
-			public:
-				using Ptr = std::shared_ptr<AstExpr>;
-				void accept(AstVisitor *visitor) ;
-			private:
-				std::vector<AstNode::Ptr> child_;
-		};
 
-		class AstPrimary:public AstWithChildNode
-		{
-			public:
-				using Ptr = std::shared_ptr<AstPrimary>;
-				void accept(AstVisitor *visitor) ;
-				AstPrimary(AstLeafNode* node);
-				AstPrimary(AstExpr::Ptr node);
-			private:
-				AstLeafNode::Ptr leaf_node_;
-				AstExpr::Ptr expr_node_; 
-
-		};
 		
 		class AstFactor:public AstWithChildNode 
 		{
 			public:
 				using Ptr = std::shared_ptr<AstFactor>;
-				using WeakPtr = std::shared_ptr<AstFactor>;
 				void accept(AstVisitor * vistor) ;
 		};
 
-		class AstNumber:public AstLeafNode
+
+		class AstExpr:public AstWithChildNode
 		{
 			public:
-				AstNumber(struct Token* token);
-				using Ptr = std::shared_ptr<AstNumber>;
-				using WeakPtr = std::weak_ptr<AstNumber>;
+				struct AstOpFactor 
+				{
+					AstOperation::Ptr op;
+					AstFactor::Ptr factor;
+				
+				};
+				using AstOPFactor = struct Ast_OP_Factor;
+
+				using Ptr = std::shared_ptr<AstExpr>;
+				AstExpr(AstFactor::Ptr node);
+				void add_op_factor(AstOperation::Ptr op,AstFactor::Ptr factor);
 				void accept(AstVisitor *visitor) ;
-		
+			private:
+				AstFactor::Ptr factor_;
+				std::vector<AstOpFactor> ast_op_factor_; 
 		};
 
 		class AstIdentifier:public AstLeafNode
@@ -146,23 +158,25 @@ namespace Stone
 				using Ptr = std::shared_ptr<AstBlock>;
 				void accept(AstVisitor* visitor)  ;
 		};
-		class AstOperation:public AstLeafNode
-		{
-			public:
-				using Ptr = std::shared_ptr<AstOperation>;
-				using WeakPtr = std::weak_ptr<AstOperation>;
-				void accept(AstVisitor* visitor)  ;
-			private:
-				std::string operator_;
-
-			
-		};
 
 		class AstSimple:public AstWithChildNode
 		{
 			public:
 				using Ptr = std::shared_ptr<AstSimple>;
 				void accept(AstVisitor* visitor) ;
+
+		};
+
+		class AstPrimary:public AstWithChildNode
+		{
+			public:
+				using Ptr = std::shared_ptr<AstPrimary>;
+				void accept(AstVisitor *visitor) ;
+				AstPrimary(AstLeafNode* node);
+				AstPrimary(AstExpr::Ptr node);
+			private:
+				AstLeafNode::Ptr leaf_node_;
+				AstExpr::Ptr expr_node_; 
 
 		};
 
@@ -262,12 +276,7 @@ namespace Stone
 		{
 			public:
 				virtual void visit(AstLeafNode *Node) override ;
-		};
-
-
-
-	}
-
-
+		}; 
+	} 
 }
 #endif

@@ -21,6 +21,11 @@ AstIdentifier::AstIdentifier(struct Token* token):AstLeafNode(token)
 { 
 }
 
+AstOperation::AstOperation(struct Token* token):AstLeafNode(token)
+{
+
+}
+
 void AstIdentifier::accept(AstVisitor* visitor)
 { 
 	visitor->visit(this);
@@ -47,6 +52,16 @@ void AstNumber::accept(AstVisitor* visitor)
 	visitor->visit(this); 
 }
 
+AstExpr::AstExpr(AstFactor::Ptr node)
+{
+	
+}
+void AstExpr::add_op_factor(AstOperation::Ptr op,AstFactor::Ptr factor)
+{
+	AstExpr::AstOpFactor op_factor{op,factor}; 
+	ast_op_factor_.push_back(op_factor);
+}
+
 AstPrimary::AstPrimary(AstLeafNode *node):expr_node_(nullptr),leaf_node_(std::shared_ptr<AstLeafNode>(node))
 { 
 
@@ -66,3 +81,4 @@ void AstProgram::add_statement(AstStatement::Ptr node)
 	statement_.push_back(node);
 	
 }
+

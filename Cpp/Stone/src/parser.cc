@@ -118,11 +118,36 @@ AstFactor::Ptr Parser::parse_factor()
 	return nullptr;
 }
 
+AstOperation::Ptr Parser::parse_operation()
+{
+	return nullptr;
+}
+
 AstExpr::Ptr  Parser::parse_expr()
 {
 	auto new_factor_node = parse_factor(); 
-	
-	return nullptr;
+	AstExpr::Ptr new_expr_node;
+
+	if(new_factor_node == nullptr)
+		return nullptr;
+	else 
+		new_expr_node = std::shared_ptr<AstExpr>(new AstExpr(new_factor_node));
+
+	while(1)
+	{
+		auto new_operation_node = parse_operation();
+		auto new_factor_node = parse_factor();
+
+		if(new_operation_node != nullptr && new_factor_node != nullptr)
+		{ 
+			new_expr_node->add_op_factor(new_operation_node,new_factor_node);
+			continue;
+
+		}
+		else 
+			break; 
+	} 
+	return new_expr_node;
 
 
 }
@@ -151,7 +176,7 @@ AstProgram::Ptr Parser::parse_program()
 	} 
 	struct Token *token = get_next_token();
 
-	if(token->type == Code_Token_Type::Eof ||Code_Token_Type::Semicolon)
+	if(token->type == Code_Token_Type::Eof ||token->type == Code_Token_Type::Semicolon)
 	{
 		return new_ast_program_node;
 	}

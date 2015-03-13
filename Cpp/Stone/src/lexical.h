@@ -55,37 +55,44 @@ namespace Stone
 	{
 		public:
 			File(const char *filename);
-			File(const File* another_file);
+			File(const File* another_file) = delete;
 			File& operator=(const File&) = delete;
 			void read2buffer();
 			int get_file_line_num() const;
-			std::shared_ptr<std::string>get_line(int pos);
+			std::string* get_line(int pos);
 			~File();
 		private:
-			FILE *fp_;
-			std::vector<std::shared_ptr<std::string>> buffer_; 
+			FILE* fp_;
+			std::vector<std::string> buffer_; 
 			int line_num_;
 	};
 
-	class Lexical { 
+	class Lexical 
+	{ 
 		public:
-			Lexical(File* source_code);
+			Lexical(const char * source);
+			void parse();
+			size_t get_token_num();
+			struct Token* get_token_info(int pos);
+			Lexical& operator=(const Lexical&)  = delete;
+			Lexical(const Lexical&) = delete;
+			~Lexical();
+		private:
+			//Method
+			void determin_token_type(const char *dest,int line);
+			bool is_string(const std::string& word) const;
+			bool is_interger(const std::string& word) const ;
+			bool is_identifier(const std::string& word);
+
 			//ensure dest has enough space to contain tokens
 			//each time get a token ,the 'src' points to next tokens to be get 
 			//and tokens is stored into dest
 			int get_next_token(const char **src, char *dest,int token_len);
-			void determin_token_type(const char *dest,int line);
-			void parse();
-			bool is_string(const std::string& word) const;
-			bool is_interger(const std::string& word) const ;
-			bool is_identifier(const std::string& word);
-			size_t get_token_num();
-			struct Token* get_token_info(int pos);
-			Lexical& operator=(const Lexical&)  = delete;
-			~Lexical();
-		private:
+			void add_eof_to_tail();
+
+			//data member
+			std::unique_ptr<File> source_code_file_;
 			std::vector<Token> token_list_;
-			std::shared_ptr<File> source_code_file_; 
 			std::vector<std::string> err_vec_;
 			int err_code_; 
 	};

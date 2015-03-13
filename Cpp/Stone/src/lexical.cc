@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <assert.h>
-#define kBufferSize (16 * 1024)
+#define kBufferSize (1024)
 using namespace Stone;
 
 //global variables;
@@ -18,24 +18,23 @@ File::File(const char* file_name):fp_(fopen(file_name,"r")),line_num_(0)
 { 
 	buffer_.reserve(kBufferSize);
 
-	if(fp_ == NULL)
+	if(fp_ == nullptr)
 	{ 
 		::fprintf(stderr,"can't open the source code for read\n");
 		exit(0); 
-	}
-
+	} 
 }
 
 void File::read2buffer()
 {
 
-	assert(fp_ != NULL); 
+	assert(fp_ != nullptr); 
 	//a buffer to store source code per line 
 	char buffer[1024]; 
 
 	while(::fgets(buffer,sizeof(buffer)-1,fp_))
 	{ 
-		auto tokens_per_line = std::make_shared<std::string>(buffer); 
+		auto tokens_per_line = std::string(buffer);
 		buffer_.push_back(tokens_per_line); 
 		line_num_++;
 	} 
@@ -46,26 +45,25 @@ int File::get_file_line_num() const
 	return line_num_;
 }
 
-std::shared_ptr<std::string> File::get_line(int pos)
-{
-	return buffer_[pos];
-}
-
-
-File::File(const File* another_file)
+std::string* File::get_line(int pos)
 { 
-	line_num_ = another_file->line_num_;
-	fp_ = another_file->fp_;
-	buffer_ = another_file->buffer_;
+	if(pos < buffer_.size()) 
+		return &buffer_[pos];
+	else 
+		return nullptr;
 }
+
+
 
 File::~File()
 {
+	if(fp_ != nullptr)
+		fclose(fp_);
 }
 
-
-Lexical::Lexical(File* source_code_file):source_code_file_(std::make_shared<File>(source_code_file)),err_code_(0)
+Lexical::Lexical(const char *file_name):source_code_file_(std::unique_ptr<File>(new File(file_name))),err_code_(0) 
 { 
+	source_code_file_->read2buffer(); 
 }
 
 bool Lexical::is_interger(const std::string& word) const 
@@ -354,18 +352,22 @@ void Lexical::parse()
 	}
 	
 	//add Eof Token to represent the end of file
-	struct Token eof_token;
-	eof_token.type = Code_Token_Type::Eof;
-	eof_token.line_num = total_line_num; 
-	eof_token.value = std::string("");
-	token_list_.push_back(eof_token);
-
-
+	add_eof_to_tail();
 
 	// if there is something wrong 
 	// there will show something about error information
 	for(const auto& err_msg : err_vec_)
 		::fprintf(stderr,"%s",err_msg.data()); 
+}
+
+void Lexical::add_eof_to_tail()
+{
+	auto total_line_num = source_code_file_->get_file_line_num();
+	struct Token eof_token;
+	eof_token.type = Code_Token_Type::Eof;
+	eof_token.line_num = total_line_num; 
+	eof_token.value = std::string("");
+	token_list_.push_back(eof_token); 
 }
 
 size_t Lexical::get_token_num()
@@ -374,5 +376,7 @@ size_t Lexical::get_token_num()
 }
 
 Lexical::~Lexical()
-{ 
+{
+
+
 }

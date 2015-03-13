@@ -35,7 +35,7 @@ namespace Stone
 			AstSimple::Ptr parse_simple();
 			AstExpr::Ptr parse_expr();
 			AstFactor::Ptr parse_factor();
-			AstNode::Ptr parse_operation(); 
+			AstOperation::Ptr parse_operation(); 
 			AstBlock::Ptr parse_block();
 			AstPrimary::Ptr parse_primary(); 
 			struct Token* get_next_token();
