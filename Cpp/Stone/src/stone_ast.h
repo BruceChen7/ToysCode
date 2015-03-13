@@ -83,48 +83,7 @@ namespace Stone
 				AstOperation(struct Token *token);
 				void accept(AstVisitor* visitor)  ;
 			private:
-				std::string operator_;
-
-			
-		};
-
-		class AstStatement:public AstWithChildNode
-		{
-			public:
-				using Ptr = std::shared_ptr<AstStatement> ;
-				void accept(AstVisitor* visitor); 
-			private:
-				std::vector<AstNode::Ptr> child_;
-		};
-
-
-		
-		class AstFactor:public AstWithChildNode 
-		{
-			public:
-				using Ptr = std::shared_ptr<AstFactor>;
-				void accept(AstVisitor * vistor) ;
-		};
-
-
-		class AstExpr:public AstWithChildNode
-		{
-			public:
-				struct AstOpFactor 
-				{
-					AstOperation::Ptr op;
-					AstFactor::Ptr factor;
-				
-				};
-				using AstOPFactor = struct Ast_OP_Factor;
-
-				using Ptr = std::shared_ptr<AstExpr>;
-				AstExpr(AstFactor::Ptr node);
-				void add_op_factor(AstOperation::Ptr op,AstFactor::Ptr factor);
-				void accept(AstVisitor *visitor) ;
-			private:
-				AstFactor::Ptr factor_;
-				std::vector<AstOpFactor> ast_op_factor_; 
+				std::string operator_; 
 		};
 
 		class AstIdentifier:public AstLeafNode
@@ -151,6 +110,35 @@ namespace Stone
 				Code_Token_Type type_; 
 		
 		};
+
+		
+		class AstFactor:public AstWithChildNode 
+		{
+			public:
+				using Ptr = std::shared_ptr<AstFactor>;
+				void accept(AstVisitor * vistor) ;
+		};
+
+		class AstExpr:public AstWithChildNode
+		{
+			public:
+				struct AstOpFactor 
+				{
+					AstOperation::Ptr op;
+					AstFactor::Ptr factor;
+				
+				};
+				using AstOPFactor = struct Ast_OP_Factor;
+
+				using Ptr = std::shared_ptr<AstExpr>;
+				AstExpr(AstFactor::Ptr node);
+				void add_op_factor(AstOperation::Ptr op,AstFactor::Ptr factor);
+				void accept(AstVisitor *visitor) ;
+			private:
+				AstFactor::Ptr factor_;
+				std::vector<AstOpFactor> ast_op_factor_; 
+		};
+
 
 		class AstBlock:public AstWithChildNode
 		{ 
@@ -179,6 +167,28 @@ namespace Stone
 				AstExpr::Ptr expr_node_; 
 
 		};
+
+		class AstStatement:public AstWithChildNode
+		{
+			public:
+				struct AstIfExprBlock
+				{
+					AstLeafNode::Ptr if_;
+					AstExpr::Ptr expr_;
+					AstBlock::Ptr if_block_; 
+					AstLeafNode::Ptr else_; 
+					AstBlock::Ptr else_block_; 
+				};
+				
+				using AstIfElseBlock = struct AstIfExprBlock; 
+				using Ptr = std::shared_ptr<AstStatement> ;
+				AstStatement(AstLeafNode::Ptr if_node,AstExpr::Ptr expr,AstBlock::Ptr if_block,AstLeafNode::Ptr else_node,AstBlock::Ptr else_block );
+				void accept(AstVisitor* visitor); 
+			private: 
+				AstIfElseBlock statement_; 
+
+		};
+
 
 		class AstProgram:public AstWithChildNode
 		{

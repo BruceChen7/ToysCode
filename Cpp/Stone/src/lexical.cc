@@ -308,7 +308,7 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
 
 	//Fix Me 
 	// deal with a string with space 
-	while(!isspace(**src) && (**src) != '\0')
+	while(!isspace(**src) && (**src) != '\0' && (**src) != ';')
 	{
 		*dest = **src;
 		dest++;

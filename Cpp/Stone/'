@@ -37,12 +37,20 @@ AstString::AstString(struct Token* token):AstLeafNode(token)
 
 }
 
+void AstString::accept(AstVisitor* visitor)
+{
+	visitor->visit(this);
+}
 
 AstNumber::AstNumber(struct Token *token):AstLeafNode(token)
 {
 
 }
 
+void AstNumber::accept(AstVisitor* visitor)
+{
+	visitor->visit(this); 
+}
 
 AstExpr::AstExpr(AstFactor::Ptr node)
 {
@@ -60,9 +68,8 @@ AstPrimary::AstPrimary(AstLeafNode *node):expr_node_(nullptr),
 
 }
 
-AstPrimary::AstPrimary(AstExpr::Ptr node):expr_node_(node)
-										  ,leaf_node_(nullptr)
-{ 
+AstPrimary::AstPrimary(AstExpr::Ptr node):expr_node_(node),leaf_node_(nullptr)
+{
 
 }
 
@@ -70,9 +77,10 @@ AstStatement::AstStatement(AstLeafNode::Ptr if_node,
 						   AstExpr::Ptr expr,
 						   AstBlock::Ptr if_block,
 						   AstLeafNode::Ptr else_node,
-						   AstBlock::Ptr else_block):statement_{if_node,expr,if_block,else_node,else_block}
-{ 
-	
+						   AstBlock::Ptr else_block):statement_->if_(if),statement_->
+{
+
+
 
 }
 
@@ -86,12 +94,3 @@ void AstProgram::add_statement(AstStatement::Ptr node)
 	
 }
 
-void AstNumber::accept(AstVisitor* visitor)
-{
-	visitor->visit(this); 
-}
-
-void AstString::accept(AstVisitor* visitor)
-{
-	visitor->visit(this);
-}

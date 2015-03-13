@@ -2,10 +2,11 @@
 #include "lexical.h"
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 using namespace Stone;
 using namespace Ast;
 
-Parser::Parser(Lexical* lex):lex_(std::make_shared<Lexical>(*lex)),parsed_token_num_(0)
+Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_(0)
 { 
 
 }
@@ -65,8 +66,8 @@ AstPrimary::Ptr Parser::parse_primary()
 				case Code_Token_Type::Identifier:
 				{
 
-					auto new_ast_identier_node  =  new AstIdentifier(token);
-					new_primary_node  = new AstPrimary(new_ast_identier_node); 
+					auto new_ast_identifier_node  =  new AstIdentifier(token);
+					new_primary_node  = new AstPrimary(new_ast_identifier_node); 
 					break;
 				}
 
@@ -98,10 +99,57 @@ AstPrimary::Ptr Parser::parse_primary()
 
 }
 
-AstStatement::Ptr Parser::parse_statement()
+AstSimple::Ptr Parser::parse_simple()
 {
 	return nullptr;
+}
 
+AstStatement::Ptr Parser::parse_statement()
+{
+	auto token_pos = parsed_token_num_;
+	auto token = get_next_token(); 
+	auto value = token->value.data();
+	AstStatement::Ptr new_statement_node = nullptr;
+	AstExpr::Ptr new_expr_node = nullptr;
+	AstSimple::Ptr new_simple_node = nullptr;
+	AstBlock::Ptr new_block_node = nullptr;
+	AstLeafNode::Ptr new_if_node = nullptr;
+
+	if(::strcmp(value,"if") == 0)
+	{ 
+		new_expr_node = parse_expr(); 
+		
+		if(new_expr_node == nullptr)
+			goto Err;
+		else 
+		{
+			new_block_node = parse_block();
+			if(new_block_node == nullptr)
+			{
+				goto Err;
+			}
+		} 
+
+		new_if_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
+		new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_if_node,new_expr_node,new_block_node,nullptr,nullptr));
+
+	}
+	else if(strcmp(value,"while") == 0)
+	{
+		
+	}
+	else 
+	{
+		new_simple_node = parse_simple();
+		
+		if(new_simple_node == nullptr)
+			goto Err; 
+	} 
+
+	Err:
+		LOG("Syntax Error In Line",token->line_num);
+
+	return new_statement_node;
 }
 
 AstFactor::Ptr Parser::parse_factor()
@@ -154,6 +202,9 @@ AstExpr::Ptr  Parser::parse_expr()
 
 AstBlock::Ptr Parser::parse_block() 
 {
+	auto token =  get_next_token();
+
+
 
 	return nullptr;
 }
@@ -161,27 +212,29 @@ AstBlock::Ptr Parser::parse_block()
 AstProgram::Ptr Parser::parse_program()
 {
 
-	AstProgram* new_ast_program_node = nullptr;
-
-	while(1)
-	{
-		auto new_ast_statement_node = parse_statement(); 
+	auto token_pos  = parsed_token_num_;
+	AstProgram* new_ast_program_node = nullptr; 
+	auto new_ast_statement_node = parse_statement(); 
 		
-		if(new_ast_statement_node != nullptr)
-		{
+	if(new_ast_statement_node != nullptr)
+	{
 			new_ast_program_node->add_statement(new_ast_statement_node);
-		}
-		else 
-			break;
-	} 
+	}
+	else 
+	{
+		parsed_token_num_ = token_pos; 
+	}
+
 	struct Token *token = get_next_token();
 
 	if(token->type == Code_Token_Type::Eof ||token->type == Code_Token_Type::Semicolon)
 	{
-		return new_ast_program_node;
+		return std::shared_ptr<AstProgram>(new_ast_program_node);
 	}
 	else 
 	{
-		LOG("Syntax Error",token->line_num);	
+		LOG("Syntax Error In Line : ",token->line_num);	
+		return nullptr;
 	} 
+
 }

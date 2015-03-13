@@ -41,7 +41,7 @@ namespace Stone
 			struct Token* get_next_token();
 
 		private:
-			std::shared_ptr<Lexical> lex_; 
+			std::unique_ptr<Lexical> lex_; 
 			int parsed_token_num_;
 
 	};
