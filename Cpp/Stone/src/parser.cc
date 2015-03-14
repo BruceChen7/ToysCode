@@ -99,58 +99,7 @@ AstPrimary::Ptr Parser::parse_primary()
 
 }
 
-AstSimple::Ptr Parser::parse_simple()
-{
-	return nullptr;
-}
 
-AstStatement::Ptr Parser::parse_statement()
-{
-	auto token_pos = parsed_token_num_;
-	auto token = get_next_token(); 
-	auto value = token->value.data();
-	AstStatement::Ptr new_statement_node = nullptr;
-	AstExpr::Ptr new_expr_node = nullptr;
-	AstSimple::Ptr new_simple_node = nullptr;
-	AstBlock::Ptr new_block_node = nullptr;
-	AstLeafNode::Ptr new_if_node = nullptr;
-
-	if(::strcmp(value,"if") == 0)
-	{ 
-		new_expr_node = parse_expr(); 
-		
-		if(new_expr_node == nullptr)
-			goto Err;
-		else 
-		{
-			new_block_node = parse_block();
-			if(new_block_node == nullptr)
-			{
-				goto Err;
-			}
-		} 
-
-		new_if_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
-		new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_if_node,new_expr_node,new_block_node,nullptr,nullptr));
-
-	}
-	else if(strcmp(value,"while") == 0)
-	{
-		
-	}
-	else 
-	{
-		new_simple_node = parse_simple();
-		
-		if(new_simple_node == nullptr)
-			goto Err; 
-	} 
-
-	Err:
-		LOG("Syntax Error In Line",token->line_num);
-
-	return new_statement_node;
-}
 
 AstFactor::Ptr Parser::parse_factor()
 {
@@ -203,15 +152,141 @@ AstExpr::Ptr  Parser::parse_expr()
 AstBlock::Ptr Parser::parse_block() 
 {
 	auto token =  get_next_token();
+	
+	if(token->type == Code_Token_Type::LBRACE) 
+	{
+
+		auto token_pos = parsed_token_num_;
+		auto new_statement_node = parse_statement(); 
+		
+		if(new_statement_node == nullptr)
+			parsed_token_num_ = token_pos;
+
+		while(1)
+		{
+			token = get_next_token(); 
+
+			if(token->type == Code_Token_Type::Semicolon || token->type == Code_Token_Type::Eof)
+			{ 
+				token_pos = parsed_token_num_;
+				auto new_other_statement_node = parse_statement(); 
+
+				if(new_other_statement_node == nullptr)
+				{
+					parsed_token_num_ = token_pos;
+					break;
+				}
+			} 
+			else 
+				goto Err; 
+		} 
+		token = get_next_token();
+
+		if(token->type == Code_Token_Type::RBRACE)
+		{
+			
+		} 
+	}
+	else 
+		goto Err;
+
+	Err:
+		LOG("Syntax Error In Line :",token->line_num); 
+		return nullptr; 
+}
+
+AstSimple::Ptr Parser::parse_simple()
+{ 
+	auto new_expr_node = parse_expr();
+
+	if(new_expr_node != nullptr)
+	{
+		auto new_simple_node = std::shared_ptr<AstSimple>(new AstSimple(new_expr_node));
+		return new_simple_node;
+	}
+	else 
+	{
+		return nullptr;
+	}
+	
+}
 
 
+AstStatement::Ptr Parser::parse_statement()
+{
+	auto token_pos = parsed_token_num_;
+	auto token = get_next_token(); 
+	auto value = token->value.data();
 
-	return nullptr;
+	AstStatement::Ptr new_statement_node = nullptr;
+	AstExpr::Ptr new_expr_node = nullptr;
+	AstSimple::Ptr new_simple_node = nullptr;
+	AstBlock::Ptr new_block_node = nullptr;
+	AstLeafNode::Ptr new_if_node = nullptr;
+	AstLeafNode::Ptr new_else_node = nullptr;
+	AstBlock::Ptr new_else_block_node = nullptr;
+
+	if(::strcmp(value,"if") == 0)
+	{ 
+		new_if_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
+		new_expr_node = parse_expr(); 
+		
+		if(new_expr_node == nullptr)
+			goto Err;
+		else 
+		{
+			new_block_node = parse_block();
+
+			if(new_block_node == nullptr)
+			{
+				goto Err;
+			}
+			else
+			{
+				 token = get_next_token();
+				 value = token->value.data();
+
+				if((::strcmp(value,"else")==0) && (new_else_block_node =  parse_block() ) != nullptr)
+				{
+
+					new_else_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
+					new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_if_node,new_expr_node,
+																	   new_block_node,new_else_node,new_else_block_node));
+				
+				} 
+				else 
+				{
+
+					new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_if_node,new_expr_node,new_block_node,nullptr,nullptr));
+				}
+			}
+		} 
+		return  new_statement_node;
+	}
+	else if(strcmp(value,"while") == 0 && (new_expr_node = parse_expr()) != nullptr && (new_block_node = parse_block()))
+	{
+		auto new_while_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token)); 
+		new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_while_node,new_expr_node,new_block_node)); 
+	}
+	else 
+	{
+		new_simple_node = parse_simple(); 
+		
+		if(new_simple_node == nullptr)
+			goto Err; 
+		else 
+			new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_simple_node)); 
+		return new_statement_node;
+	} 
+
+	Err: 
+		LOG("Syntax Error In Line",token->line_num); 
+		return new_statement_node;
 }
 
 AstProgram::Ptr Parser::parse_program()
 {
-
+	//reserve origin parsed token position
 	auto token_pos  = parsed_token_num_;
 	AstProgram* new_ast_program_node = nullptr; 
 	auto new_ast_statement_node = parse_statement(); 

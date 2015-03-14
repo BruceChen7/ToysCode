@@ -21,14 +21,17 @@ TEST_CASE("File Unit Test && Lexical Unit test")
 		REQUIRE(lex->get_token_info(0)->type == Code_Token_Type::Identifier); 
 		REQUIRE(lex->get_token_info(1)->type == Code_Token_Type::Assgin);
 		REQUIRE(lex->get_token_info(2)->type == Code_Token_Type::Integer);
-		REQUIRE(lex->get_token_info(3)->type == Code_Token_Type::Identifier);
-		REQUIRE(lex->get_token_info(4)->type == Code_Token_Type::Assgin);
-		REQUIRE(lex->get_token_info(5)->type == Code_Token_Type::Integer);
-		REQUIRE(lex->get_token_info(6)->type == Code_Token_Type::While);
-		REQUIRE(lex->get_token_info(7)->type == Code_Token_Type::Identifier);
-		REQUIRE(lex->get_token_info(8)->type == Code_Token_Type::LT);
-		REQUIRE(lex->get_token_info(9)->type == Code_Token_Type::Integer);
-		REQUIRE(lex->get_token_info(10)->type == Code_Token_Type::LBRACE); 
+		REQUIRE(lex->get_token_info(3)->type == Code_Token_Type::Eol);
+		REQUIRE(lex->get_token_info(4)->type == Code_Token_Type::Identifier);
+		REQUIRE(lex->get_token_info(5)->type == Code_Token_Type::Assgin);
+		REQUIRE(lex->get_token_info(6)->type == Code_Token_Type::Integer);
+		REQUIRE(lex->get_token_info(7)->type == Code_Token_Type::Eol);
+		REQUIRE(lex->get_token_info(8)->type == Code_Token_Type::While);
+		REQUIRE(lex->get_token_info(9)->type == Code_Token_Type::Identifier);
+		REQUIRE(lex->get_token_info(10)->type == Code_Token_Type::LT);
+		REQUIRE(lex->get_token_info(11)->type == Code_Token_Type::Integer); 
+		REQUIRE(lex->get_token_info(12)->type == Code_Token_Type::LBRACE);
+		REQUIRE(lex->get_token_info(13)->type == Code_Token_Type::Eol);
 	}
 
 

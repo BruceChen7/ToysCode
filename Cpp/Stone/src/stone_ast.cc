@@ -66,15 +66,41 @@ AstPrimary::AstPrimary(AstExpr::Ptr node):expr_node_(node)
 
 }
 
+AstSimple::AstSimple(AstExpr::Ptr expr):expr_(expr)
+{
+
+}
+
 AstStatement::AstStatement(AstLeafNode::Ptr if_node,
 						   AstExpr::Ptr expr,
 						   AstBlock::Ptr if_block,
 						   AstLeafNode::Ptr else_node,
-						   AstBlock::Ptr else_block):statement_{if_node,expr,if_block,else_node,else_block}
+						   AstBlock::Ptr else_block):if_statement_{if_node,expr,if_block,else_node,else_block},
+						 while_stament_{nullptr,nullptr,nullptr},
+						 simple_statement_{nullptr}
+
 { 
 	
 
 }
+
+AstStatement::AstStatement(AstLeafNode::Ptr while_node,AstExpr::Ptr expr,AstBlock::Ptr block):
+													while_stament_{while_node,expr,block},
+													if_statement_{nullptr,nullptr,nullptr},
+													simple_statement_{nullptr}
+{
+
+
+}
+
+AstStatement::AstStatement(AstSimple::Ptr simple):simple_statement_{simple},
+												  if_statement_{nullptr,nullptr,nullptr},
+												  while_stament_{nullptr,nullptr,nullptr}
+{
+
+}
+
+
 
 AstProgram::AstProgram():statement_{} 
 {

@@ -147,13 +147,6 @@ namespace Stone
 				void accept(AstVisitor* visitor)  ;
 		};
 
-		class AstSimple:public AstWithChildNode
-		{
-			public:
-				using Ptr = std::shared_ptr<AstSimple>;
-				void accept(AstVisitor* visitor) ;
-
-		};
 
 		class AstPrimary:public AstWithChildNode
 		{
@@ -168,6 +161,17 @@ namespace Stone
 
 		};
 
+		class AstSimple:public AstWithChildNode
+		{
+			public:
+				using Ptr = std::shared_ptr<AstSimple>;
+				void accept(AstVisitor* visitor) ;
+				AstSimple(AstExpr::Ptr expr);
+			private: 
+				AstExpr::Ptr expr_; 
+
+		};
+
 		class AstStatement:public AstWithChildNode
 		{
 			public:
@@ -179,13 +183,24 @@ namespace Stone
 					AstLeafNode::Ptr else_; 
 					AstBlock::Ptr else_block_; 
 				};
+				struct AstWhileExprBlock
+				{
+					AstLeafNode::Ptr while_;
+					AstExpr::Ptr expr_; 
+					AstBlock::Ptr block_;
+				};
 				
 				using AstIfElseBlock = struct AstIfExprBlock; 
+				using AstWhileExprBlock = struct AstWhileExprBlock;
 				using Ptr = std::shared_ptr<AstStatement> ;
 				AstStatement(AstLeafNode::Ptr if_node,AstExpr::Ptr expr,AstBlock::Ptr if_block,AstLeafNode::Ptr else_node,AstBlock::Ptr else_block );
+				AstStatement(AstLeafNode::Ptr while_node,AstExpr::Ptr expr,AstBlock::Ptr block);
+				AstStatement(AstSimple::Ptr simple);
 				void accept(AstVisitor* visitor); 
 			private: 
-				AstIfElseBlock statement_; 
+				AstIfElseBlock if_statement_; 
+				AstWhileExprBlock while_stament_;
+				AstSimple::Ptr simple_statement_; 
 
 		};
 

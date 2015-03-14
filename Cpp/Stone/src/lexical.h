@@ -41,7 +41,8 @@ namespace Stone
 		Assgin,              // =
 		LBRACE,             // {
 		RBRACE,             // }
-		Eof,					//stand for the end of file
+		Eol,                 // end  of line
+		Eof,				//stand for the end of file
 		Semicolon           //
 	};
 
@@ -88,6 +89,9 @@ namespace Stone
 			//each time get a token ,the 'src' points to next tokens to be get 
 			//and tokens is stored into dest
 			int get_next_token(const char **src, char *dest,int token_len);
+
+			//add end of line flag in each of line
+			void add_eol_to_tail(int line_num);
 			void add_eof_to_tail();
 
 			//data member
