@@ -10,96 +10,97 @@
 //macros
 #define MAX_TOKEN_LEN 128
 #define ADD_ERROR_LIST(_err_code,_err_vec,_line_num,_token) do \
-{														\
-	if(err_code_) {                                    \
-				::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s :: %s\n",_line_num,g_err_buf[_err_code],_token);\
-				err_vec_.push_back(g_status);\
-				err_code_ = 0;\
-	}\
+{                                                       \
+    if(err_code_) {                                    \
+                ::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s :: %s\n",_line_num,g_err_buf[_err_code],_token);\
+                err_vec_.push_back(g_status);\
+                err_code_ = 0;\
+    }\
 }while(0)
 
 namespace Stone
 {
 
-	enum class Code_Token_Type
-	{
-		Identifier,
-		Integer,
-		String,
-		While, 				// while
-		If,  				// if				
-		Add,				// + 
-		Sub,  				// -
-		Mul,				// *
-		Div,				// /
-		Mod,				// %
-		LT,					// <
-		GT,					// >
-		LE,					// <=
-		GE,					// >=
-		EQ,					// == 
-		Assgin,              // =
-		LBRACE,             // {
-		RBRACE,             // }
-		Eol,                 // end  of line
-		Eof,				//stand for the end of file
-		Semicolon           //
-	};
+    enum class Code_Token_Type
+    {
+        Identifier,
+        Integer,
+        String,
+        While,              // while
+        If,                 // if               
+        Add,                // + 
+        Sub,                // -
+        Mul,                // *
+        Div,                // /
+        Mod,                // %
+        LT,                 // <
+        GT,                 // >
+        LE,                 // <=
+        GE,                 // >=
+        EQ,                 // == 
+        Assgin,             // =
+        Minus,               // - which is used in front of number 
+        LBRACE,             // {
+        RBRACE,             // }
+        Eol,                // end  of line
+        Eof,                //stand for the end of file
+        Semicolon           //;
+    };
 
-	struct Token{
-		int line_num; 
-	 	Code_Token_Type type; 
-		std::string value;
-	}; 
-	
-	class File 
-	{
-		public:
-			File(const char *filename);
-			File(const File* another_file) = delete;
-			File& operator=(const File&) = delete;
-			void read2buffer();
-			int get_file_line_num() const;
-			std::string* get_line(int pos);
-			~File();
-		private:
-			FILE* fp_;
-			std::vector<std::string> buffer_; 
-			int line_num_;
-	};
+    struct Token{
+        int line_num; 
+        Code_Token_Type type; 
+        std::string value;
+    }; 
+    
+    class File 
+    {
+        public:
+            File(const char *filename);
+            File(const File* another_file) = delete;
+            File& operator=(const File&) = delete;
+            void read2buffer();
+            int get_file_line_num() const;
+            std::string* get_line(int pos);
+            ~File();
+        private:
+            FILE* fp_;
+            std::vector<std::string> buffer_; 
+            int line_num_;
+    };
 
-	class Lexical 
-	{ 
-		public:
-			Lexical(const char * source);
-			void parse();
-			size_t get_token_num();
-			struct Token* get_token_info(int pos);
-			Lexical& operator=(const Lexical&)  = delete;
-			Lexical(const Lexical&) = delete;
-			~Lexical();
-		private:
-			//Method
-			void determin_token_type(const char *dest,int line);
-			bool is_string(const std::string& word) const;
-			bool is_interger(const std::string& word) const ;
-			bool is_identifier(const std::string& word);
+    class Lexical 
+    { 
+        public:
+            Lexical(const char * source);
+            void parse();
+            size_t get_token_num();
+            struct Token* get_token_info(int pos);
+            Lexical& operator=(const Lexical&)  = delete;
+            Lexical(const Lexical&) = delete;
+            ~Lexical();
+        private:
+            //Method
+            void determin_token_type(const char *dest,int line);
+            bool is_string(const std::string& word) const;
+            bool is_interger(const std::string& word) const ;
+            bool is_identifier(const std::string& word);
 
-			//ensure dest has enough space to contain tokens
-			//each time get a token ,the 'src' points to next tokens to be get 
-			//and tokens is stored into dest
-			int get_next_token(const char **src, char *dest,int token_len);
+            //ensure dest has enough space to contain tokens
+            //each time get a token ,the 'src' points to next tokens to be get 
+            //and tokens is stored into dest
+            int get_next_token(const char **src, char *dest,int token_len);
 
-			//add end of line flag in each of line
-			void add_eol_to_tail(int line_num);
-			void add_eof_to_tail();
+            //add end of line flag in each of line
+            void add_eol_to_tail(int line_num);
+            void add_eof_to_tail();
 
-			//data member
-			std::unique_ptr<File> source_code_file_;
-			std::vector<Token> token_list_;
-			std::vector<std::string> err_vec_;
-			int err_code_; 
-	};
+            //data member
+            std::unique_ptr<File> source_code_file_;
+            std::vector<Token> token_list_;
+            std::vector<std::string> err_vec_;
+            int err_code_; 
+    };
 
 }
 

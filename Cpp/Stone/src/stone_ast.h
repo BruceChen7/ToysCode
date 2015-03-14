@@ -144,7 +144,11 @@ namespace Stone
 		{ 
 			public:
 				using Ptr = std::shared_ptr<AstBlock>;
-				void accept(AstVisitor* visitor)  ;
+				AstBlock();
+				void add_statement(std::shared_ptr<AstStatement> statement);
+				void accept(AstVisitor* visitor);
+			private: 
+				std::vector<std::shared_ptr<AstStatement>> statement_; 
 		};
 
 
