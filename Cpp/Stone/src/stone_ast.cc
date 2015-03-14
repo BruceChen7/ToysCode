@@ -21,7 +21,7 @@ AstIdentifier::AstIdentifier(struct Token* token):AstLeafNode(token)
 { 
 }
 
-AstOperation::AstOperation(struct Token* token):AstLeafNode(token)
+AstOperation::AstOperation(struct Token *token):AstLeafNode(token)
 {
 
 }
@@ -43,6 +43,10 @@ AstNumber::AstNumber(struct Token *token):AstLeafNode(token)
 
 }
 
+AstFactor::AstFactor(AstLeafNode::Ptr minus,AstPrimary::Ptr primary):minus_{minus},primary_{primary}
+{
+
+}
 
 AstExpr::AstExpr(AstFactor::Ptr node)
 {

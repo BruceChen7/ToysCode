@@ -105,16 +105,19 @@ AstFactor::Ptr Parser::parse_factor()
 {
     struct Token* token = get_next_token();
     AstPrimary::Ptr new_primary_node;
+    AstFactor::Ptr new_factor_node;
 
     if(token->type == Code_Token_Type::Minus) 
     {
+        auto new_minus_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
         new_primary_node = parse_primary();
-        
-        if(new_primary_node != nullptr)
-        {
 
-        
+        if(new_primary_node != nullptr)
+        { 
+            new_factor_node = std::shared_ptr<AstFactor>(new AstFactor(new_minus_node,new_primary_node)); 
         }   
+        else
+            goto Err;
     }
     else
     {
@@ -122,8 +125,11 @@ AstFactor::Ptr Parser::parse_factor()
         
         if(new_primary_node == nullptr) 
             goto Err;
-
+        else 
+            new_factor_node = std::shared_ptr<AstFactor>(new AstFactor(nullptr,new_primary_node)); 
     }
+    return new_factor_node;
+
     Err: 
         LOG("Syntax Error In Line",token->line_num); 
         return nullptr;
@@ -131,7 +137,20 @@ AstFactor::Ptr Parser::parse_factor()
 
 AstOperation::Ptr Parser::parse_operation()
 {
-    return nullptr;
+    auto token = get_next_token();
+
+    if(token->type == Code_Token_Type::Sub || token->type == Code_Token_Type::Add 
+                                || token->type == Code_Token_Type::Mul || token->type ==Code_Token_Type::Div) 
+    {
+        auto new_operation_node = std::shared_ptr<AstOperation>(new AstOperation(token));
+        return new_operation_node; 
+    } 
+    else 
+    {
+        LOG("Syntax Error In Line",token->line_num);
+        return nullptr;
+    }
+  
 }
 
 AstExpr::Ptr  Parser::parse_expr()
