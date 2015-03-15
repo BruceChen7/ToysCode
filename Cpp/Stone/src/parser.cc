@@ -322,10 +322,15 @@ AstStatement::Ptr Parser::parse_statement()
         } 
         return  new_statement_node;
     }
-    else if(strcmp(value,"while") == 0 && (new_expr_node = parse_expr()) != nullptr && (new_block_node = parse_block()))
+    else if(current_token_->type == Code_Token_Type::While)  
     {
-        auto new_while_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token)); 
-        new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_while_node,new_expr_node,new_block_node)); 
+        get_next_token();
+
+        if((new_expr_node = parse_expr()) != nullptr && (new_block_node = parse_block())!= nullptr)
+        {
+            auto new_while_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token)); 
+            new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_while_node,new_expr_node,new_block_node)); 
+        }
     }
     else 
     { 
