@@ -9,23 +9,13 @@ using namespace Ast;
 
 #define LOG(_msg,_line_num) do \
 {                              \
-	fprintf(stderr,"%s:%d",_msg,_line_num);   \
+	fprintf(stderr,"%s:%d\n",_msg,_line_num);   \
 }while(0)
 
 
 
 namespace Stone
 {
-	enum class NodeType
-	{
-		Number,
-		String,
-		While,
-		If,
-		Identifier, 
-	};
-
-	
 	class Parser
 	{
 		public:
@@ -39,13 +29,15 @@ namespace Stone
 			AstBlock::Ptr parse_block();
 			AstPrimary::Ptr parse_primary(); 
 			struct Token* get_next_token();
+            void set_cur_token();
+
 
 		private:
 			std::unique_ptr<Lexical> lex_; 
-			int parsed_token_num_;
-
+			int parsed_token_num_; 
+            struct Token* current_token_;
+            
 	};
-}
-
+} 
 
 #endif

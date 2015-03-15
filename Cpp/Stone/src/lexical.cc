@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <assert.h>
-#define kBufferSize (1024)
+#define kBufferSize (64)
 using namespace Stone;
 
 //global variables;
@@ -12,7 +12,7 @@ const char * g_err_buf[32] = {
     "I Do Not know What The Symbol Is,May Be, You Should Use blank Character To Separate Them"
 }; 
 
-char g_status[1024];
+char g_status[32];
 
 File::File(const char* file_name):fp_(fopen(file_name,"r")),line_num_(0)
 { 

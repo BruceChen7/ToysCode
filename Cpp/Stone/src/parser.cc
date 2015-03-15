@@ -3,28 +3,34 @@
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <iostream>
 using namespace Stone;
 using namespace Ast;
 
-Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_(0)
+Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_(-1)
 { 
-
+    lex_->parse();
 }
 
-struct Token* Parser::get_next_token()
+struct Token*  Parser::get_next_token()
 { 
-
+    parsed_token_num_++; 
     auto token_num = lex_->get_token_num();
     assert(parsed_token_num_ <= token_num);
-    auto p_token = lex_->get_token_info(parsed_token_num_);
-    parsed_token_num_++;
-    return p_token;
+    current_token_ = lex_->get_token_info(parsed_token_num_);
+    return current_token_;
+}
+
+void Parser::set_cur_token()
+{ 
+    current_token_ =lex_->get_token_info(parsed_token_num_+1);
 }
 
 
 AstPrimary::Ptr Parser::parse_primary()
 {
-    auto token = get_next_token();
+    auto token = current_token_;
+    std::cout << token->value << std::endl;
 
     if(token->type == Code_Token_Type::LBRACE)
     {
@@ -56,8 +62,7 @@ AstPrimary::Ptr Parser::parse_primary()
     }
     else
     {
-        AstPrimary *new_primary_node = nullptr;
-
+        AstPrimary *new_primary_node = nullptr; 
 
         if(token->type == Code_Token_Type::Identifier || token->type ==  Code_Token_Type::Integer || token->type == Code_Token_Type::String)
         {
@@ -65,9 +70,9 @@ AstPrimary::Ptr Parser::parse_primary()
             {
                 case Code_Token_Type::Identifier:
                 {
-
                     auto new_ast_identifier_node  =  new AstIdentifier(token);
                     new_primary_node  = new AstPrimary(new_ast_identifier_node); 
+                    get_next_token();
                     break;
                 }
 
@@ -75,6 +80,7 @@ AstPrimary::Ptr Parser::parse_primary()
                 {
                     auto new_ast_number_node  =  new AstNumber(token);
                     new_primary_node  = new AstPrimary(new_ast_number_node); 
+                    get_next_token();
                     break;
                 }
 
@@ -103,7 +109,7 @@ AstPrimary::Ptr Parser::parse_primary()
 
 AstFactor::Ptr Parser::parse_factor()
 {
-    struct Token* token = get_next_token();
+    struct Token* token = current_token_;
     AstPrimary::Ptr new_primary_node;
     AstFactor::Ptr new_factor_node;
 
@@ -121,12 +127,15 @@ AstFactor::Ptr Parser::parse_factor()
     }
     else
     {
+        std::cout << "Enter In Parse Primary " << std::endl;
         new_primary_node = parse_primary();
         
         if(new_primary_node == nullptr) 
             goto Err;
         else 
+        {
             new_factor_node = std::shared_ptr<AstFactor>(new AstFactor(nullptr,new_primary_node)); 
+        }
     }
     return new_factor_node;
 
@@ -137,17 +146,20 @@ AstFactor::Ptr Parser::parse_factor()
 
 AstOperation::Ptr Parser::parse_operation()
 {
-    auto token = get_next_token();
-
+    auto token = current_token_;
     if(token->type == Code_Token_Type::Sub || token->type == Code_Token_Type::Add 
-                                || token->type == Code_Token_Type::Mul || token->type ==Code_Token_Type::Div) 
+                                || token->type == Code_Token_Type::Mul || token->type == Code_Token_Type::Div
+                                || token->type == Code_Token_Type::Assgin || token->type == Code_Token_Type::EQ) 
     {
+        std::cout << token->value << std::endl;
         auto new_operation_node = std::shared_ptr<AstOperation>(new AstOperation(token));
+        assert(new_operation_node != nullptr);
+        get_next_token();
         return new_operation_node; 
     } 
     else 
     {
-        LOG("Syntax Error In Line",token->line_num);
+        LOG("Syntax Error In Parsing Operation",token->line_num);
         return nullptr;
     }
   
@@ -155,24 +167,33 @@ AstOperation::Ptr Parser::parse_operation()
 
 AstExpr::Ptr  Parser::parse_expr()
 {
+    std::cout << "Enter In Parse Factor" << std::endl;
     auto new_factor_node = parse_factor(); 
     AstExpr::Ptr new_expr_node;
 
     if(new_factor_node == nullptr)
         return nullptr;
     else 
-        new_expr_node = std::shared_ptr<AstExpr>(new AstExpr(new_factor_node));
+    {
+        new_expr_node = std::shared_ptr<AstExpr>(new AstExpr(new_factor_node)); 
+        std::cout << "Enter In parse Expr Again" << std::endl;
+    }
+
 
     while(1)
     {
+        if(current_token_->type == Code_Token_Type::Eol)
+        {
+            get_next_token();
+            break;
+        }
         auto new_operation_node = parse_operation();
         auto new_factor_node = parse_factor();
 
         if(new_operation_node != nullptr && new_factor_node != nullptr)
         { 
             new_expr_node->add_op_factor(new_operation_node,new_factor_node);
-            continue;
-
+            continue; 
         }
         else 
             break; 
@@ -228,12 +249,13 @@ AstBlock::Ptr Parser::parse_block()
         goto Err;
 
     Err:
-        LOG("Syntax Error In Line :",token->line_num); 
+        LOG("Syntax Error In Parsing Block ",token->line_num); 
         return nullptr; 
 }
 
 AstSimple::Ptr Parser::parse_simple()
 { 
+    std::cout << "Enter In Parse Expr" << std::endl;
     auto new_expr_node = parse_expr();
 
     if(new_expr_node != nullptr)
@@ -252,8 +274,8 @@ AstSimple::Ptr Parser::parse_simple()
 AstStatement::Ptr Parser::parse_statement()
 {
     auto token_pos = parsed_token_num_;
-    auto token = get_next_token(); 
-    auto value = token->value.data();
+    auto token = current_token_;
+    auto value = (token->value).data(); 
 
     AstStatement::Ptr new_statement_node = nullptr;
     AstExpr::Ptr new_expr_node = nullptr;
@@ -263,7 +285,7 @@ AstStatement::Ptr Parser::parse_statement()
     AstLeafNode::Ptr new_else_node = nullptr;
     AstBlock::Ptr new_else_block_node = nullptr;
 
-    if(::strcmp(value,"if") == 0)
+    if(token->type == Code_Token_Type::If)
     { 
         new_if_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
         new_expr_node = parse_expr(); 
@@ -306,47 +328,48 @@ AstStatement::Ptr Parser::parse_statement()
         new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_while_node,new_expr_node,new_block_node)); 
     }
     else 
-    {
+    { 
+        std::cout << "Enter In Parse Simple" << std::endl;
         new_simple_node = parse_simple(); 
-        
+
         if(new_simple_node == nullptr)
             goto Err; 
         else 
+        {
             new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_simple_node)); 
+            assert(new_statement_node != nullptr);
+        }
         return new_statement_node;
     } 
 
     Err: 
-        LOG("Syntax Error In Line",token->line_num); 
+        LOG("Syntax Error In Parsing Statement \n",token->line_num); 
         return new_statement_node;
 }
 
 AstProgram::Ptr Parser::parse_program()
 {
-    //reserve origin parsed token position
-    auto token_pos  = parsed_token_num_;
-    AstProgram* new_ast_program_node = nullptr; 
+    //get first token and set current_token_ is the first token
+    auto token = get_next_token();
+    AstProgram* new_ast_program_node = new AstProgram();
+
+    std::cout << "Enter In parse Statement \n"; 
     auto new_ast_statement_node = parse_statement(); 
         
     if(new_ast_statement_node != nullptr)
-    {
-            new_ast_program_node->add_statement(new_ast_statement_node);
-    }
-    else 
-    {
-        parsed_token_num_ = token_pos; 
+    { 
+        new_ast_program_node->add_statement(new_ast_statement_node);
     }
 
-    struct Token *token = get_next_token();
-
-    if(token->type == Code_Token_Type::Eof ||token->type == Code_Token_Type::Semicolon)
+    if(current_token_->type == Code_Token_Type::Eof ||current_token_->type == Code_Token_Type::Semicolon)
     {
         return std::shared_ptr<AstProgram>(new_ast_program_node);
     }
     else 
     {
-        LOG("Syntax Error In Line : ",token->line_num); 
+        LOG("Syntax Error In Parsing Programe: ",token->line_num); 
         return nullptr;
     } 
 
+    return nullptr;
 }

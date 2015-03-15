@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(Compiler CXX)
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++11 -g")
 set(CMAKE_CXX_COMPILER "clang++-3.5")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "O2 -Wshadow")

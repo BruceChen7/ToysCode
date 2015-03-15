@@ -14,7 +14,7 @@ TEST_CASE("File Unit Test && Lexical Unit test")
         REQUIRE(*(source_file->get_line(2))== "while i < 10 {\n");
     }
     
-    SECTION("Lexical Class Unit Test")
+    SECTION("Lexical Class Unit Test -- while.st")
     {
         std::unique_ptr<Lexical> lex(new Lexical("while.st"));
         lex->parse();
@@ -34,6 +34,19 @@ TEST_CASE("File Unit Test && Lexical Unit test")
         REQUIRE(lex->get_token_info(13)->type == Code_Token_Type::Eol);
     }
 
+    SECTION("Assgin Lexical Uint Test --assign.st")
+    {
+        auto lex1 = std::unique_ptr<Lexical>(new Lexical("assign.st"));
+        lex1->parse();
+        REQUIRE(lex1->get_token_info(0)->type == Code_Token_Type::Identifier);
+        REQUIRE(lex1->get_token_info(1)->type == Code_Token_Type::Assgin);
+        REQUIRE(lex1->get_token_info(2)->type == Code_Token_Type::Integer);
+        REQUIRE(lex1->get_token_info(3)->type == Code_Token_Type::Eol);
+        REQUIRE(lex1->get_token_info(4)->type == Code_Token_Type::Eof); 
+
+        REQUIRE(lex1->get_token_info(0)->value == "event");
+        REQUIRE(lex1->get_token_info(1)->value == "=");
+    }
 
 }
 
