@@ -4,10 +4,60 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <iostream>
-using namespace Stone;
+using namespace Stone; 
 using namespace Ast;
 
-Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),cur_parsed_token_pos_(0)
+
+Parser::TypeSet Parser::program_first_set_ = { 
+                Code_Token_Type::If,
+                Code_Token_Type::While,
+                Code_Token_Type::Minus, 
+                Code_Token_Type::LBrackets,
+                Code_Token_Type::Integer,
+                Code_Token_Type::Identifier,
+                Code_Token_Type::String,
+                Code_Token_Type::Eol,
+                Code_Token_Type::Semicolon 
+};
+
+Parser::TypeSet Parser::statement_first_set_ = {
+    Code_Token_Type::If,
+    Code_Token_Type::While,
+    Code_Token_Type::Minus, 
+    Code_Token_Type::LBrackets,
+    Code_Token_Type::Integer,
+    Code_Token_Type::Identifier,
+    Code_Token_Type::String 
+};
+
+Parser::TypeSet Parser::simple_first_set_ = {
+    Code_Token_Type::Minus, 
+    Code_Token_Type::LBrackets,
+    Code_Token_Type::Integer,
+    Code_Token_Type::Identifier,
+    Code_Token_Type::String,
+};
+
+Parser::TypeSet Parser::block_first_set_ = {
+    Code_Token_Type::LBRACE 
+};
+
+Parser::TypeSet Parser::factor_first_set_ = {
+    Code_Token_Type::Minus, 
+    Code_Token_Type::LBrackets,
+    Code_Token_Type::Integer,
+    Code_Token_Type::Identifier,
+    Code_Token_Type::String, 
+}; 
+
+Parser::TypeSet Parser::Primary_first_set_ {
+    Code_Token_Type::LBrackets,
+    Code_Token_Type::Integer,
+    Code_Token_Type::Identifier,
+    Code_Token_Type::String, 
+};
+
+Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),cur_parsed_token_pos_(0) 
 { 
     lex_->parse();
     total_token_num_ = lex_->get_token_num();
@@ -170,7 +220,7 @@ AstOperation::Ptr Parser::parse_operation()
     std::cout << "ther current operator is " << token->value << std::endl;
     
     if(token->type == Code_Token_Type::LBRACE)
-        parse_block(); 
+        parse_block(true); 
 
     if(token->type == Code_Token_Type::Sub || token->type == Code_Token_Type::Add 
                                 || token->type == Code_Token_Type::Mul || token->type == Code_Token_Type::Div
@@ -229,7 +279,7 @@ AstExpr::Ptr  Parser::parse_expr()
     return new_expr_node; 
 }
 
-AstBlock::Ptr Parser::parse_block() 
+AstBlock::Ptr Parser::parse_block(bool must_be_a_block) 
 {
     auto token =  get_token_to_be_parsed(); 
     auto new_block_node = std::shared_ptr<AstBlock>(new AstBlock());
@@ -239,7 +289,7 @@ AstBlock::Ptr Parser::parse_block()
         token_has_parsed();
         auto token_pos = cur_parsed_token_pos_;
 
-        auto new_statement_node = parse_statement(); 
+        auto new_statement_node = parse_statement(false); 
         
         if(new_statement_node == nullptr)
             cur_parsed_token_pos_ = token_pos;
@@ -253,7 +303,7 @@ AstBlock::Ptr Parser::parse_block()
             if(token->type == Code_Token_Type::Semicolon || token->type == Code_Token_Type::Eof)
             { 
                 token_pos = cur_parsed_token_pos_;
-                auto new_other_statement_node = parse_statement(); 
+                auto new_other_statement_node = parse_statement(false); 
 
                 if(new_other_statement_node == nullptr)
                 {
@@ -279,8 +329,9 @@ AstBlock::Ptr Parser::parse_block()
         goto Err;
 
     Err:
-        LOG("Syntax Error In Parsing Block ",token->line_num); 
-        return nullptr; 
+        if(must_be_a_block)
+            LOG("Syntax Error In Parsing Block ",token->line_num); 
+            return nullptr; 
 }
 
 AstSimple::Ptr Parser::parse_simple()
@@ -301,7 +352,7 @@ AstSimple::Ptr Parser::parse_simple()
 }
 
 
-AstStatement::Ptr Parser::parse_statement()
+AstStatement::Ptr Parser::parse_statement(bool must_be_a_statement)
 {
     auto token = get_token_to_be_parsed();
     auto token_pos = cur_parsed_token_pos_;
@@ -326,7 +377,7 @@ AstStatement::Ptr Parser::parse_statement()
             goto Err;
         else 
         {
-            new_block_node = parse_block();
+            new_block_node = parse_block(true);
 
             if(new_block_node == nullptr)
             {
@@ -337,7 +388,7 @@ AstStatement::Ptr Parser::parse_statement()
                  token = get_token_to_be_parsed();
                  value = token->value.data();
 
-                if((::strcmp(value,"else")==0) && (new_else_block_node =  parse_block() ) != nullptr)
+                if((::strcmp(value,"else")==0) && (new_else_block_node =  parse_block(true) ) != nullptr)
                 {
 
                     new_else_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token));
@@ -358,7 +409,7 @@ AstStatement::Ptr Parser::parse_statement()
     {
         token_has_parsed();
 
-        if((new_expr_node = parse_expr()) != nullptr && (new_block_node = parse_block())!= nullptr)
+        if((new_expr_node = parse_expr()) != nullptr && (new_block_node = parse_block(true))!= nullptr)
         {
             auto new_while_node = std::shared_ptr<AstLeafNode>(new AstLeafNode(token)); 
             new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_while_node,new_expr_node,new_block_node)); 
@@ -375,35 +426,47 @@ AstStatement::Ptr Parser::parse_statement()
             new_statement_node = std::shared_ptr<AstStatement>(new AstStatement(new_simple_node)); 
             assert(new_statement_node != nullptr);
         }
-        return new_statement_node;
     } 
 
     Err: 
-        LOG("Syntax Error In Parsing Statement \n",token->line_num); 
-        return new_statement_node;
+        if(must_be_a_statement)
+        {
+            LOG("Syntax Error In Parsing Statement \n",token->line_num); 
+            return new_statement_node;
+        }
+     return new_statement_node;
 }
 
 AstProgram::Ptr Parser::parse_program()
 {
     auto token = get_token_to_be_parsed();
 
-    if(token->type == Code_Token_Type::Eof)
-        return nullptr; 
+    switch(token->type)
+    {
+        case Code_Token_Type::Eol:
+            token_has_parsed();
+            break;
+        case Code_Token_Type::Semicolon:
+            token_has_parsed();
+            break;
+
+        case Code_Token_Type::Eof:
+            return nullptr;
+
+        default: 
+            break; 
+    }
 
     AstProgram* new_ast_program_node = new AstProgram();
 
-    auto new_ast_statement_node = parse_statement(); 
+    auto new_ast_statement_node = parse_statement(true); 
         
     if(new_ast_statement_node != nullptr)
     { 
         new_ast_program_node->add_statement(new_ast_statement_node);
-    }
-
-    if(current_token_->type == Code_Token_Type::Eol ||current_token_->type == Code_Token_Type::Semicolon)
-    {
-        token_has_parsed();
         return std::shared_ptr<AstProgram>(new_ast_program_node);
     }
+
     else 
     {
         LOG("Syntax Error In Parsing Programe: ",current_token_->line_num); 
