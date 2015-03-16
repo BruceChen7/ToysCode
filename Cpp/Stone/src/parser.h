@@ -28,13 +28,15 @@ namespace Stone
             AstOperation::Ptr parse_operation(); 
             AstBlock::Ptr parse_block();
             AstPrimary::Ptr parse_primary(); 
-            struct Token* get_next_token();
+            struct Token* get_token_to_be_parsed();
             void parse(); 
         private:
             std::unique_ptr<Lexical> lex_; 
-            int parsed_token_num_; 
+            int total_token_num_;
+            int cur_parsed_token_pos_; 
             struct Token* current_token_;
-            std::vector<AstProgram::Ptr> program_;
+            std::vector<AstProgram::Ptr> program_; 
+            void token_has_parsed();
     };
 } 
 

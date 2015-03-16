@@ -7,27 +7,30 @@
 using namespace Stone;
 using namespace Ast;
 
-Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_(-1)
+Parser::Parser(Lexical* lex):lex_(std::unique_ptr<Lexical>(lex)),cur_parsed_token_pos_(0)
 { 
     lex_->parse();
+    total_token_num_ = lex_->get_token_num();
     program_.reserve(128);
 }
 
-struct Token*  Parser::get_next_token()
+struct Token*  Parser::get_token_to_be_parsed()
 { 
-    parsed_token_num_++; 
-    auto token_num = lex_->get_token_num();
-    assert(parsed_token_num_ <= token_num);
-    current_token_ = lex_->get_token_info(parsed_token_num_);
+    assert(cur_parsed_token_pos_ < total_token_num_);
+    current_token_ = lex_->get_token_info(cur_parsed_token_pos_);
     return current_token_;
+}
+
+void Parser::token_has_parsed()
+{ 
+    cur_parsed_token_pos_++;
 }
 
 AstPrimary::Ptr Parser::parse_primary()
 {
-    auto token = current_token_;
-    std::cout << "Enter In Parse Primary" << std::endl;
-
-    if(token->type == Code_Token_Type::LBRACE)
+    auto token = get_token_to_be_parsed();
+    
+    if(token->type == Code_Token_Type::LBrackets)
     {
         AstExpr::Ptr expr_node = parse_expr();
 
@@ -38,9 +41,10 @@ AstPrimary::Ptr Parser::parse_primary()
         } 
         else 
         {
-             token = get_next_token();
+             token_has_parsed();
+             token = get_token_to_be_parsed();
 
-             if(token->type == Code_Token_Type::RBRACE)
+             if(token->type == Code_Token_Type::RBrackets)
              {
 
                 auto new_primary_node = new AstPrimary(expr_node);
@@ -58,18 +62,24 @@ AstPrimary::Ptr Parser::parse_primary()
     else
     {
         AstPrimary *new_primary_node = nullptr; 
-
+        
         if(token->type == Code_Token_Type::Identifier || token->type ==  Code_Token_Type::Integer || token->type == Code_Token_Type::String)
         {
             switch(token->type)
             {
                 case Code_Token_Type::Identifier:
                 {
+
+                    std::cout << "the ptoken is " << token->value << std::endl;
+
                     auto new_ast_identifier_node  =  new AstIdentifier(token);
                     new_primary_node  = new AstPrimary(new_ast_identifier_node); 
-                    std::cout << token->value << std::endl;
-                    get_next_token();
-                    std::cout << current_token_->value << std::endl;
+
+                    token_has_parsed(); 
+                    token = get_token_to_be_parsed();
+
+                    std::cout << "the next token is " << token->value << std::endl;
+
                     break;
                 }
 
@@ -77,7 +87,14 @@ AstPrimary::Ptr Parser::parse_primary()
                 {
                     auto new_ast_number_node  =  new AstNumber(token);
                     new_primary_node  = new AstPrimary(new_ast_number_node); 
-                    get_next_token();
+
+                    token_has_parsed();
+
+                    token = get_token_to_be_parsed();
+
+                    std::cout << "the next token is " << (int)token->type << std::endl;
+
+  
                     break;
                 }
 
@@ -85,10 +102,13 @@ AstPrimary::Ptr Parser::parse_primary()
                 {
                     auto new_ast_string_node = new AstString(token);
                     new_primary_node = new AstPrimary(new_ast_string_node);
+                    token_has_parsed();
                     break;
                 }
                 default:
-                    break;
+                {
+                    LOG("Syntax",token->line_num);
+                }
             } 
             return std::shared_ptr<AstPrimary>(new_primary_node);
         }
@@ -106,7 +126,8 @@ AstPrimary::Ptr Parser::parse_primary()
 
 AstFactor::Ptr Parser::parse_factor()
 {
-    struct Token* token = current_token_;
+    struct Token* token = get_token_to_be_parsed();
+    std::cout << "the token is " << token->value << std::endl;
     AstPrimary::Ptr new_primary_node;
     AstFactor::Ptr new_factor_node;
 
@@ -124,7 +145,7 @@ AstFactor::Ptr Parser::parse_factor()
     }
     else
     {
-        std::cout << "Enter In Parse Factor " << std::endl;
+        std::cout << "Enter In Parse Primary " << std::endl;
         new_primary_node = parse_primary();
         
         if(new_primary_node == nullptr) 
@@ -143,15 +164,25 @@ AstFactor::Ptr Parser::parse_factor()
 
 AstOperation::Ptr Parser::parse_operation()
 {
-    auto token = current_token_;
+    auto token = get_token_to_be_parsed();
+
     std::cout << "Enter In parse Operation" << std::endl;
+    std::cout << "ther current operator is " << token->value << std::endl;
+    
+    if(token->type == Code_Token_Type::LBRACE)
+        parse_block(); 
+
     if(token->type == Code_Token_Type::Sub || token->type == Code_Token_Type::Add 
                                 || token->type == Code_Token_Type::Mul || token->type == Code_Token_Type::Div
-                                || token->type == Code_Token_Type::Assgin || token->type == Code_Token_Type::EQ) 
+                                || token->type == Code_Token_Type::Assgin || token->type == Code_Token_Type::EQ 
+                                || token->type == Code_Token_Type::LT || token->type == Code_Token_Type::LE
+                                || token->type == Code_Token_Type::GE || token->type == Code_Token_Type::GT) 
     {
         auto new_operation_node = std::shared_ptr<AstOperation>(new AstOperation(token));
         assert(new_operation_node != nullptr);
-        get_next_token();
+        token_has_parsed();
+        token = get_token_to_be_parsed();
+        std::cout << "the next token is " << token->value << std::endl;
         return new_operation_node; 
     } 
     else 
@@ -180,7 +211,8 @@ AstExpr::Ptr  Parser::parse_expr()
     while(1)
     {
         if(current_token_->type == Code_Token_Type::Eol)
-        {
+        { 
+            
             break;
         }
         auto new_operation_node = parse_operation();
@@ -199,31 +231,33 @@ AstExpr::Ptr  Parser::parse_expr()
 
 AstBlock::Ptr Parser::parse_block() 
 {
-    auto token =  get_next_token(); 
+    auto token =  get_token_to_be_parsed(); 
     auto new_block_node = std::shared_ptr<AstBlock>(new AstBlock());
-    if(token->type == Code_Token_Type::LBRACE) 
-    {
 
-        auto token_pos = parsed_token_num_;
+    if(token->type == Code_Token_Type::LBRACE) 
+    { 
+        token_has_parsed();
+        auto token_pos = cur_parsed_token_pos_;
+
         auto new_statement_node = parse_statement(); 
         
         if(new_statement_node == nullptr)
-            parsed_token_num_ = token_pos;
+            cur_parsed_token_pos_ = token_pos;
         else 
             new_block_node->add_statement(new_statement_node); 
 
         while(1)
         {
-            token = get_next_token(); 
+            token = get_token_to_be_parsed(); 
 
             if(token->type == Code_Token_Type::Semicolon || token->type == Code_Token_Type::Eof)
             { 
-                token_pos = parsed_token_num_;
+                token_pos = cur_parsed_token_pos_;
                 auto new_other_statement_node = parse_statement(); 
 
                 if(new_other_statement_node == nullptr)
                 {
-                    parsed_token_num_ = token_pos;
+                    cur_parsed_token_pos_ = token_pos;
                     break;
                 }
                 else 
@@ -232,7 +266,7 @@ AstBlock::Ptr Parser::parse_block()
             else 
                 goto Err; 
         } 
-        token = get_next_token();
+        token = get_token_to_be_parsed();
 
         if(token->type == Code_Token_Type::RBRACE)
         {
@@ -269,8 +303,8 @@ AstSimple::Ptr Parser::parse_simple()
 
 AstStatement::Ptr Parser::parse_statement()
 {
-    auto token_pos = parsed_token_num_;
-    auto token = current_token_;
+    auto token = get_token_to_be_parsed();
+    auto token_pos = cur_parsed_token_pos_;
     auto value = (token->value).data(); 
 
     AstStatement::Ptr new_statement_node = nullptr;
@@ -281,7 +315,7 @@ AstStatement::Ptr Parser::parse_statement()
     AstLeafNode::Ptr new_else_node = nullptr;
     AstBlock::Ptr new_else_block_node = nullptr;
 
-    std::cout << "Enter In Parse statement" << std::endl;
+    std::cout << "enter in Pase statment"<< std::endl;
 
     if(token->type == Code_Token_Type::If)
     { 
@@ -300,7 +334,7 @@ AstStatement::Ptr Parser::parse_statement()
             }
             else
             {
-                 token = get_next_token();
+                 token = get_token_to_be_parsed();
                  value = token->value.data();
 
                 if((::strcmp(value,"else")==0) && (new_else_block_node =  parse_block() ) != nullptr)
@@ -322,7 +356,7 @@ AstStatement::Ptr Parser::parse_statement()
     }
     else if(current_token_->type == Code_Token_Type::While)  
     {
-        get_next_token();
+        token_has_parsed();
 
         if((new_expr_node = parse_expr()) != nullptr && (new_block_node = parse_block())!= nullptr)
         {
@@ -351,9 +385,13 @@ AstStatement::Ptr Parser::parse_statement()
 
 AstProgram::Ptr Parser::parse_program()
 {
+    auto token = get_token_to_be_parsed();
+
+    if(token->type == Code_Token_Type::Eof)
+        return nullptr; 
+
     AstProgram* new_ast_program_node = new AstProgram();
 
-    std::cout << "Enter In parse Programe \n"; 
     auto new_ast_statement_node = parse_statement(); 
         
     if(new_ast_statement_node != nullptr)
@@ -363,8 +401,7 @@ AstProgram::Ptr Parser::parse_program()
 
     if(current_token_->type == Code_Token_Type::Eol ||current_token_->type == Code_Token_Type::Semicolon)
     {
-        get_next_token();
-        std::cout << parsed_token_num_ << std::endl;
+        token_has_parsed();
         return std::shared_ptr<AstProgram>(new_ast_program_node);
     }
     else 
@@ -376,24 +413,30 @@ AstProgram::Ptr Parser::parse_program()
     return nullptr;
 }
 
-void  Parser::parse()
+void Parser::parse()
 { 
-    int token_num = lex_->get_token_num();
-    
-    //parsed_token_num_ begin with 0
-    get_next_token();
+          
+    AstProgram::Ptr ptr = nullptr;
 
-    
-    while(parsed_token_num_ < token_num)
-    { 
-        AstProgram::Ptr ptr = nullptr;
-       
-        if((ptr = parse_program()) != nullptr)
-            program_.push_back(ptr);
-        parsed_token_num_++; 
+    while(cur_parsed_token_pos_< total_token_num_)
+    {
+        
+        auto token = get_token_to_be_parsed();
+
+        if(token->type != Code_Token_Type::Eof)
+        {
+            if((ptr = parse_program()) != nullptr )
+            {
+                program_.push_back(ptr); 
+            }
+            else 
+            {
+                ::fprintf(stderr,"Error In Parse Your file");
+                break;
+            }
+        }
+        else 
+            break;
     }
-    
-    if(parsed_token_num_ == token_num)
-        std::cout << "success" << std::endl;
 
 }
