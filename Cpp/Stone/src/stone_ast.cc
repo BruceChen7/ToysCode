@@ -124,7 +124,6 @@ AstProgram::AstProgram():statement_{}
 void AstProgram::add_statement(AstStatement::Ptr node)
 {
     statement_.push_back(node);
-    std::cout << "Hello world" << std::endl; 
 }
 
 void AstNumber::accept(AstVisitor* visitor)
