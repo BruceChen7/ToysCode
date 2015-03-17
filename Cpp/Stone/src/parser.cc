@@ -1,10 +1,9 @@
 #include "parser.h"
 #include "lexical.h"
-#include <string.h>
 #include <assert.h>
-#include <stdlib.h>
 #include <iostream>
-#include <algorithm>
+#include <stdlib.h>
+#include <string.h>
 using namespace Stone; 
 using namespace Ast;
 

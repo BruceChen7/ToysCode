@@ -175,7 +175,7 @@ void Lexical::determin_token_type(const char *token,int line_num)
         case '%':
             if(::strcmp(ptr,"%")==0)
             { 
-                tokens.type = Code_Token_Type::Div;
+                tokens.type = Code_Token_Type::Mod;
             }
             else 
                 goto ERR;
@@ -214,10 +214,12 @@ void Lexical::determin_token_type(const char *token,int line_num)
             if(::strcmp(ptr,">") == 0)
             {
                 tokens.type = Code_Token_Type::GT;
+                break;
             }
             else if(::strcmp(ptr,">=") == 0)
             {
                 tokens.type = Code_Token_Type::GE;
+                break;
             } 
             else 
                 goto ERR;
@@ -227,6 +229,7 @@ void Lexical::determin_token_type(const char *token,int line_num)
             if(::strcmp(ptr,"{") == 0)
             {
                 tokens.type = Code_Token_Type::LBRACE;
+                break;
             }
             else 
                 goto ERR;
@@ -236,23 +239,45 @@ void Lexical::determin_token_type(const char *token,int line_num)
             if(::strcmp(ptr,"}") == 0)
             {
                 tokens.type = Code_Token_Type::RBRACE;
+                break;
             }
             else 
                 goto ERR;
             break; 
         case 'w':
-            if(::strcmp(ptr,"while")  == 0)
+            if(::strcmp(ptr,"while")== 0)
             {
                 tokens.type = Code_Token_Type::While;
-                break;
-                
+                break; 
             }
+            else 
+            {
+                if(is_identifier(str))
+                {
+                    // fprintf(stderr,"%s\n",ptr);
+                    tokens.type = Code_Token_Type::Identifier;
+                }
+                else 
+                    goto ERR; 
+                break;
+            } 
         case 'i':
             if(::strcmp(ptr,"if") == 0)
             {
                 tokens.type = Code_Token_Type::If;
                 break;
             } 
+            else 
+            {
+                if(is_identifier(str))
+                {
+                    // fprintf(stderr,"%s\n",ptr);
+                    tokens.type = Code_Token_Type::Identifier;
+                }
+                else 
+                    goto ERR; 
+                break;
+            }
         case ';':
             tokens.type = Code_Token_Type::Semicolon;
             break;
@@ -260,8 +285,10 @@ void Lexical::determin_token_type(const char *token,int line_num)
         default:
             if(::isalpha(*ptr) || *ptr == '_')
             {
+
                 if(is_identifier(str))
                 {
+                    // fprintf(stderr,"%s\n",ptr);
                     tokens.type = Code_Token_Type::Identifier;
                 }
                 else 
