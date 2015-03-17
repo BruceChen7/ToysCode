@@ -7,9 +7,9 @@
 using namespace Stone;
 using namespace Ast;
 
-#define LOG(_msg,_line_num) do \
+#define LOG(_msg,_token,_line_num) do \
 {                              \
-    fprintf(stderr,"%s:%d\n",_msg,_line_num);   \
+    fprintf(stderr,"%s::::%s in positon %d\n",_msg,_token,_line_num);   \
 }while(0)
 
 
@@ -31,6 +31,7 @@ namespace Stone
             AstPrimary::Ptr parse_primary(); 
             struct Token* get_token_to_be_parsed();
             void parse(); 
+            bool is_in_first_set(std::vector<Code_Token_Type>&,Code_Token_Type type)const;
         private:
             std::unique_ptr<Lexical> lex_; 
             int total_token_num_;
@@ -38,6 +39,7 @@ namespace Stone
             struct Token* current_token_;
             std::vector<AstProgram::Ptr> program_; 
             void token_has_parsed(); 
+            bool err_state_;
 
             static std::vector<Code_Token_Type>program_first_set_; 
             static std::vector<Code_Token_Type>statement_first_set_;

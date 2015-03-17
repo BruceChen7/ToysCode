@@ -12,7 +12,8 @@
 #define ADD_ERROR_LIST(_err_code,_err_vec,_line_num,_token) do \
 {                                                       \
     if(err_code_) {                                    \
-                ::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: %s :: %s\n",_line_num,g_err_buf[_err_code],_token);\
+                ::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: The Code Information is \
+                        %s :: %s\n",_line_num,g_err_buf[_err_code],_token);\
                 err_vec_.push_back(g_status);\
                 err_code_ = 0;\
     }\

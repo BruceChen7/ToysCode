@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <assert.h>
+#include <iostream>
 #define kBufferSize (64)
 using namespace Stone;
 
@@ -252,6 +253,10 @@ void Lexical::determin_token_type(const char *token,int line_num)
                 tokens.type = Code_Token_Type::If;
                 break;
             } 
+        case ';':
+            tokens.type = Code_Token_Type::Semicolon;
+            break;
+
         default:
             if(::isalpha(*ptr) || *ptr == '_')
             {
@@ -303,6 +308,14 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
 
     while(isspace(**src))
         (*src)++;
+
+    if(**src == ';')
+    {
+        dest[0] = ';';
+        dest[1] = '\0'; 
+        (*src)++;
+        return 1;
+    }
 
     auto cnt = 0;
 
