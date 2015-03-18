@@ -10,10 +10,10 @@ using namespace Stone;
 const char * g_err_buf[32] = {
     "All is well",
     "The Token Is Too Long",
-    "I Do Not know What The Symbol Is,May Be, You Should Use blank Character To Separate Them"
+    "I Do Not know What The Symbol Is,May Be,You Should Use Blank Character To Separate Them"
 }; 
 
-char g_status[32];
+char g_status[1024];
 
 File::File(const char* file_name):fp_(fopen(file_name,"r")),line_num_(0)
 { 
@@ -91,7 +91,7 @@ bool Lexical::is_string(const std::string& word) const
     auto len = word.length();
 
     
-    if(ptr[0] == '"' && ptr[len-1] == '"')
+    if(len != 1 && ptr[0] == '"' && ptr[len-1] == '"')
         return true;
     else
         return false; 
@@ -194,6 +194,18 @@ void Lexical::determin_token_type(const char *token,int line_num)
             else 
                 goto ERR;
             break; 
+        case '(':
+            if(::strcmp(ptr,"(") == 0)
+            {
+                tokens.type = Code_Token_Type::LBrackets;
+            }
+            break;
+        case ')':
+            if(::strcmp(ptr,")") == 0)
+            {
+                tokens.type = Code_Token_Type::RBrackets;
+            }
+            break;
 
         case '<':
             if(::strcmp(ptr,"<") == 0)
@@ -254,7 +266,6 @@ void Lexical::determin_token_type(const char *token,int line_num)
             {
                 if(is_identifier(str))
                 {
-                    // fprintf(stderr,"%s\n",ptr);
                     tokens.type = Code_Token_Type::Identifier;
                 }
                 else 
@@ -271,7 +282,6 @@ void Lexical::determin_token_type(const char *token,int line_num)
             {
                 if(is_identifier(str))
                 {
-                    // fprintf(stderr,"%s\n",ptr);
                     tokens.type = Code_Token_Type::Identifier;
                 }
                 else 
@@ -325,6 +335,48 @@ void Lexical::determin_token_type(const char *token,int line_num)
     token_list_.push_back(tokens); 
 }
 
+//which is used by get_next_token
+void Lexical::creat_char_string(char ch,char *dest)
+{
+    dest[0] = ch;
+    dest[1] = '\0'; 
+}
+
+//Be careful: the (*src) has been changed
+//(*src) point to next token in the next turn  which is be get
+int Lexical::get_a_string(const char **src,char *dest)
+{
+    //**ptr begin with "
+    assert(**src=='"');
+
+     const char  *ptr = (*src)+1;
+
+    //find the next '"'
+    while(*ptr != '\n')
+    {
+        if(*ptr == '"')
+            break;
+        else 
+            ptr++; 
+    }
+
+    if(*ptr != '\n')
+    {
+        auto len = ptr-(*src)+1;
+        ::memcpy(dest,(*src),len);
+        dest[len] = '\0';
+        *src  =  ptr+1;
+        return len;
+    }
+    else 
+    {
+        creat_char_string('"',dest);
+        (*src)++;
+        return 1;
+    }
+
+}
+
 int Lexical::get_next_token(const char **src, char *dest,int token_length)
 {
     assert(dest != nullptr);
@@ -336,13 +388,32 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
     while(isspace(**src))
         (*src)++;
 
-    if(**src == ';')
+    switch(**src)
     {
-        dest[0] = ';';
-        dest[1] = '\0'; 
-        (*src)++;
-        return 1;
+        //deal with a Semicolon
+        case ';':
+            creat_char_string(';',dest);
+            (*src)++;
+            return 1;
+        //deal with a left bracket
+        case '(':
+            creat_char_string('(',dest);
+            (*src)++;
+            return 1;
+        //deal with a right bracket
+        case ')' :
+            creat_char_string(')',dest);
+            (*src)++;
+            return 1;
+        case '"': 
+            return get_a_string(src,dest); 
+
+        default:
+            break;
     }
+                
+
+    // deal with a  string with space 
 
     auto cnt = 0;
 

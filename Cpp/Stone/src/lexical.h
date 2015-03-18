@@ -10,12 +10,11 @@
 //macros
 #define MAX_TOKEN_LEN 128
 #define ADD_ERROR_LIST(_err_code,_err_vec,_line_num,_token) do \
-{                                                       \
-    if(err_code_) {                                    \
-                ::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line : %d  :: The Code Information is \
-                        %s :: %s\n",_line_num,g_err_buf[_err_code],_token);\
-                err_vec_.push_back(g_status);\
-                err_code_ = 0;\
+{                                                              \
+    if(err_code_) {                                            \
+        ::snprintf(g_status,sizeof(g_status),"Something Wrong With Your Code In Line ::::: %d  ::::%s :::::The Symbol is  %s\n",_line_num,g_err_buf[_err_code],_token);\
+        err_vec_.push_back(g_status);\
+        err_code_ = 0;\
     }\
 }while(0)
 
@@ -89,6 +88,13 @@ namespace Stone
             bool is_interger(const std::string& word) const ;
             bool is_identifier(const std::string& word);
 
+            // It a utility function to creat a Character to a string
+            // which is used by get_next_token
+            void creat_char_string(char ch,char *dest);
+
+            // It a utility function to get a string
+            // which is used by get_next_token
+            int get_a_string(const char **src, char *dest); 
             //ensure dest has enough space to contain tokens
             //each time get a token ,the 'src' points to next tokens to be get 
             //and tokens is stored into dest

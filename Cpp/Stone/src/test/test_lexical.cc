@@ -62,7 +62,7 @@ TEST_CASE("File Unit Test && Lexical Unit test")
         REQUIRE(lex1->get_token_info(1)->value == "=");
     }
 
-    SECTION("Semicolon Lexical Uint Test --empty.st")
+    SECTION("Semicolon  && String Lexical Uint Test --empty.st")
     {
         auto lex = std::unique_ptr<Lexical>(new Lexical("empty.st"));
         lex->parse();
@@ -72,7 +72,19 @@ TEST_CASE("File Unit Test && Lexical Unit test")
         REQUIRE(lex->get_token_info(3)->type == Code_Token_Type::Assgin);
         REQUIRE(lex->get_token_info(4)->type == Code_Token_Type::Integer);
         REQUIRE(lex->get_token_info(5)->type == Code_Token_Type::Semicolon);
+        REQUIRE(lex->get_token_info(6)->type == Code_Token_Type::Eol);
+        REQUIRE(lex->get_token_info(7)->type == Code_Token_Type::Identifier);
+        REQUIRE(lex->get_token_info(8)->type == Code_Token_Type::Assgin);
+        REQUIRE(lex->get_token_info(9)->type == Code_Token_Type::String);
+        REQUIRE(lex->get_token_info(10)->type == Code_Token_Type::Semicolon);
+        REQUIRE(lex->get_token_info(11)->type == Code_Token_Type::Eol);
+        REQUIRE(lex->get_token_info(13)->type == Code_Token_Type::Eol);
+        REQUIRE(lex->get_token_info(14)->type == Code_Token_Type::LBrackets);
+        REQUIRE(lex->get_token_info(15)->type == Code_Token_Type::RBrackets);
+        REQUIRE(lex->get_token_info(16)->type == Code_Token_Type::Eol);
+        REQUIRE(lex->get_token_info(17)->type == Code_Token_Type::Eof);
     }
+
 
 }
 
