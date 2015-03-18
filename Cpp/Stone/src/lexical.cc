@@ -477,7 +477,7 @@ void Lexical::add_eol_to_tail(int line_num)
 {
     struct Token eol_token;
     eol_token.type = Code_Token_Type::Eol;
-    eol_token.value = std::string("");
+    eol_token.value = std::string("eol");
     eol_token.line_num =  line_num;
     token_list_.push_back(eol_token);
 }
@@ -488,7 +488,7 @@ void Lexical::add_eof_to_tail()
     struct Token eof_token;
     eof_token.type = Code_Token_Type::Eof;
     eof_token.line_num = total_line_num; 
-    eof_token.value = std::string("");
+    eof_token.value = std::string("eof");
     token_list_.push_back(eof_token); 
 }
 

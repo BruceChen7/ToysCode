@@ -96,7 +96,7 @@ AstPrimary::Ptr Parser::parse_primary()
 
         if(expr_node == nullptr)
         {
-            LOG("Syntax Error",token->value.data(),token->line_num);
+            LOG(token->value.data(),token->line_num);
             return nullptr;
         } 
         else 
@@ -112,7 +112,7 @@ AstPrimary::Ptr Parser::parse_primary()
              }
              else 
              {
-                LOG("Syntax Error",token->value.c_str(),token->line_num);
+                LOG(token->value.c_str(),token->line_num);
                 return nullptr;
              
              }
@@ -130,7 +130,7 @@ AstPrimary::Ptr Parser::parse_primary()
                 case Code_Token_Type::Identifier:
                 {
 
-                    std::cout << "the ptoken is " << token->value << std::endl;
+                    std::cout << "the token is " << token->value << std::endl;
 
                     auto new_ast_identifier_node  =  new AstIdentifier(token);
                     new_primary_node  = new AstPrimary(new_ast_identifier_node); 
@@ -167,14 +167,14 @@ AstPrimary::Ptr Parser::parse_primary()
                 }
                 default:
                 {
-                    LOG("Syntax",token->value.c_str(),token->line_num);
+                    LOG(token->value.c_str(),token->line_num);
                 }
             } 
             return std::shared_ptr<AstPrimary>(new_primary_node);
         }
         else 
         {
-            LOG("Syntax Error",token->value.data(),token->line_num);
+            LOG(token->value.data(),token->line_num);
             return nullptr;
         }
     }
@@ -218,7 +218,7 @@ AstFactor::Ptr Parser::parse_factor()
     return new_factor_node;
 
     Err: 
-        LOG("Syntax Error In Line",token->value.data(),token->line_num); 
+        LOG(token->value.data(),token->line_num); 
         return nullptr;
 }
 
@@ -247,7 +247,7 @@ AstOperation::Ptr Parser::parse_operation()
     } 
     else 
     {
-        LOG("Syntax Error In Parsing Operation",token->value.data(),token->line_num);
+        LOG(token->value.data(),token->line_num);
         return nullptr;
     }
   
@@ -340,8 +340,8 @@ AstBlock::Ptr Parser::parse_block(bool must_be_a_block)
 
     Err:
         if(must_be_a_block)
-            LOG("Syntax Error In Parsing Block ",token->value.data(),token->line_num); 
-            return nullptr; 
+            LOG(token->value.data(),token->line_num); 
+        return nullptr; 
 }
 
 AstSimple::Ptr Parser::parse_simple()
@@ -376,7 +376,15 @@ AstStatement::Ptr Parser::parse_statement(bool must_be_a_statement)
     AstLeafNode::Ptr new_else_node = nullptr;
     AstBlock::Ptr new_else_block_node = nullptr;
 
-    std::cout << "enter in Parse statment"<< std::endl;
+    std::cout << "Enter in Parse statment"<< std::endl;
+
+    //decide whether token is in the first set
+    //if not 
+    //Log and exit
+    if(!is_in_first_set(statement_first_set_,token->type)) 
+    {
+        LOG(token->value.data(),token->line_num);
+    }
 
     if(token->type == Code_Token_Type::If)
     { 
@@ -441,7 +449,7 @@ AstStatement::Ptr Parser::parse_statement(bool must_be_a_statement)
     Err: 
         if(must_be_a_statement)
         {
-            LOG("Syntax Error In Parsing Statement",token->value.data(),token->line_num);
+            LOG(token->value.data(),token->line_num);
             return new_statement_node;
         }
      return new_statement_node;
@@ -453,9 +461,7 @@ AstProgram::Ptr Parser::parse_program()
     
     if(!is_in_first_set(program_first_set_,token->type)) 
     {
-        LOG("Syntax Error ",token->value.data(),token->line_num);
-        err_state_ = 1;
-        return nullptr;
+        LOG(token->value.data(),token->line_num);
     }
    
 
@@ -476,6 +482,7 @@ AstProgram::Ptr Parser::parse_program()
             break; 
     }
 
+
     AstProgram* new_ast_program_node = new AstProgram();
 
     auto new_ast_statement_node = parse_statement(true); 
@@ -491,7 +498,7 @@ AstProgram::Ptr Parser::parse_program()
 
     Err:
         {
-            LOG("Syntax Error In Parsing Programe",token->value.data(),current_token_->line_num); 
+            LOG(token->value.data(),current_token_->line_num); 
             return nullptr;
         }
 
@@ -502,26 +509,26 @@ void Parser::parse()
           
     AstProgram::Ptr ptr = nullptr;
 
-    while(cur_parsed_token_pos_< total_token_num_)
-    {
-
-        auto token = get_token_to_be_parsed();
-
-        if(token->type != Code_Token_Type::Eof)
-        {
-            if((ptr = parse_program()) != nullptr )
-            {
-                program_.push_back(ptr); 
-            }
-            else 
-            {
-                ::fprintf(stderr,"Error In Parse Your file");
-                break;
-            }
-        }
-        else 
-            break;
-    }
+    // while(cur_parsed_token_pos_< total_token_num_)
+    // {
+    //
+    //     auto token = get_token_to_be_parsed();
+    //
+    //     if(token->type != Code_Token_Type::Eof)
+    //     {
+    //         if((ptr = parse_program()) != nullptr )
+    //         {
+    //             program_.push_back(ptr); 
+    //         }
+    //         else 
+    //         {
+    //             ::fprintf(stderr,"Error In Parse Your file");
+    //             break;
+    //         }
+    //     }
+    //     else 
+    //         break;
+    // }
 
     parse_program();
 }

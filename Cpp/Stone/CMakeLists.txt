@@ -6,7 +6,8 @@ set(CMAKE_CXX_COMPILER "clang++-3.5")
 set(CMAKE_CXX_FLAGS_DEBUG "-g3 -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "O2 -Wshadow")
 
-include_directories(${PROJECT_SOURCE_DIR}/src/*.h)
+include_directories(${PROJECT_SOURCE_DIR}/src/)
+include_directories(../)
 add_subdirectory(src)
 add_subdirectory(src/test)
  

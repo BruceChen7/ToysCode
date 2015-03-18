@@ -7,9 +7,10 @@
 using namespace Stone;
 using namespace Ast;
 
-#define LOG(_msg,_token,_line_num) do \
+#define LOG(_token,_line_num) do \
 {                              \
-    fprintf(stderr,"%s::::%s in positon %d\n",_msg,_token,_line_num);   \
+    fprintf(stderr,"Syntax Error :::::::: %s :::::: In Line ::::: %d\n",_token,_line_num);   \
+    exit(-1);\
 }while(0)
 
 

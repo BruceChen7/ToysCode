@@ -9,7 +9,7 @@ TEST_CASE("Parser Unit Test")
 
     auto assign_parser = std::unique_ptr<Parser>(new Parser(new Lexical("assign.st")));
     auto while_parser = std::unique_ptr<Parser>(new Parser(new Lexical("while.st")));
-    auto empty_parser = std::unique_ptr<Parser>(new Parser(new Lexical("empty.st")));
+    // auto empty_parser = std::unique_ptr<Parser>(new Parser(new Lexical("empty.st")));
 
     SECTION("Parser Unit Test -- assign.st")
     {
@@ -20,12 +20,12 @@ TEST_CASE("Parser Unit Test")
 
     SECTION("Parser Unit Test -- while.st")
     { 
-        // while_parser->parse();
+        while_parser->parse();
     } 
 
     SECTION("Parser Empty Set -- empty.st")
     {
-        empty_parser->parse(); 
+        // empty_parser->parse(); 
     }
 
 }
