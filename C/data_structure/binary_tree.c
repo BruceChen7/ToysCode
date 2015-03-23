@@ -47,3 +47,54 @@ struct node* remove_half_leaf(struct node* root)
     }
     return root; 
 }
+
+
+struct node* bst_insert(struct node *root, int data)
+{
+    if(root == NULL)
+        return creat_new_node(data);
+
+    else if(data < root->value)
+    {
+        root->left = bst_insert(root->left,data);
+    }
+    else 
+        root->right = bst_insert(root->right,data);
+    return root;
+}
+
+void  kth_largetst_node_for_bst_uitl(struct node *root,int k, int *cnt,struct node **kth_node)
+{
+
+    if(root == NULL  ||  *cnt >= k)
+    {
+        return ;
+    }
+
+    kth_largetst_node_for_bst_uitl(root->right,k,cnt,kth_node);
+
+    (*cnt)++;
+    
+    if(*cnt == k)
+    {
+
+        *kth_node = root;
+        return ; 
+    }
+
+    kth_largetst_node_for_bst_uitl(root->left,k,cnt,kth_node);
+ 
+    
+}
+
+struct node*  kth_largetst_node_for_bst(struct node *root, int k)
+{ 
+    int cnt = 0;
+    struct node * kth_node  = NULL;
+    
+    kth_largetst_node_for_bst_uitl(root,k,&cnt,&kth_node); 
+
+
+    return kth_node; 
+}
+

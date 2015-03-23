@@ -10,6 +10,7 @@ struct node {
 };
 
 struct node *creat_new_node(int data);
+struct node *bst_insert(struct node *root , int data);
 void print_in_order(struct node *root); 
 
 // Given A binary Tree, how do you remove all the half nodes (which has only one child)? 
@@ -26,8 +27,12 @@ void print_in_order(struct node *root);
 //     2
 //    / \
 //   6   4
-//  / \ 
+//  / \
 // 1  11
 struct node* remove_half_leaf(struct node* root);
+//return the kth kth_largetst_node_for
+struct node*  kth_largetst_node_for_bst(struct node *root, int k);
+void kth_largetst_node_for_bst_uitl(struct node *root,int k, int *cnt,struct node **kth_node); 
+
 #endif
 
