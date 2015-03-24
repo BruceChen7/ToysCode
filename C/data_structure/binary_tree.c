@@ -63,6 +63,22 @@ struct node* bst_insert(struct node *root, int data)
     return root;
 }
 
+int get_binary_tree_depth(struct node* root)
+{
+    int depth;
+    if(root == NULL)
+        return 0;
+    else 
+    {
+        int left_depth = get_binary_tree_depth(root->left) + 1;
+        int right_depth = get_binary_tree_depth(root->right) + 1; 
+
+        depth = (left_depth > right_depth) ? left_depth : right_depth;
+        
+    }
+    return depth; 
+}
+
 void  kth_largetst_node_for_bst_uitl(struct node *root,int k, int *cnt,struct node **kth_node)
 {
 

@@ -4,6 +4,13 @@
 
 Test(BinaryTree,remove_leaf)
 {
+    //        2
+    //      /   \
+    //     7    5
+    //    / \  / \
+    //      6     9
+    //     / \   / \
+    //    1  11 4 
     struct node *new_node =  creat_new_node(2);
     new_node->left = creat_new_node(7);
     new_node->right = creat_new_node(5);
@@ -51,6 +58,21 @@ Test(BinarySearchTree,create_bst_tree)
     assert_eq(root->right->right->value,80);
 
 
+}
+
+Test(BinaryTree,get_binary_tree_depth)
+{
+
+    struct node *new_node =  creat_new_node(2);
+    new_node->left = creat_new_node(7);
+    new_node->right = creat_new_node(5);
+    new_node->left->right = creat_new_node(6);
+    new_node->left->right->left =  creat_new_node(1); 
+    new_node->left->right->right = creat_new_node(11);
+    new_node->right->right = creat_new_node(9);
+    new_node->right->right->left = creat_new_node(4);
+    new_node->right->right->left->right= creat_new_node(4);
+    assert_eq(get_binary_tree_depth(new_node),5); 
 }
 
 Test(BinarySearchTree,kth_largest_node)

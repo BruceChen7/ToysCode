@@ -30,6 +30,7 @@ void print_in_order(struct node *root);
 //  / \
 // 1  11
 struct node* remove_half_leaf(struct node* root);
+int  Wget_binary_tree_depth(struct node* root);
 //return the kth kth_largetst_node_for
 struct node*  kth_largetst_node_for_bst(struct node *root, int k);
 void kth_largetst_node_for_bst_uitl(struct node *root,int k, int *cnt,struct node **kth_node); 
