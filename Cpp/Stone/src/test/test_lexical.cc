@@ -18,6 +18,7 @@ TEST_CASE("File Unit Test && Lexical Unit test")
     {
         std::unique_ptr<Lexical> lex(new Lexical("while.st"));
         lex->parse();
+
         REQUIRE(lex->get_token_info(0)->type == Code_Token_Type::Identifier); 
         REQUIRE(lex->get_token_info(1)->type == Code_Token_Type::Assgin);
         REQUIRE(lex->get_token_info(2)->type == Code_Token_Type::Integer);
