@@ -3,10 +3,7 @@ project(TOYS_DS C)
 
 add_subdirectory(test)
 
-set(
-    Toy_DS
-    binary_tree.c
-    )
+set( Toy_DS binary_tree.c string_.c)
 
 add_library(DS ${Toy_DS})
 
