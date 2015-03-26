@@ -317,7 +317,7 @@ AstExpr::Ptr  Parser::parse_expr()
 
             if(new_factor_node != nullptr)
             {
-                new_expr_node->add_op_factor(new_operation_node,new_factor_node);
+                new_expr_node->add_op_factor(new_operation_node,new_factor_node); 
                 continue;
             }
             else 
@@ -333,7 +333,7 @@ AstExpr::Ptr  Parser::parse_expr()
 
             //recover the original token
             set_token_parsed_pos(cur_parsed_token_pos); 
-            std::cout << get_token_to_be_parsed()->value.data() << std::endl;
+            std::cout << "the original data is " << get_token_to_be_parsed()->value.data() << std::endl;
             break;
         }
 
@@ -353,54 +353,91 @@ AstBlock::Ptr Parser::parse_block()
         token  = get_token_to_be_parsed(); 
 
         auto token_pos = cur_parsed_token_pos_;
-
+        
+        //there must be 'eol' after the '{'
         if(is_token_eol_or_semi(token))
         {
             token_has_parsed(); 
-        }
-        else 
-        {
+           
+            token = get_token_to_be_parsed();
+            auto token_pos  = cur_parsed_token_pos_; 
+            auto new_statement_node = parse_statement();
 
-            auto new_statement_node = parse_statement(); 
+            if(new_statement_node != nullptr)
+            {
+                new_block_node->add_statement(new_statement_node);
 
-            if(new_statement_node == nullptr)
-                cur_parsed_token_pos_ = token_pos;
-            else 
-                new_block_node->add_statement(new_statement_node); 
-        }
-        while(1)
-        {
-            token = get_token_to_be_parsed(); 
-
-            if(token->type == Code_Token_Type::Semicolon || token->type == Code_Token_Type::Eof)
-            { 
-                token_pos = cur_parsed_token_pos_;
-                auto new_other_statement_node = parse_statement(); 
-
-                if(new_other_statement_node == nullptr)
+                while(1)
                 {
-                    cur_parsed_token_pos_ = token_pos;
-                    break;
+                    token = get_token_to_be_parsed();
+                    token_pos = cur_parsed_token_pos_;
+
+                    if(is_token_eol_or_semi(token))
+                        token_has_parsed();
+
+                    new_statement_node = parse_statement();
+
+                    if(new_statement_node != nullptr)
+                    {
+                        new_block_node->add_statement(new_statement_node);
+                        continue;
+                    
+                    }
+                    else 
+                    {
+                        set_token_parsed_pos(token_pos); 
+                        break;
+                    
+                    } 
+                }
+
+                token = get_token_to_be_parsed();
+
+                if(token->type == Code_Token_Type::RBRACE)
+                {
+                    std::cout << "Hello world again" << std::endl;
+                    token_has_parsed();
                 }
                 else 
-                    new_block_node->add_statement(new_other_statement_node); 
-            } 
-            else 
-                return nullptr;
-        } 
-        token = get_token_to_be_parsed();
+                {
+                    if(token->type == Code_Token_Type::Eol)
+                        token_has_parsed();
+                    else 
+                    {
+                        LOG(token->value.data(),token->line_num); 
+                        return nullptr;
+                    }
+                }
 
-        if(token->type == Code_Token_Type::RBRACE)
-        {
-            return new_block_node;
-        } 
+            }
+            else 
+            {
+                
+                if(token->type == Code_Token_Type::RBRACE)
+                {
+                    token_has_parsed();
+                } 
+                else 
+                {
+                    LOG(token->value.data(),token->line_num); 
+                    return nullptr;
+                }
+            }
+
+        }
         else 
+        {
+            LOG(token->value.data(),token->line_num); 
             return nullptr;
+        }
     }
     else 
-        LOG(token->value.data(),token->line_num); 
-
+    {
+        LOG(token->value.data(),token->line_num);
+        return nullptr;
+    }
     return new_block_node;
+
 }
 
 AstSimple::Ptr Parser::parse_simple()
@@ -437,6 +474,8 @@ AstStatement::Ptr Parser::parse_statement()
 
     std::cout << "Enter in Parse statement"<< std::endl;
 
+    if(token->type == Code_Token_Type::RBRACE)
+        return nullptr;
     //decide whether token is in the first set
     //if not 
     if(!is_in_first_set(statement_first_set_,token->type)) 

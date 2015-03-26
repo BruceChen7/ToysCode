@@ -11,6 +11,7 @@ struct node* creat_new_node(int data)
     return new_node;
 }
 
+//inorder traversal
 void print_in_order(struct node *root)
 {
     if(root != NULL)
@@ -114,3 +115,15 @@ struct node*  kth_largetst_node_for_bst(struct node *root, int k)
     return kth_node; 
 }
 
+void swap_left_right_child_tree(struct node * node)
+{
+    if(node == NULL)
+        return;
+    swap_left_right_child_tree(node->left);
+    swap_left_right_child_tree(node->right); 
+
+    struct node *temp = node->left; 
+    node->left = node->right;
+    node->right = temp;
+
+}
