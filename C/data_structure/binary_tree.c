@@ -104,6 +104,8 @@ void  kth_largetst_node_for_bst_uitl(struct node *root,int k, int *cnt,struct no
     
 }
 
+
+//get the kth most  largest value
 struct node*  kth_largetst_node_for_bst(struct node *root, int k)
 { 
     int cnt = 0;
@@ -115,6 +117,7 @@ struct node*  kth_largetst_node_for_bst(struct node *root, int k)
     return kth_node; 
 }
 
+//swap the left and right  subtree
 void swap_left_right_child_tree(struct node * node)
 {
     if(node == NULL)
