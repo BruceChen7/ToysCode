@@ -1,0 +1,28 @@
+#ifndef __STONE_SRC_STONE_AST__
+#define __STONE_SRC_STONE_AST__
+#include <memory>
+#include <vector>
+#include "lexical.h"
+namespace Stone
+{
+    class AstLeafNode;
+    class AstNumber;
+    class AstIdentifier;
+    class AstString;
+    class AstOperation;
+
+    class Interface 
+    {
+        virtual parse()
+    
+    
+    };
+    class AstLeafNode 
+    { 
+
+    
+    };
+
+
+}
+#endif
