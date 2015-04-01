@@ -3,7 +3,7 @@
 using namespace Stone;
 
 
-bool AstLeafParser::parse_ast_leaf(AstLeafNode* node, Code_Token_Type type)
+bool AstParser::parse_ast_leaf(AstLeafNode* node, Code_Token_Type type)
 {
     if(node->get_token()->type != type)
         return false;
@@ -17,17 +17,24 @@ bool AstLeafParser::parse_ast_leaf(AstLeafNode* node, Code_Token_Type type)
     }
 }
 
-bool AstLeafParser::visit(AstNumber *number)
+bool AstParser::visit(AstNumber *number)
 { 
    return parse_ast_leaf(number,Code_Token_Type::Integer);
 }
 
-bool AstLeafParser::visit(AstString *str)
+bool AstParser::visit(AstString *str)
 { 
     return parse_ast_leaf(str,Code_Token_Type::String);
 }
 
-bool AstLeafParser::visit(AstIdentifier *identifier)
+bool AstParser::visit(AstIdentifier *identifier)
 { 
     return parse_ast_leaf(identifier,Code_Token_Type::Identifier); 
+}
+
+
+bool AstParser::visit(AstOperation *operation)
+{
+    
+
 }

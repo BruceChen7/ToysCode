@@ -8,8 +8,8 @@ using namespace Stone;
 TEST_CASE("Parser Unit Test")
 {
     auto lex = new Lexical("while.st");
-    auto ast_leaf_parser  = new AstLeafParser();
-    auto parser =  Parser(lex,ast_leaf_parser); 
+    auto ast_parser  = new AstParser();
+    auto parser =  Parser(lex,ast_parser); 
 }
 
 

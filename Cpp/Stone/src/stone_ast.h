@@ -18,10 +18,15 @@ namespace Stone
         public:
             virtual bool visit(AstNumber* number) = 0;
             virtual bool visit(AstIdentifier* identifer) = 0;
-            // virtual bool visit(AstOperation* operation) = 0;
+            virtual bool visit(AstOperation* operation) = 0;
             virtual bool visit(AstString* operation) = 0; 
     }; 
-
+    
+    /**
+     * It's a base class used by AstNumber, AstIdentifier
+     * AstString class
+     *
+     */
     class AstLeafNode 
     { 
         public:
@@ -37,12 +42,13 @@ namespace Stone
 
     
    
-    class AstLeafParser:public IVisitor
+    class AstParser:public IVisitor
     { 
         public:
             bool visit(AstNumber* number);
             bool visit(AstString* string);
             bool visit(AstIdentifier* Identifier); 
+            bool visit(AstOperation* opeation);
 
         private: 
             //private method 

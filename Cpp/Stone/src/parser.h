@@ -11,7 +11,7 @@ namespace Stone
     class Parser
     {
         public:
-            Parser(Lexical *lex, AstLeafParser *parser):leaf_parser_(std::unique_ptr<AstLeafParser>(parser))
+            Parser(Lexical *lex, AstParser *parser):leaf_parser_(std::unique_ptr<AstParser>(parser))
                                                         ,lex_(std::unique_ptr<Lexical>(lex))
             {
             
@@ -20,7 +20,7 @@ namespace Stone
 
         private:
             std::unique_ptr<Lexical> lex_;
-            std::unique_ptr<AstLeafParser> leaf_parser_;
+            std::unique_ptr<AstParser> leaf_parser_;
 
     };
 
