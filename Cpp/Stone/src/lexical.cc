@@ -13,13 +13,22 @@ const char * g_err_buf[32] = {
     "I Do Not know What The Symbol Is,May Be,You Should Use Blank Character To Separate Them"
 }; 
 
+
 char g_status[1024];
 
-File::File(const char* file_name):fp_(fopen(file_name,"r")),line_num_(0)
+File::File(const char* file_name):line_num_(0)
 { 
     buffer_.reserve(kBufferSize);
+    
+    //user-defined deleter
+    auto close_file = [](FILE *fp) { 
+        ::fclose(fp); 
+    };
 
-    if(fp_ == nullptr)
+           
+    fp_ = std::shared_ptr<FILE>(::fopen(file_name,"r"),close_file);
+
+    if(fp_.get() == nullptr)
     { 
         ::fprintf(stderr,"can't open the source code for read\n");
         exit(0); 
@@ -33,7 +42,7 @@ void File::read2buffer()
     //a buffer to store source code per line 
     char buffer[1024]; 
 
-    while(::fgets(buffer,sizeof(buffer)-1,fp_))
+    while(::fgets(buffer,sizeof(buffer)-1,fp_.get()))
     { 
         auto tokens_per_line = std::string(buffer);
         buffer_.push_back(tokens_per_line); 
@@ -46,6 +55,7 @@ int File::get_file_line_num() const
     return line_num_;
 }
 
+
 std::string* File::get_line(int pos)
 { 
     if(pos < buffer_.size()) 
@@ -55,12 +65,6 @@ std::string* File::get_line(int pos)
 }
 
 
-
-File::~File()
-{
-    if(fp_ != nullptr)
-        fclose(fp_);
-}
 
 Lexical::Lexical(const char *file_name):source_code_file_(std::unique_ptr<File>(new File(file_name))),err_code_(0) 
 { 
@@ -85,6 +89,7 @@ bool Lexical::is_interger(const std::string& word) const
     return true;
 
 }
+
 bool Lexical::is_string(const std::string& word) const
 {
     auto ptr = word.data(); 
@@ -343,7 +348,7 @@ void Lexical::creat_char_string(char ch,char *dest)
 }
 
 //Be careful: the (*src) has been changed
-//(*src) point to next token in the next turn  which is be get
+//(*src) point to next token in the next turn  which will be get
 int Lexical::get_a_string(const char **src,char *dest)
 {
     //**ptr begin with "
@@ -414,12 +419,8 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
                 
 
     // deal with a  string with space 
-
     auto cnt = 0;
 
-    //Fix Me 
-    // deal with a string with space 
-    // deal with a bracket
     while(!isspace(**src) && (**src) != '\0' && (**src) != ';')
     {
         *dest = **src;
@@ -427,6 +428,7 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
         (*src)++; 
         cnt++; 
     } 
+
     //delete '\n'
     if(dest[cnt-1] == '\n')
         dest[cnt-1] = '\0';
@@ -435,10 +437,12 @@ int Lexical::get_next_token(const char **src, char *dest,int token_length)
     return cnt; 
 }
 
+//return a pointer to the token
 struct Token* Lexical::get_token_info(int pos)
 { 
     return &(token_list_.at(pos));
 }
+
 void Lexical::parse()
 {   
     auto total_line_num = source_code_file_->get_file_line_num();
@@ -485,6 +489,7 @@ void Lexical::add_eol_to_tail(int line_num)
 void Lexical::add_eof_to_tail()
 {
     auto total_line_num = source_code_file_->get_file_line_num();
+
     struct Token eof_token;
     eof_token.type = Code_Token_Type::Eof;
     eof_token.line_num = total_line_num; 

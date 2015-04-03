@@ -7,9 +7,10 @@ using namespace Stone;
 
 TEST_CASE("Parser Unit Test")
 {
-    auto lex = new Lexical("while.st");
-    auto ast_parser  = new AstParser();
-    auto parser =  Parser(lex,ast_parser); 
+    auto parser = std::unique_ptr<Parser>(new Parser(new Lexical("while.st")));
+
+
+
 }
 
 

@@ -58,15 +58,15 @@ namespace Stone
     class File 
     {
         public:
-            File(const char *filename);
-            File(const File* another_file) = delete;
-            File& operator=(const File&) = delete;
+            explicit File(const char *filename);
+            File(const File* another_file)= delete;
+            File& operator=(const File&) = default;
             void read2buffer();
             int get_file_line_num() const;
             std::string* get_line(int pos);
-            ~File();
+            ~File() = default;
         private:
-            FILE* fp_;
+            std::shared_ptr<FILE> fp_; 
             std::vector<std::string> buffer_; 
             int line_num_;
     };
@@ -77,7 +77,7 @@ namespace Stone
             Lexical(const char * source);
             void parse();
             size_t get_token_num();
-            struct Token* get_token_info(int pos);
+            struct Token* get_token_info(int pos); 
             Lexical& operator=(const Lexical&)  = delete;
             Lexical(const Lexical&) = delete;
             ~Lexical();
