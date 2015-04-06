@@ -3,7 +3,7 @@
 #include "lexical.h"
 #include <memory>
 using namespace Stone;
-
+#define DEBUG
 
 namespace Stone
 {
@@ -11,10 +11,11 @@ namespace Stone
     {
         public:
 
-            Parser(Lexical *lex):lex_(std::unique_ptr<Lexical>(lex)),total_token_num_{lex_->get_token_num()},parsed_token_num_{0}
+            Parser(Lexical *lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_{0}
             {
             
-                lex->parse();
+                lex_->parse();
+                total_token_num_ = lex_->get_token_num();
             }
 
             Parser(const Parser& ) = delete;
@@ -37,7 +38,8 @@ namespace Stone
 
             int parsed_token_num_; 
             size_t total_token_num_;
-            //parse  non-terminals
+
+            //parse  terminals and non-terminals 
             bool parse_program();
             bool parse_statement();
             bool parse_operation();

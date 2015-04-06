@@ -1,26 +1,37 @@
+"""""" Basic Edit Setting """"""
 set nu
 set tabstop=4
 set shiftwidth=4
 set expandtab
 set magic
 set ignorecase
+set nocompatible 
 set nobackup
 set incsearch
 set mouse=a
 set backspace=2
+
+""" file encoding """
+set encoding=utf-8
+set fileencoding=utf-8,ucs-bom,gb2312,cp936,gb2132
+
+"""plugin  setting  """"
 syntax  on
 filetype plugin  on
 filetype plugin indent on
+
+""""" colorschem """""""
 set t_Co=256
 colorscheme seoul256
 set background=dark
 		 
- "Set mapleader
+""""Set mapleade """"r
 let mapleader = ","
-set nocompatible 
 call plug#begin() 
+
 "plugins
-Plug 'Lokaltog/vim-powerline'
+Plug 'bling/vim-airline'
+Plug 'godlygeek/csapprox'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-multiple-cursors'
@@ -38,7 +49,6 @@ Plug 'jlanzarotta/bufexplorer'
 Plug 'vim-scripts/a.vim'
 call plug#end()            " required
 
-filetype plugin indent on 
 
 """""""""vimwiki """"""""""
 let g:vimwiki_list = [{'path': '/home/bruce/.Wiki/', 
@@ -50,7 +60,7 @@ let g:vimwiki_list = [{'path': '/home/bruce/.Wiki/',
 
 """"""""key mapping""""""""""""""
 
-"Fast reloading of the .vimrc
+"Fast Reloading of the .vimrc
 map <leader>ss :e ~/.vimrc <cr>
 "Fast split the window
 noremap <leader>sp :split<cr>
@@ -68,11 +78,16 @@ noremap <C-H> :tabp<CR>
 noremap <C-L> :tabn<CR>
 noremap <C-J> :tabc<CR>
 noremap <C-K> :tabe<CR> 
+
+
+""""" Fast Indeting """"""""""
 vnoremap < <gv 
 vnoremap > >gv
-" Fast convert to html
+
+""""  Fast convert to html """"""
 map va :VimwikiAll2HTML<cr>
-" tagbar configure
+
+""""" tagbar configure """""""
 map tl :TagbarToggle<cr>
 let g:tagbar_width = 15
 

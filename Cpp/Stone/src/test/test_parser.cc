@@ -9,8 +9,7 @@ TEST_CASE("Parser Unit Test")
 {
     auto parser = std::unique_ptr<Parser>(new Parser(new Lexical("while.st")));
 
-
-
+    parser->parse();
 
 }
 
