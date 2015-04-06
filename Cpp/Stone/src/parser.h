@@ -35,12 +35,12 @@ namespace Stone
 
             std::unique_ptr<Lexical> lex_; 
 
-			int parsed_token_num_; 
-			size_t total_token_num_;
+            int parsed_token_num_; 
+            size_t total_token_num_;
             //parse  non-terminals
             bool parse_program();
             bool parse_statement();
-			bool parse_operation();
+            bool parse_operation();
             bool parse_simple();
             bool parse_block();
             bool parse_expr();

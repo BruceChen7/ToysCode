@@ -8,8 +8,6 @@ set nobackup
 set incsearch
 set mouse=a
 set backspace=2
-set encoding=utf-8 
-set fileencodings=ucs-bom,utf-8,cp936,gb2312
 syntax  on
 filetype plugin  on
 filetype plugin indent on
@@ -22,18 +20,18 @@ let mapleader = ","
 set nocompatible 
 call plug#begin() 
 "plugins
-Plug 'bling/vim-airline'
-Plug 'godlygeek/csapprox'
+Plug 'Lokaltog/vim-powerline'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/vimwiki' 
 Plug 'tomtom/tcomment_vim'
 Plug 'Valloric/YouCompleteMe' 
-Plug 'godlygeek/csapprox'
 Plug 'yonchu/accelerated-smooth-scroll'
+"Bundle 'plasticboy/vim-markdown'
 Plug 'kien/ctrlp.vim'
 Plug 'tpope/vim-fugitive' 
+"Bundle 'zhaocai/GoldenView.Vim'
 Plug 'junegunn/seoul256.vim'
 Plug 'jlanzarotta/bufexplorer'
 "Plug 'wincent/command-t'
@@ -43,10 +41,11 @@ call plug#end()            " required
 filetype plugin indent on 
 
 """""""""vimwiki """"""""""
-let g:vimwiki_list = [{'path': '/home/bruce/Wiki/', 
-  \ 'template_path': '/home/bruce/Wiki/', 
+let g:vimwiki_list = [{'path': '/home/bruce/.Wiki/', 
+  \ 'template_path': '/home/bruce/.Wiki/', 
   \ 'template_default': 'default', 
-  \ 'template_ext': '.tpl'}]
+  \ 'template_ext': '.tpl',
+  \ 'path_html': '/home/bruce/.Wiki_html'}]
 
 
 """"""""key mapping""""""""""""""
