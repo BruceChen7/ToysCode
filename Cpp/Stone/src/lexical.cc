@@ -382,6 +382,8 @@ int Lexical::get_a_string(const char **src,char *dest)
 
 }
 
+//FixMe:: refactor the code 
+//and add Minus parsing
 int Lexical::get_next_token(const char **src, char *dest,int token_length)
 {
     assert(dest != nullptr);
