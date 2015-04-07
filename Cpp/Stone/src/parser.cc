@@ -93,6 +93,7 @@ void Parser::parse()
     }
     
     #ifdef DEBUG
+    //all the token have been parsed
     if(parsed_token_num_ == (int)total_token_num_ )
         ::fprintf(stdout,"Parse Success\n");
     else 
@@ -135,6 +136,11 @@ bool Parser::parse_statement()
 {
     auto token = lex_->get_token_info(parsed_token_num_);
     auto parsed_flag = false;
+
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
 
     switch(token->type)
     {
@@ -188,6 +194,11 @@ bool Parser::parse_block()
 { 
     auto token = lex_->get_token_info(parsed_token_num_);
 
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
+
    if(!is_belonged_to_first_set(first_block_set_,Code_Token_Type::LBRACE))
        return false; 
 
@@ -231,6 +242,11 @@ bool Parser::parse_block()
 
 bool Parser::parse_simple()
 {
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
+
     auto token = lex_->get_token_info(parsed_token_num_);
 
     if(!is_belonged_to_first_set(first_simple_set_,token->type))
@@ -244,6 +260,11 @@ bool Parser::parse_simple()
 bool Parser::parse_expr()
 { 
     auto token = lex_->get_token_info(parsed_token_num_);
+    
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
 
     if(!is_belonged_to_first_set(first_expr_set_,token->type))
         return false; 
@@ -282,6 +303,11 @@ bool Parser::parse_factor()
 {
     auto token = lex_->get_token_info(parsed_token_num_);
 
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
+
     if(!is_belonged_to_first_set(first_factor_set_,token->type))
         return false;
 
@@ -303,6 +329,11 @@ bool Parser::parse_factor()
 bool Parser::parse_operation()
 {
     auto token = lex_->get_token_info(parsed_token_num_);
+
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
 
     auto parsed_flag = false;
 
@@ -333,6 +364,11 @@ bool Parser::parse_operation()
 bool Parser::parse_primary()
 {
     auto token = lex_->get_token_info(parsed_token_num_);
+
+    #ifdef DEBUG
+    std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
+    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    #endif
 
     if(!is_belonged_to_first_set(first_primary_set_,token->type))
         return false;
