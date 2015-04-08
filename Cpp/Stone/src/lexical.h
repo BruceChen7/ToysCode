@@ -95,6 +95,7 @@ namespace Stone
             // It a utility function to get a string
             // which is used by get_next_token
             int get_a_string(const char **src, char *dest); 
+
             //ensure dest has enough space to contain tokens
             //each time get a token ,the 'src' points to next tokens to be get 
             //and tokens is stored into dest
