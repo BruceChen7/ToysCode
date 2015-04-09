@@ -10,6 +10,7 @@ using namespace Stone;
 std::vector<Code_Token_Type> Parser::first_program_set_ = {
     Code_Token_Type::Semicolon,
     Code_Token_Type::Eol,
+    Code_Token_Type::Eof,
     Code_Token_Type::If,
     Code_Token_Type::While,
     Code_Token_Type::Minus,
@@ -108,7 +109,7 @@ bool Parser::parse_program()
 
     #ifdef DEBUG
     std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
-    std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+    std::cout << "Have Parsed token is " << parsed_token_num_ << std::endl;
     #endif
 
     auto parsed_flag = false;
@@ -125,8 +126,7 @@ bool Parser::parse_program()
             parsed_flag = true;
             break;
         default: 
-            parsed_flag = parse_statement();
-    
+            parsed_flag = parse_statement(); 
     } 
 
     return parsed_flag;
@@ -158,7 +158,7 @@ bool Parser::parse_statement()
                 { 
                     token = lex_->get_token_info(parsed_token_num_);
 
-                    if(::strcmp(token->value.data(),"else"))
+                    if(::strcmp(token->value.data(),"else") == 0)
                     {
                         parsed_token_num_ ++; 
                         parsed_flag = parse_block(); 
@@ -216,6 +216,7 @@ bool Parser::parse_block()
    while(1)
    {
        token = lex_->get_token_info(parsed_token_num_);
+
        //zero or more '; | Eol '
        if(token->type == Code_Token_Type::Eol || token->type == Code_Token_Type::Semicolon)
        {
@@ -232,9 +233,14 @@ bool Parser::parse_block()
    } 
 
    token = lex_->get_token_info(parsed_token_num_);
+   std::cout << "token is " << token->value << std::endl;
    
    if(token->type == Code_Token_Type::RBRACE) 
+   {
+       //"}" has been parsed
+       parsed_token_num_++;
        return true; 
+   }
    else 
        return false;
 }
@@ -242,12 +248,13 @@ bool Parser::parse_block()
 
 bool Parser::parse_simple()
 {
+
+    auto token = lex_->get_token_info(parsed_token_num_);
+
     #ifdef DEBUG
     std::cout << "Current Token is ' " << token->value.data() << " '" << std::endl;
     std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
     #endif
-
-    auto token = lex_->get_token_info(parsed_token_num_);
 
     if(!is_belonged_to_first_set(first_simple_set_,token->type))
         return false; 
@@ -353,6 +360,11 @@ bool Parser::parse_operation()
 
             parsed_token_num_ ++; 
             parsed_flag = true;
+
+        #ifdef DEBUG
+            std::cout << "Operation Token is ' " << token->value.data() << " '" << std::endl;
+            std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
+        #endif
             break;
 
         default:
@@ -403,6 +415,11 @@ bool Parser::parse_primary()
         case Code_Token_Type::Integer:
             parsed_flag = true;
             parsed_token_num_++;
+
+            #ifdef DEBUG
+            std::cout << "The Integer is " << token->value << std::endl; 
+            #endif
+
             break;
 
         case Code_Token_Type::Identifier:
@@ -410,8 +427,7 @@ bool Parser::parse_primary()
             parsed_token_num_++;
             
             #ifdef DEBUG
-            std::cout << "The Identifier is " << token->value << std::endl;
-
+            std::cout << "The Identifier is " << token->value << std::endl; 
             #endif
             break;
 
