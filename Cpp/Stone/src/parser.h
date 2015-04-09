@@ -3,7 +3,15 @@
 #include "lexical.h"
 #include <memory>
 using namespace Stone;
-#define DEBUG
+
+#define LOG(_token,_line,_msg,_flag) do{   \
+    if(!_flag)                             \
+    {                                      \
+        _flag = true;                      \
+        ::fprintf(stderr,"Syntax Error:::::: %s ::::::  In Line :::: %d ::::%s \n",_token,_line,_msg);\
+    }\
+}while(0)
+
 
 namespace Stone
 {
@@ -11,7 +19,7 @@ namespace Stone
     {
         public:
 
-            Parser(Lexical *lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_{0}
+            Parser(Lexical *lex):lex_(std::unique_ptr<Lexical>(lex)),parsed_token_num_{0},is_set_err_flag_(false),parse_success_flag_(false)
             {
             
                 lex_->parse();
@@ -35,9 +43,10 @@ namespace Stone
         private:
 
             std::unique_ptr<Lexical> lex_; 
-
             int parsed_token_num_; 
             size_t total_token_num_;
+            bool is_set_err_flag_;
+            bool parse_success_flag_;
 
             //parse  terminals and non-terminals 
             bool parse_program();

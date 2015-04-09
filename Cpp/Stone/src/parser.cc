@@ -93,10 +93,14 @@ void Parser::parse()
            break;
     }
     
-    #ifdef DEBUG
     //all the token have been parsed
     if(parsed_token_num_ == (int)total_token_num_ )
+    {
         ::fprintf(stdout,"Parse Success\n");
+        parse_success_flag_ = true;
+    }
+
+    #ifdef DEBUG
     else 
         ::fprintf(stdout,"Parse Error\n"); 
     #endif
@@ -115,7 +119,10 @@ bool Parser::parse_program()
     auto parsed_flag = false;
 
     if(!is_belonged_to_first_set(first_program_set_,token->type))
+    {
+        LOG(token->value.data(),token->line_num,"May Be Here Are Strings,Identifier Or Number",is_set_err_flag_);
         return false;
+    }
     
     switch(token->type)
     {
@@ -173,12 +180,12 @@ bool Parser::parse_statement()
             parsed_token_num_++;
             
             parsed_flag = parse_expr();
-            
+
             if(parsed_flag)
             { 
-                parsed_flag = parse_block();
+                parsed_flag = parse_block(); 
             }
-            
+
             break;
 
         default: 
@@ -199,8 +206,12 @@ bool Parser::parse_block()
     std::cout << "Parsed Token Number is " << parsed_token_num_ << std::endl;
     #endif
 
-   if(!is_belonged_to_first_set(first_block_set_,Code_Token_Type::LBRACE))
-       return false; 
+
+   if(!is_belonged_to_first_set(first_block_set_,token->type))
+   {
+       LOG(token->value.data(),token->line_num,"May Be Here Is '{' ",is_set_err_flag_);
+       return false;
+   }
 
    //"{" has been parsed
    parsed_token_num_ ++; 
@@ -233,7 +244,6 @@ bool Parser::parse_block()
    } 
 
    token = lex_->get_token_info(parsed_token_num_);
-   std::cout << "token is " << token->value << std::endl;
    
    if(token->type == Code_Token_Type::RBRACE) 
    {
@@ -242,7 +252,10 @@ bool Parser::parse_block()
        return true; 
    }
    else 
+   {
+       LOG(token->value.data(),token->line_num,"May Be Here Is '}' ",is_set_err_flag_);
        return false;
+   }
 }
 
 
@@ -257,7 +270,9 @@ bool Parser::parse_simple()
     #endif
 
     if(!is_belonged_to_first_set(first_simple_set_,token->type))
+    {
         return false; 
+    }
 
     auto parsed_flag = parse_expr(); 
     return parsed_flag;
@@ -274,7 +289,10 @@ bool Parser::parse_expr()
     #endif
 
     if(!is_belonged_to_first_set(first_expr_set_,token->type))
+    {
+        LOG(token->value.data(),token->line_num,"May Be Here Are A Identifier,String Or Number ",is_set_err_flag_); 
         return false; 
+    }
 
     auto parsed_flag = parse_factor(); 
     
@@ -298,10 +316,11 @@ bool Parser::parse_expr()
         }
         else 
         {
-            parsed_token_num_ = reserved_parsed_num;
+            parsed_token_num_ = reserved_parsed_num; 
             break;
         }
     } 
+
     return parsed_flag;
 }
 
@@ -316,7 +335,11 @@ bool Parser::parse_factor()
     #endif
 
     if(!is_belonged_to_first_set(first_factor_set_,token->type))
+    {
+
+        LOG(token->value.data(),token->line_num,"May Be Here Are Strings Or Number Or Identifier ",is_set_err_flag_);
         return false;
+    }
 
     auto parsed_flag = false;
 
@@ -429,11 +452,17 @@ bool Parser::parse_primary()
             #ifdef DEBUG
             std::cout << "The Identifier is " << token->value << std::endl; 
             #endif
+
             break;
 
         case Code_Token_Type::String:
             parsed_flag = true;
             parsed_token_num_++;
+
+            #ifdef DEBUG
+            std::cout << "The Identifier is " << token->value << std::endl; 
+            #endif
+
             break;
 
         default:
