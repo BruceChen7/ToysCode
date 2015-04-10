@@ -35,6 +35,7 @@ struct                    \
 #define QUEUE_INSERT_TAIL(head,elem,field) do { \
     (elem)->field.next = NULL;                  \
     (elem)->field.prev = (head)->last;          \
+    (head)->field.next = (elem)                 \
     (head)->last = (elem);                      \
 }while(0)
 

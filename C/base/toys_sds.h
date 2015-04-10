@@ -9,11 +9,11 @@ typedef  char* sds;
 #define SDS_MAX_PRESIZE (1024 * 1024)
 
 struct toys_sds_hdr {
-	//the length of the c-style string 
-	unsigned int len;
-	// the free space which can be used
-	unsigned int free;
-	char buf[];
+    //the length of the c-style string 
+    unsigned int len;
+    // the free space which can be used
+    unsigned int free;
+    char buf[];
 };
 
 //creat a new sds string with the content specified by the init poninter and init_len 

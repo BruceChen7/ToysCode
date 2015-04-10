@@ -26,12 +26,12 @@ void print_in_order(struct node *root)
 
 void print_post_order(struct node *root)
 {
-	if(root != NULL)
-	{
-		print_post_order(root->left);
-		print_post_order(root->right);
-		fprintf(stdout,"%d",root->value); 
-	}
+    if(root != NULL)
+    {
+        print_post_order(root->left);
+        print_post_order(root->right);
+        fprintf(stdout,"%d",root->value); 
+    }
 }
 struct node* remove_half_leaf(struct node* root)
 {

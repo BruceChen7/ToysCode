@@ -5,25 +5,25 @@
 #define TOYS_SKIP_LIST_P 0.25
 
 typedef struct toys_skip_list_node {
-	void *value;
-	double score;
-	struct toys_skip_list_node *backward; 
+    void *value;
+    double score;
+    struct toys_skip_list_node *backward; 
 
-	//flexible array
-	struct toys_skip_list_level { 
-		struct toys_skip_list_node *forward;
-		unsigned int span; 
-	}level[]; 
+    //flexible array
+    struct toys_skip_list_level { 
+        struct toys_skip_list_node *forward;
+        unsigned int span; 
+    }level[]; 
 }toys_skip_list_node;
 
 
 typedef struct toys_skip_list { 
-	struct toys_skip_list_node *head;
-	struct toys_skip_list_node *tail; 
-	// the node number
-	unsigned long length; 
-	//the most level the skip list has
-	int level; 
+    struct toys_skip_list_node *head;
+    struct toys_skip_list_node *tail; 
+    // the node number
+    unsigned long length; 
+    //the most level the skip list has
+    int level; 
 } toys_skip_list;
 
 toys_skip_list_node* toys_sl_create_node(int level,double score,void *value); 
