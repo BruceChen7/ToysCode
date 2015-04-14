@@ -1,23 +1,36 @@
 #include <criterion/criterion.h>
 #include "../queue.h"
-
+#include <assert.h>
+#include <stdlib.h>
 Test(Queue,QueueMacroTest)
 {
-    struct QueueItem
+    struct QueueNode
     {
         int value;
-        QUEUE_ENTRY(elem) entry; 
+        QUEUE_ENTRY(QueueNode) entry; 
     };
    
-    struct QueueItem *item;
-    QUEUE_HEAD(,QueueItem) *TestHead;
+    struct QueueNode *node = malloc(sizeof(*node));  
+    node->entry.prev = NULL;
 
+    QUEUE_HEAD(QueueList,QueueNode) *TestHead = malloc(sizeof(*TestHead));
 
-    struct Queue_item*  test;
-    QUEUE_HEAD(TestHead,elem);
-    QUEUE_INSERT_TAIL(TestHead,item,entry);
+    QUEUE_INIT_HEAD(TestHead);
 
+    assert(TestHead->first == NULL);
+    assert(TestHead->last == NULL);
 
+    node->value = 1; 
+    QUEUE_INSERT_TAIL(TestHead,node,entry);
 
+    struct QueueNode *another_node = malloc(sizeof(*another_node));
+    another_node->value = 2;
+
+    QUEUE_INSERT_TAIL(TestHead,another_node,entry);
+
+    assert_eq(TestHead->last->value,2);
+
+    free(TestHead);
+    free(node);
 }
 

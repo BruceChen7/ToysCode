@@ -60,7 +60,7 @@ namespace Stone
         public:
             explicit File(const char *filename);
             File(const File* another_file)= delete;
-            File& operator=(const File&) = default;
+            File& operator=(const File&) = delete;
             void read2buffer();
             int get_file_line_num() const;
             std::string* get_line(int pos);

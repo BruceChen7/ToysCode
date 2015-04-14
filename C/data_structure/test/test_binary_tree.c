@@ -79,6 +79,7 @@ Test(BinaryTree,get_binary_tree_depth)
     new_node->right->right = creat_new_node(9);
     new_node->right->right->left = creat_new_node(4);
     new_node->right->right->left->right= creat_new_node(4);
+
     assert_eq(get_binary_tree_depth(new_node),5); 
 }
 

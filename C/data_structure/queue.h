@@ -26,7 +26,7 @@ struct                    \
 //判断当前的队列是否为空
 #define IS_QUEUE_EMPTY(head) (QUEUE_FIRST(head) == QUEUE_END(head) )
 
-#define QUEUE_INIT(head) do \
+#define QUEUE_INIT_HEAD(head) do \
 {                           \
     head->first = NULL;     \
     head->last = NULL;      \
@@ -35,7 +35,6 @@ struct                    \
 #define QUEUE_INSERT_TAIL(head,elem,field) do { \
     (elem)->field.next = NULL;                  \
     (elem)->field.prev = (head)->last;          \
-    (head)->field.next = (elem)                 \
     (head)->last = (elem);                      \
 }while(0)
 
