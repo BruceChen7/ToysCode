@@ -6,12 +6,12 @@ This is a code repository  for me to understand some conception and familiar wit
 	│   └── base  Some Basic Structures Implementations
 	│      
 	├── Cpp
-	│   ├── catch.hpp A Unit Test Header To
+	│   ├── catch.hpp A Unit Test Header 
 	│   ├── Compiler  A C Compiler Code Source,I think I can not complete it in a short time
 	|   |	
-	│   ├── Stone   
+	│   ├── Stone   A Toy Interpreter to be used to study compiler  principles
 	│   │ 
-	│   └── Utilities Some Useful Utilities Completed by C plus plus 
+	│   └── Utilities  Some Useful Utilities Completed by C plus plus 
 	│       
 	├── Dotfiles
 	|   |

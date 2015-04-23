@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 2.8)
 project(TOYS_C C)
-
+set(EXECUTABLE_OUTPUT_PATH,${PROJECT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH,${PROJECT_BINARY_DIR}/lib)
 add_subdirectory(test)
 
+
 set(Toy_C_SRC
-	toys_sds.c
-	toys_list.c
-	toys_mem.c
+    toys_sds.c
+    toys_list.c
+    toys_mem.c
     toys_skiplist.c
-	)
+    )
 
 add_library(Toys_C_CODE ${Toy_C_SRC})
 
