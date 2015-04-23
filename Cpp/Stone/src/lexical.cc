@@ -1,4 +1,4 @@
-#include "lexical.h"
+#include <Stone/src/lexical.h>
 #include <stdlib.h>
 #include <memory.h>
 #include <assert.h>

@@ -1,5 +1,5 @@
-#include "parser.h"
-#include "lexical.h"
+#include <Stone/src/parser.h>
+#include <Stone/src/lexical.h>
 #include <assert.h>
 #include <iostream>
 #include <stdlib.h>

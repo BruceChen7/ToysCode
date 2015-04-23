@@ -1,7 +1,7 @@
-#include "logging.h"
+#include <Utilities/include/logging.h>
 
 #define CATCH_CONFIG_MAIN 
-#include "../../catch.hpp"
+#include <catch.hpp>
 #include <string.h> //used for errno
 using namespace Toyscode;
 using namespace Utilities;

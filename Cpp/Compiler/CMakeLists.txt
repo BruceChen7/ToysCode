@@ -1,10 +1,3 @@
-cmake_minimum_required(VERSION 2.8)
-project(Compiler CXX)
-
-set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_CXX_COMPILER "clang++")
-
-include_directories(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(Src)
 add_subdirectory(Test)
 

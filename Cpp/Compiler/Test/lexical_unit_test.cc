@@ -1,6 +1,6 @@
-#include "lexical_analyzer.h"
+#include <Compiler/Src/lexical_analyzer.h>
 #define CATCH_CONFIG_MAIN 
-#include "../../catch.hpp"
+#include "catch.hpp"
 
 namespace ToysCode 
 {

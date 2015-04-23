@@ -1,4 +1,4 @@
-#include "lexical_analyzer.h"
+#include <Compiler/Src/lexical_analyzer.h>
 
 namespace ToysCode
 {

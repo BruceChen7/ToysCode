@@ -1,6 +1,7 @@
 #ifndef __STONE__PARSER_H__
 #define __STONE__PARSER_H__
-#include "lexical.h"
+
+#include <Stone/src/lexical.h>
 #include <memory>
 using namespace Stone;
 

@@ -1,16 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
-project(Compiler CXX)
-
-set(CMAKE_CXX_FLAGS "-std=c++11")
-set(CMAKE_CXX_COMPILER "clang++")
-set(CMAKE_CXX_FLAGS_DEBUG "-g3 -Wall")
-set(CMAKE_CXX_FLAGS_RELEASE "O2 -Wshadow")
-
-include_directories(${PROJECT_SOURCE_DIR}/src/)
-include_directories(../)
 add_subdirectory(src)
-add_subdirectory(src/test)
  
 enable_testing()
-add_test(NAME test_lexical COMMAND test_lexical)
 
+add_test(NAME test_lexical COMMAND test_lexical)

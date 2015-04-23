@@ -1,5 +1,5 @@
-#include "stone_ast.h"
-#include "lexical.h"
+#include <Stone/src/stone_ast.h>
+#include <Stone/src/lexical.h>
 using namespace Stone;
 
 

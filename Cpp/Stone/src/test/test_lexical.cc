@@ -1,6 +1,6 @@
-#include "lexical.h"
+#include <Stone/src/lexical.h>
 #define CATCH_CONFIG_MAIN 
-#include "catch.hpp"
+#include <catch.hpp>
 using namespace Stone;
 
 TEST_CASE("File Unit Test && Lexical Unit test")

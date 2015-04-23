@@ -1,4 +1,4 @@
-#include "stone_ast.h"
+#include <Stone/src/stone_ast.h>
 #define CATCH_CONFIG_MAIN 
 #include "catch.hpp"
 #include <memory.h>
