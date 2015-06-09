@@ -14,7 +14,8 @@ syntax  on
 filetype plugin  on
 filetype plugin indent on
 set t_Co=256
-colorscheme seoul256
+"colorscheme seoul256
+colorscheme apprentice
 set background=dark
 		 
  "Set mapleader
@@ -39,6 +40,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'junegunn/seoul256.vim'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'vim-scripts/a.vim'
+Plug 'dyng/ctrlsf.vim'
 call plug#end()            " required
 
 filetype plugin indent on 
