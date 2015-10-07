@@ -2,3 +2,18 @@
 name = "hyper"
 version = "0.1.0"
 authors = ["BruceChen7 <bofengqiye7@gmail.com>"]
+
+
+[dependencies]
+httparse = "1.0"
+log = "0.3"
+mime = "0.1"
+num_cpus = "0.2"
+rustc-serialize = "0.3"
+time = "0.1"
+url = "0.2"
+unicase = "1.0"
+
+[dependencies.cookie]
+version = "0.1"
+default-features = false

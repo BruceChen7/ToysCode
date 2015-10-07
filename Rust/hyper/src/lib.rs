@@ -7,15 +7,16 @@ extern crate openssl;
 extern crate serde;
 extern crate cookie;
 extern crate unicase;
-extern crate httpparse;
+extern crate httparse;
 extern crate num_cpus;
 
 
 
+
 pub use url::Url;
-pub use client::Client;
-pub use error::{Result,Error};
-pub use method::Method::{Get,Head,Post,Delete};
+//pub use client::Client;
+//pub use error::{Result,Error};
+//pub use method::Method::{Get,Head,Post,Delete};
 pub use status::StatusCode::{Ok,BadRequest,NotFound}; 
 
 
