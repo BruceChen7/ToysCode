@@ -1,5 +1,5 @@
-use std::fmt
-use std::cmp::Ordering
+use std::fmt;
+use std::cmp::Ordering;
 
 pub enum StatusCode {
     Continue,
@@ -60,7 +60,7 @@ pub enum StatusCode {
     LoopDetected,
     NotExtended,
     NetworkAuthenticationRequired,
-    Unregister(u16); 
+    Unregister(u16),
 }
 
 impl StatusCode {
@@ -114,7 +114,7 @@ impl StatusCode {
             426 => StatusCode::UpgradedRequired,
             428 => StatusCode::PreconditionRequired,
             429 => StatusCode::TooManyRequests,
-            431 => StatusCode::RequestHeaderFieldTooLarge
+            431 => StatusCode::RequestHeaderFieldTooLarge,
             500 => StatusCode::InternalServerError,
             501 => StatusCode::NotImplemented,
             502 => StatusCode::BadGateWay,
@@ -126,7 +126,7 @@ impl StatusCode {
             508 => StatusCode::LoopDetected,
             510 => StatusCode::NotExtended,
             511 => StatusCode::NetworkAuthenticationRequired,
-            _ => StatusCode::Unregister(n);
+            _ => StatusCode::Unregister(n),
 
         }
         
