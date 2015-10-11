@@ -13,10 +13,13 @@ pub enum RequestUri {
     Star, 
 }
 
+
+//FromStr is a trait to abstract  the idea of creating a new instance of type from a String
 impl FromStr for RequestUri{
     type Err = Error;
 
     fn from_str(s: &str) -> Result<RequestUri,Error> {
+        //Covert s to a byte slice
         let bytes = s.as_bytes();
 
         if bytes == [] {
