@@ -140,7 +140,36 @@ impl StatusCode {
             StatusCode::Processing => 102,
             StatusCode::Ok => 200,
             StatusCode::Created => 201,
+            StatusCode::Accepted => 202,
+            StatusCode::NonAuthoritativInformation => 203,
+            StatusCode::NoContent => 204,
+            StatusCode::ResetContent => 205,
+            StatusCode::PartialContent => 206,
+            StatusCode::MultiState => 207, 
 
         }
     }
+}
+
+
+pub enum StatusClass {
+    Informational,
+    Success,
+    Redirection,
+    ClientError,
+    ServerError,
+    NoClass,
+}
+
+impl StatusClass {
+    pub fn default_code(&self)->StatusCode {
+        match *self {
+            StatusClass::Informational => StatusCode::Continue,
+            StatusClass::Success => StatusCode::Ok,
+            StatusClass::Redirection => StatusCode::MulitplieChoices, 
+            StatusClass::ClientError => StatusCode::InternalServerError, 
+            StatusClass::NoClass => StatusCode::Ok,
+        }
+    }
+
 }

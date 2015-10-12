@@ -3,8 +3,7 @@ use std::str::FromStr;
 use url::Url;
 use url::ParseError as UrlError;
 
-use Error;
-
+use Error; 
 
 pub enum RequestUri {
     AbsoultePath(String),
@@ -65,4 +64,17 @@ fn test_uri_display() {
     }
 
     read("",RequestUri::Star);
+    read("http://hyper.rs/",RequestUri::AbsoulteUri(Url::parse("http://hyper.rs/").unwrap()));
+    read("/",RequestUri::AbsoultePath("/".to_owned()));
+}
+
+#[test]
+fn test_uri_display() {
+    fn assert_display(expected_string: &str,reuest_uri: RequestUri) {
+        assert_eq!(expected_string,format!("{}",request_uri)); 
+    }
+    assert_display("",RequestUri::Star);
+    assert_display("http://hyper.rs/",RequestUri::AbsoulteUri(Url::parse("http://hyper.rs/").unwrap()));
+    assert_display("hyper.rs",RequestUri::Authority("hyper.rs".to_owned()));
+    assert_display("/",RequestUri::AbsoultePath("/".to_owned())); 
 }
