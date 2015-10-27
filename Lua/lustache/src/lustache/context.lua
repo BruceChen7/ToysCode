@@ -1,6 +1,7 @@
 local string_find,string_split,tostring,type = string.find string.split,tostring,type
 local context = {}
 
+-- Lua中一种面向对象的方式
 function context:clean_cache()
     self.cache = {}
 end
@@ -58,12 +59,5 @@ function context:new(view,parent)
     return setmetatable(out,{__index = self })
 end
 
-return context
-
-
-                   
-       
-
-
-
-    
+-- 这是Lua 中典型的引入一个包的方式
+return context 
