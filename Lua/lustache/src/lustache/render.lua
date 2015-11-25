@@ -10,14 +10,20 @@ local math_floor,math_max,string_find,string_gsub,string_split,string_sub,table_
 local table_remove = table.remove;
  
 local patterns  = {
+	--空白字符的匹配
 	white = "%s*",
+	--空格
 	space = "%s+",
-	nonSpace = "%s",
+	-- %S表示非空白字符
+	nonSpace = "%S",
+	-- 等于符号的匹配
 	eq = "%s*=",
+	--右括号的匹配
 	curly = "%s*}",
 	tag = "[#\\^/>{&=!]"
 }
 
+-- 注意到字符做为表的域，是如何表示。
 local html_escape_charaters  = {
 	["&"] = "&amp;",
 	["<"] = "&lt;",
@@ -27,7 +33,12 @@ local html_escape_charaters  = {
 	["/"] = "&#x2F"
 }
 
---- 判断表是否是简单的数组.
+-- 判断表是否是简单的数组.
+-- 如何判断？
+-- 首先看array 是否是 table类型 ，注意使用type 来查看变量的类型。
+-- 然后看 k 是否是 number类型，且k是否是大于0，数组在Lua中下标是从1开始的。
+-- 最后看键值是否从1开始连续
+
 local function is_array(array)
 	if type(array) ~= "table" then
 		return false
@@ -48,7 +59,6 @@ end
 
 -- Low-level function that compiles the given 'tokens' into a
 -- function that accepts two arguments: a Context and a Render
-
 local function compiler_tokens(tokens,originTemplate) 
 	local subs = {}
 
@@ -85,9 +95,10 @@ local function compiler_tokens(tokens,originTemplate)
 end
 
 
+-- string_gsub 返回的是匹配后替换的字符串。
 local function escape_tags(tags)
 	return {
-		string_gsub(tags[i],"%%","%%%%").."%s*",
+		string_gsub(tags[1],"%%","%%%%").."%s*",
 			"%s*"..string_gsub(tags[2],"%%","%%%%"),
 		)
 	}
@@ -179,6 +190,41 @@ function renderer:clear_cache()
 end
 
 
+function renderer:compiler(tokens,tags,originTemplate)
+	tags = tags or self.tags
+	if type(tokens) == "string" then
+		tokens = self:parse(tokens,tags);
+	end
+	
+	local fn = compile_token(tokens,originTemplate)
+	
+	return function(view)
+		return fn(make_context(view) ,self)
+	end
+
+end
+
+function renderer:render(template,view,partials) 
+	if type(self) == "string" then
+		error("Call mustache:render,not mustache.render!")
+	end
+	if partials then
+		self.partials = partials
+	end
+	
+	if not template then
+		return ""
+	end
+	
+	local fn = self.cache[template]
+	
+	if not fn then
+		fn = self.compile(template,self.tags,template)
+		self.cache[template] = fn;
+	end
+	return fn(view)
+end
+
 function renderer:_partial(name,context,orginTemplate) 
 	local fn = self.partial_cache[name]
 
@@ -197,10 +243,7 @@ function renderer:_partial(name,context,orginTemplate)
 end
 
 
-
-end
-
-
+-- template 是一个模板字符串比如 "{{ test }}"
 function renderer:parse(template,tags) 
 	tags = tags or self.tags
 	local tag_patterns = escape_tags(tags)
@@ -213,7 +256,10 @@ function renderer:parse(template,tags)
 	local type ,value,chr
 
 	while not scanner:eos() do
+		--scanner.pos指定当前模板的开始位置
 		local start = scanner.pos
+		--一直读到{{
+		-- value就是文本节点
 		value = scanner:scan_until(tag_patterns[1])
 
 		if value then
@@ -279,6 +325,7 @@ function renderer:new()
 	local out = {
 		cache = {},
 		partial_cache = {},
+		-- 默认使用 "{{"  "}}"作为模板的分隔符号
 		tags = {"{{","}}"}
 	}
 	return setmetatable(out,{__index =  self })

@@ -25,6 +25,8 @@ return setmetatable(lustache,{
         end
     end,
     
+    
+    -- 当使用lunstache.tags = [[]],就是在设置模板的分割符号为[[]]
     __newindex = function(self,idx,val)
         if idx == "partials" then
             self.renderer.partials = val
