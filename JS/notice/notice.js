@@ -55,8 +55,8 @@ var notice  = function() {
 		
 		if(alert_is_showing) {
 			if(enter_clicked || escape_clicked) {
-				cleanTimeout(alter_timeout_1);
-				clearTimeout(alter_timeout_2);
+				clearTimeout(alert_timeout_1);
+				clearTimeout(alert_timeout_2);
 				alert_hide();
 			}	
 		} else if(confirm_is_showing) {
@@ -184,7 +184,7 @@ var notice  = function() {
 		
 	}
 	
-	function alert_hide	(callback) {
+	function alert_hide(callback) {
 		alert_outer.stype.top = '-' + alert_outer.offsetHeight - 5 + 'px';
 		setTimeout(function() {
 			if(shadow) {
@@ -203,6 +203,67 @@ var notice  = function() {
 			
 		}, (animation_delay * 1000 + 10) );
 	}
+		
+	var confirm_outer = document.createElement('div');
+	confirm_outer.id  = confirm_outer_id;
+	confirm_outer.style.position = 'fixed';
+	confirm_outer.style.top = '0';
+	confirm_outer.style.left = '0';
+	confirm_outer.style.zIndex = '99999996';
+	confirm_outer.style.height = 'auto';
+	confirm_outer.style.width = '100%';
+	confirm_outer.style.display = 'none';
+	confirm_outer.style.textAlign = 'center';
 	
 	
+	var confirm_text = document.createElement('span');
+	confirm_text.id = confirm_yes_id;
+	confirm_text.style.color = conform_and_input_color_text; 
+	
+	if(window.innerWidth <= font_change_screen_width) {
+		confirm_text.style.fontSize = font_size_small;
+	} else {
+		confirm_text.style.fontSize = font_size_big;
+	}
+	
+	var confirm_background = document.createElement('div');
+
+	confirm_background.onclick = function {
+		if(background_click_dismiss) {
+			confirm_hide();
+		}
+	};
+	
+	
+	function confirm(title,yes_text,no_text,yes_callback) {
+		document.activeElement.blur();
+		
+		if(alert_is_showing) {
+			clearTimeout(alert_timeout_1);
+			clearTimeout(alert_timeout_2);
+			
+			alert_hide(function() {
+					confirm_show(title,yes_text,no_text,yes_callback);
+			});
+		} else {
+			confirm_show(title,yes_text,no_text,yes_callback);
+		}
+	}
+	
+	function confirm_show(title,yes_text,no_text,yes_call_back) {
+		scroll_disable();
+		
+		confirm_yes.onclick = function() {
+			confirm_hide();
+			setTimeout(function() {
+				yes_call_back()
+			},(animation_delay * 1000 ) + 10);
+		}
+		
+		function confirm_show_inner() {
+			confirm_text.in
+		}
+		
+		
+	}
 }
