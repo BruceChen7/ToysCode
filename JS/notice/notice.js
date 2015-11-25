@@ -228,7 +228,7 @@ var notice  = function() {
 	
 	var confirm_background = document.createElement('div');
 
-	confirm_background.onclick = function {
+	confirm_background.onclick = function() {
 		if(background_click_dismiss) {
 			confirm_hide();
 		}

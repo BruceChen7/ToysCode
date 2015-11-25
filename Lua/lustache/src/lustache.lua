@@ -1,3 +1,4 @@
+--- 使用同一的风格将string.gmatch 用 Unix下命名的方式替代
 local string_gmatch = string.gmatch
 
 function string.split(str,sep)
@@ -15,11 +16,15 @@ local lustache = {
     renderer = require("lustache.renderer"):new(),
 }
 
+--- setmetable 将返回lustache
+--- 设置lustache 表域对应的获取方式,和更新方式
 return setmetatable(lustache,{ 
     __index = function(self,idx)
         if self.renderer[idx] then
             return self.renderer[idx] 
-        end,
+        end
+    end,
+    
     __newindex = function(self,idx,val)
         if idx == "partials" then
             self.renderer.partials = val
@@ -27,5 +32,6 @@ return setmetatable(lustache,{
         if idx == "tags" then
             self.renderer.tags = val
         end
+    end
  })
     

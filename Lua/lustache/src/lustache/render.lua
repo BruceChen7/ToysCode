@@ -1,5 +1,16 @@
+local Scanner = require 'lustache.scanner'
+local Context = require 'lustache.context'
+
+local error,ipairs,loadstring,pairs,setmetable,tostring,type = 
+	  error,iparis,loadstring,pairs,setmetable,tosring, type
+
+local math_floor,math_max,string_find,string_gsub,string_split,string_sub,table_concat,table_insert =
+	  math.floor,math.max,string.find,string.gsub,string.split,string.sub,table.concat,table.insert
+
+local table_remove = table.remove;
+ 
 local patterns  = {
-	whit = "%s*",
+	white = "%s*",
 	space = "%s+",
 	nonSpace = "%s",
 	eq = "%s*=",
@@ -160,7 +171,7 @@ local function make_context(view)
 	return view.magic == "1235123123" and view or Contex:new(view)
 end
 
-local render = {}
+local renderer = {}
 
 function renderer:clear_cache()
 	self.cache = {}
@@ -262,13 +273,15 @@ end
 
 
 
+--  renderer:new 返回的是 out表，out表继承了render表
+-- 这是典型的Lua中一种表示继承关系的方式。
 function renderer:new()
 	local out = {
 		cache = {},
 		partial_cache = {},
 		tags = {"{{","}}"}
 	}
-	return setmetatable(out,{_index =  self })
+	return setmetatable(out,{__index =  self })
 end
 
 return renderer
