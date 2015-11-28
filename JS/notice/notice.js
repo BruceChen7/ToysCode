@@ -27,7 +27,6 @@ var notice  = function() {
 	var resizeListener = function resizeListener(ele) {
 		if(window.innerWidth <= font_change_screen_width) {
 			ele.style.fontSize = font_size_small;
-		
 		} else {
 			ele.style.fontSize = font_size_big;
 		}
@@ -185,7 +184,7 @@ var notice  = function() {
 	}
 	
 	function alert_hide(callback) {
-		alert_outer.stype.top = '-' + alert_outer.offsetHeight - 5 + 'px';
+		alert_outer.style.top = '-' + alert_outer.offsetHeight - 5 + 'px';
 		setTimeout(function() {
 			if(shadow) {
 				alert_outer.style.boxShadow = '';

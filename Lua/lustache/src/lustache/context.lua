@@ -49,7 +49,8 @@ function context:lookup(name)
     return value
 end
 
-
+-- 创建一个上下文
+--
 function context:new(view,parent)
     local out = {
         view = view,

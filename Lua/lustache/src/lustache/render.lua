@@ -59,14 +59,14 @@ end
 
 -- Low-level function that compiles the given 'tokens' into a
 -- function that accepts two arguments: a Context and a Render
-local function compiler_tokens(tokens,originTemplate) 
+local function compile_tokens(tokens,originTemplate) 
+	
 	local subs = {}
 
 	local  function subrender(i,tokens)
 		if not subs[i] then
-			local fn = compiler_tokens(tokens,originTemplate)
-			subs[i]  = function(ctx,rnd)
-			return fn(ctx,rnd)
+			local fn = compile_tokens(tokens,originTemplate)
+			subs[i]  = function(ctx,rnd) return fn(ctx,rnd) end
 		end
 		return subs[i]
 	end
@@ -75,7 +75,7 @@ local function compiler_tokens(tokens,originTemplate)
 		local buf = {}
 		local token,section
 
-		for i ,token in ipairs(token) do
+		for i ,token in ipairs(tokens) do
 			local t = token.type
 			buf[#buf+1] =
 			t == "#" and rnd:_section(
@@ -174,7 +174,7 @@ local function squash_tokens(tokens)
 	return out
 end
 
-
+-- 创建一个上下文
 local function make_context(view) 
 	if not view then
 		return view
@@ -182,6 +182,7 @@ local function make_context(view)
 	return view.magic == "1235123123" and view or Contex:new(view)
 end
 
+-- 创建一个render
 local renderer = {}
 
 function renderer:clear_cache()
@@ -189,9 +190,13 @@ function renderer:clear_cache()
 	sefl.partial_cache = {}
 end
 
-
-function renderer:compiler(tokens,tags,originTemplate)
+-- 返回的是一个函数
+-- tokens是模板字符串，tags 是默认的分隔符号，比如 {{}}
+function renderer:compile(tokens,tags,originTemplate)
 	tags = tags or self.tags
+	
+	--确保是字符串
+	--然后将模板
 	if type(tokens) == "string" then
 		tokens = self:parse(tokens,tags);
 	end
@@ -199,11 +204,12 @@ function renderer:compiler(tokens,tags,originTemplate)
 	local fn = compile_token(tokens,originTemplate)
 	
 	return function(view)
-		return fn(make_context(view) ,self)
+		return fn(make_context(view) ,self) 
 	end
-
 end
 
+-- template 是模板字符串
+-- view 是用来填充的表。
 function renderer:render(template,view,partials) 
 	if type(self) == "string" then
 		error("Call mustache:render,not mustache.render!")
@@ -220,6 +226,7 @@ function renderer:render(template,view,partials)
 	
 	if not fn then
 		fn = self.compile(template,self.tags,template)
+		--缓存这个模板字符串
 		self.cache[template] = fn;
 	end
 	return fn(view)
@@ -263,23 +270,27 @@ function renderer:parse(template,tags)
 		value = scanner:scan_until(tag_patterns[1])
 
 		if value then
+			--遍历文本字符串  
 			for i = 1 ,#value  do
+				--获取子串
 				chr = string_sub(value,i,i)
-
+				-- 如果是空白字符串
 				if string_find(chr,"%s+") then
 					spaces[#spaces +1] = #tokens
 				else 
 					non_space = true
 				end
 
-				tokens[#tokens+1] = {   type = "text",value = chr,startIndex = start,endIndex = scanner.pos - 1 }
+				tokens[#tokens+1] = { type = "text",value = chr,startIndex = start,endIndex = scanner.pos - 1 }
 				start = start + 1
 			end
 		end
 
+		-- tag_pattern[1] = }}
 		if not scanner:scan(tag_pattern[1]) then
 			break
 		end
+		
 		has_tag = true
 		type = scanner:scan(pattern.tag) or  "name"
 

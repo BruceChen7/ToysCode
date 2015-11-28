@@ -1,7 +1,7 @@
 ## Usage
 
 ```lua
-local lustache = require "lunstache"
+local lustache = require "lustache"
 view_model = {
 	title = "joe",
 	calc = function() 
