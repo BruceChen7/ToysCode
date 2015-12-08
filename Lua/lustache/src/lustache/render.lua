@@ -108,17 +108,19 @@ end
 local function nest_tokens(tokens)
 	local tree = {}
 	local collector = tree
-	local section = {}
+	local sections = {}
 	local token,section
 
 	for i ,token in ipairs(tokens) do
 		-- token 的type是section 和 inverted section
-		if token.type == "#" or token.type ==="^" then
+		if token.type == "#" or token.type =="^" then
 			--添加一个新的键值tokens
 			token.tokens = {}
+			--添加该tokens到sections中
 			sections[#sections+1] = token
-			--添加到collector中
+			--将token添加collector中
 			collector[#collector+1] = token
+			--这里不知道为什么？？？
 			collector = token.tokens
 		-- 如果是结束section标签
 		elseif token.type == "/" then
@@ -133,7 +135,7 @@ local function nest_tokens(tokens)
 			if not section.vaule == token.value then
 				error("Unclosed section: "..section.value)
 			end
-
+			--添加了一个新的键
 			section.closingTagIndex = token.startIndex
 			--如果此时sections中还有section，那么说明是嵌套的section.
 			if #sections > 0 then
@@ -142,6 +144,7 @@ local function nest_tokens(tokens)
 				collector = tree
 			end
 		else
+			--section中所有的token都添加到collector中
 			collector[#collector+1] = token
 		end
 	end
@@ -175,6 +178,7 @@ local function squash_tokens(tokens)
 		-- 不是文本了，则txt中多个表合成一个表作为value的值
 		else
 			--如果之前txt表中有文本字符串了。
+			-- table.concat是用来将一系列的文本或数组串联成一个字符串或数字。
 			if #txt > 0 then
 				out[#out + 1] = { 
 					type = "text",
@@ -399,6 +403,7 @@ function renderer:parse(template,tags)
 			scanner:scan(patterns.curly)
 			scanner:scan_until(tag_pattern[2])
 		else
+			--{{# name }}则将 type 设置为 # ,value 设置为name
 			--其余类型全被读到value
 			value = scan:scan_until(tag_pattern[2])
 		end
