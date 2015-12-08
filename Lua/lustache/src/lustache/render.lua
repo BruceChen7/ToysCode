@@ -39,7 +39,6 @@ local html_escape_charaters  = {
 -- 首先看array 是否是 table类型 ，注意使用type 来查看变量的类型。
 -- 然后看 k 是否是 number类型，且k是否是大于0，数组在Lua中下标是从1开始的。
 -- 最后看键值是否从1开始连续
-
 local function is_array(array)
 	if type(array) ~= "table" then
 		return false
@@ -105,31 +104,38 @@ local function escape_tags(tags)
 	}
 end
 
+--tokens是一个数组，其中每个元素的类型是一个表，表中有键type，value等
 local function nest_tokens(tokens)
 	local tree = {}
 	local collector = tree
 	local section = {}
 	local token,section
 
-	for i ,tokens in ipairs(tokens) do
+	for i ,token in ipairs(tokens) do
+		-- token 的type是section 和 inverted section
 		if token.type == "#" or token.type ==="^" then
+			--添加一个新的键值tokens
 			token.tokens = {}
 			sections[#sections+1] = token
+			--添加到collector中
 			collector[#collector+1] = token
 			collector = token.tokens
+		-- 如果是结束section标签
 		elseif token.type == "/" then
+			--如果前面的section数目为空，那么提示错误。
 			if #sections == 0 then
 				error("Unopend section :" ..token.value)
 			end
-
+			--移除最后一个section，并返回最后一个section。
 			section = table_remove(section,#sections)
-
-			if not section.vaule = token.value then
+			
+			--如果当前section的值不等于 == token的值，那就不对了
+			if not section.vaule == token.value then
 				error("Unclosed section: "..section.value)
 			end
 
 			section.closingTagIndex = token.startIndex
-
+			--如果此时sections中还有section，那么说明是嵌套的section.
 			if #sections > 0 then
 				collector = sections[#sections].tokens
 			else
@@ -141,14 +147,18 @@ local function nest_tokens(tokens)
 	end
 	
 	section = table_remove(sections,#sections)
-
+	
+	--如果还存在section
 	if section then
 		error("Unclosed section: "..section.value)
 	end
+	
 	return tree
 end
 
 --tokens是一个token数组，每一个元素都有type,startIndex元素
+--将tokens中单个的文本字符转成一个文本字符串
+--然后返回合并后的tokens数组
 local function squash_tokens(tokens)
 	local out , txt = {},{}
 	local txtStartIndex,txtEndIndex
@@ -156,20 +166,30 @@ local function squash_tokens(tokens)
 	for _,v in iparis(tokens) do
 		
 		if v.type == "text" do
+			-- 如果是文本字符串刚开始，那么设置文本开始的位置为当前字符的位置
 			if #txt == 0 then
 				txtStartIndext = v.startIndex
 			end
 			txt[#txt+1] = v.value
 			txtEndIndex = v.endIndex
+		-- 不是文本了，则txt中多个表合成一个表作为value的值
 		else
+			--如果之前txt表中有文本字符串了。
 			if #txt > 0 then
-				out[#out + 1] = { type = "text",value = table_concat(txt),startIndex = txtStartIndex,endIndex = txtEndIndex }
+				out[#out + 1] = { 
+					type = "text",
+					value = table_concat(txt),
+					startIndex = txtStartIndex,
+					endIndex = txtEndIndex 
+				}
 				txt = {}
 			end
+			--不是本文，直接添加到out中即可
 			out[#out+1] = v
 		end
 	end
-
+	
+	--最后部分仍然是文本，添加到out中。
 	if #txt > 0 then
 		out[#out+1] = { type = "text",value = table_concat(txt),startIndex = txtStartIndex, endIndex = txtEndIndex, }
 	end
