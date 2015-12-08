@@ -5,12 +5,16 @@ function scanner:eof()
     return  self.tail == ""
 end
 
+--从字符串tail的开头读取，匹配pattern
+--返回匹配的文本字符串，如果不匹配，则返回null
 function scanner:scan(pattern)
     local match = string_match(self.tail,pattern)
-
+    
     if match and string_find(self.tail,pattern) == 1 then
+        --更新要解析的模板字符串
         self.tail = string_sub(self.tail,#match+1)
         self.pos = self.pos + #match
+        return match
     end
 end
 

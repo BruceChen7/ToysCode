@@ -20,6 +20,7 @@ local patterns  = {
 	eq = "%s*=",
 	--右括号的匹配
 	curly = "%s*}",
+	-- #\^/>{&=!
 	tag = "[#\\^/>{&=!]"
 }
 
@@ -147,13 +148,15 @@ local function nest_tokens(tokens)
 	return tree
 end
 
+--tokens是一个token数组，每一个元素都有type,startIndex元素
 local function squash_tokens(tokens)
 	local out , txt = {},{}
 	local txtStartIndex,txtEndIndex
 	
 	for _,v in iparis(tokens) do
+		
 		if v.type == "text" do
-			if #txt ==0 then
+			if #txt == 0 then
 				txtStartIndext = v.startIndex
 			end
 			txt[#txt+1] = v.value
@@ -179,7 +182,7 @@ local function make_context(view)
 	if not view then
 		return view
 	end
-	return view.magic == "1235123123" and view or Contex:new(view)
+	return view.magic == "1235123123" and view or Context:new(view)
 end
 
 -- 创建一个render
@@ -192,11 +195,13 @@ end
 
 -- 返回的是一个函数
 -- tokens是模板字符串，tags 是默认的分隔符号，比如 {{}}
+-- 过程：
+-- 首先将模板字符串分解成一个个token数组。这个
 function renderer:compile(tokens,tags,originTemplate)
 	tags = tags or self.tags
 	
 	--确保是字符串
-	--然后将模板
+	--然后将模板字符串解析成tokens
 	if type(tokens) == "string" then
 		tokens = self:parse(tokens,tags);
 	end
@@ -210,6 +215,13 @@ end
 
 -- template 是模板字符串
 -- view 是用来填充的表。
+
+--过程：
+--首先判断template是否是字符串类型，如果不是直接报错，
+-- 根据传入的第三个参数来设置partials
+-- 根据模板字符串，来获取已经存入的解析函数
+-- 如果没有，则编译这个模板，然后缓存解析函数
+-- 然后根据调用这个解析函数，返回解析后的结果。
 function renderer:render(template,view,partials) 
 	if type(self) == "string" then
 		error("Call mustache:render,not mustache.render!")
@@ -232,6 +244,42 @@ function renderer:render(template,view,partials)
 	return fn(view)
 end
 
+function renderer:_seciton(token,context,callback,originTemplate) 
+	local value = context:lookup(token.value)
+	if type(value) == "table" then
+		if is_array(value) then
+			local buffer = ""
+			for i ,v in ipairs(value) do
+				buffer = buffer..callback(context:push（v),self)
+			end
+			return buffer
+		end
+		return callback(context:push(value),self)
+	elseif type(value) == "function" then
+		local section_text = string_sub(originTemplate,token,endIndex+1,token.closingTagIndex - 1)
+		local scoped_render = function(template) 
+			return self:render(template,context)
+		end
+		return value(section_text,scoped_render) or ""
+	else
+		if value then
+			return callback(context,self)
+		end
+	end
+	return ""
+end
+
+function renderer:_inverted(name,context,callback)
+	local value = context:lookup(name)
+	
+	if value == nil or value == false or (type(value) == "table" and is_array(value) and #value == 0)  then
+		return callback(context,self)
+	end
+	
+	return ""
+end
+
+
 function renderer:_partial(name,context,orginTemplate) 
 	local fn = self.partial_cache[name]
 
@@ -251,15 +299,28 @@ end
 
 
 -- template 是一个模板字符串比如 "{{ test }}"
+-- 返回的是解析后的token数组。
 function renderer:parse(template,tags) 
 	tags = tags or self.tags
 	local tag_patterns = escape_tags(tags)
 	local scanner = Scanner:new(template)
-	local tokens = {}
-	local spaces = {}
+	local tokens = {} --token的缓存器
+	local spaces = {} -- 空格字符串缓存器
 	local has_tag = false
-	local non_space = fasle  -- is there a non-space char on the current line?
-
+	local non_space = false -- is there a non-space char on the current line?
+	
+	local function strip_space()
+		if has_tag and not non_space then
+			while #spaces > 0 do
+				table_remove(tokens,table_remove(spaces))
+			end
+		else 
+			spaces = {}
+		end
+		has_tag = false
+		non_space = false
+		
+	end
 	local type ,value,chr
 
 	while not scanner:eos() do
@@ -268,62 +329,76 @@ function renderer:parse(template,tags)
 		--一直读到{{
 		-- value就是文本节点
 		value = scanner:scan_until(tag_patterns[1])
-
+		-- 如果有文本字符串。
 		if value then
 			--遍历文本字符串  
 			for i = 1 ,#value  do
-				--获取子串
+				--获取单个字符
 				chr = string_sub(value,i,i)
-				-- 如果是空白字符串
+				-- 如果是空白字符
+				-- 记录在tokens中的位置
 				if string_find(chr,"%s+") then
-					spaces[#spaces +1] = #tokens
+					spaces[#spaces+1] = #tokens
 				else 
 					non_space = true
 				end
-
+				--添加文本字符到tokens数组
 				tokens[#tokens+1] = { type = "text",value = chr,startIndex = start,endIndex = scanner.pos - 1 }
 				start = start + 1
+				
+				if chr == "\n" then
+					strip_space()
+				end
 			end
-		end
+		end  --结束对文本字符串的解析
 
-		-- tag_pattern[1] = }}
+		-- tag_pattern[1] = {{
+		-- 如果没有 {{ 分隔符号
+		-- 对整个模板字符串解析完成。
 		if not scanner:scan(tag_pattern[1]) then
 			break
 		end
-		
+		--拥有{{ tag
 		has_tag = true
-		type = scanner:scan(pattern.tag) or  "name"
-
+		--type 设置为 #,/,^ 等不同的类型 
+		type = scanner:scan(patterns.tag) or  "name"
+		--移除template string中的空白字符串
 		scanner:scan(patterns.white)
-
+		
+		--如果是类型为 "=",也就是设置分隔符号
 		if type == "=" then
+			--获取新的分隔符号
 			value = scanner:scan_until(patterns.eq)
 			scanner:scan(patterns.eq)
 			scanner:scan_until(tag_patterns[2])
+		--如果要设置对html不转义
 		elseif type == "{"  then
 			local close_pattern = "%s*}" .. tags[2]
 			value = scanner:scan_until(close_pattern)
-			scanner:scan(pattern.curly)
+			--读取后面结束风格符号
+			scanner:scan(patterns.curly)
 			scanner:scan_until(tag_pattern[2])
 		else
+			--其余类型全被读到value
 			value = scan:scan_until(tag_pattern[2])
 		end
 
-		if not scanner:scan(tag_pattern[2]) then
+		if not scanner:scan(tag_patterns[2]) then
 			error("Unclosed tag at " .. scanner.pos)
 		end
-
+		
+		--添加到tokens数组中
 		tokens[#tokens + 1] = { type = type, value = value, startIndex = start, endIndex = scanner.pos  -1 }
 		
 		if type == "name" or type == "{"  or type == "&" then 
 			non_space = true
 		end
-
+		--设置新的标签
 		if type == "=" then
 			tags = string_split(value,patterns.space)
 			tag_patterns  = escape_tags(tags)
 		end
-	end
+	end  -- 结束对整个模板字符串的解析
 	
 	return nest_token(squash_token(tokens))
 end
