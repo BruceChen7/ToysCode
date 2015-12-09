@@ -9,6 +9,9 @@ local math_floor,math_max,string_find,string_gsub,string_split,string_sub,table_
 
 local table_remove = table.remove;
  
+-- ???? section 如何渲染
+-- ??? partial又是一个什么东西。
+
 local patterns  = {
 	--空白字符的匹配
 	white = "%s*",
@@ -59,6 +62,7 @@ end
 
 -- Low-level function that compiles the given 'tokens' into a
 -- function that accepts two arguments: a Context and a Render
+-- 返回的什么render函数。调用render函数返回的是
 local function compile_tokens(tokens,originTemplate) 
 	
 	local subs = {}
@@ -71,6 +75,7 @@ local function compile_tokens(tokens,originTemplate)
 		return subs[i]
 	end
 
+	--ctx是上下文
 	local function render(ctx,rnd) 
 		local buf = {}
 		local token,section
@@ -268,8 +273,10 @@ function renderer:render(template,view,partials)
 	return fn(view)
 end
 
+--token是一个数组 其中的每一个元素也是一个表
 function renderer:_seciton(token,context,callback,originTemplate) 
 	local value = context:lookup(token.value)
+	
 	if type(value) == "table" then
 		if is_array(value) then
 			local buffer = ""
@@ -291,6 +298,7 @@ function renderer:_seciton(token,context,callback,originTemplate)
 		end
 	end
 	return ""
+	
 end
 
 function renderer:_inverted(name,context,callback)

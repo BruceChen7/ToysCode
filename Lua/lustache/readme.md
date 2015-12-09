@@ -16,3 +16,38 @@ view_model = {
 
 out_put = lustache:render("{{title}} spends {{calc}}", view_model )
 ```
+
+
+## Template
+A mustache template is a string that contains any number of mustache tags
+
+### Variables
+
+Template:
+
+```
+{{name}}
+{{age}}
+{{company}}
+{{{company}}}
+{{&company}}
+```
+
+View:
+
+```
+{
+	name = "Chris",
+	Company = "<b>Github</b>"	
+}
+```
+
+Output:
+
+```
+* Chris
+*
+* &lt;b&gt;GitHub&lt;/b&gt;
+* <b>Github</b>
+* <b>Github</b>
+```
