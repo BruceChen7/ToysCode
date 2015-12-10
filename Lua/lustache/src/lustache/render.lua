@@ -67,7 +67,8 @@ local function compile_tokens(tokens,originTemplate)
 	
 	local subs = {}
 
-	local  function subrender(i,tokens)
+	--返回的是一个函数表其中，表中的每一个元素都是函数。
+	local function subrender(i,tokens)
 		if not subs[i] then
 			local fn = compile_tokens(tokens,originTemplate)
 			subs[i]  = function(ctx,rnd) return fn(ctx,rnd) end
@@ -75,11 +76,15 @@ local function compile_tokens(tokens,originTemplate)
 		return subs[i]
 	end
 
-	--ctx是上下文
+	--ctx是上下文,tokens是token的数组
+	--rnd是renderer这个表
 	local function render(ctx,rnd) 
 		local buf = {}
 		local token,section
-
+		-- 根据token的类型，获取不同渲染后的值
+		-- lua 中and有如下的用法
+		-- a and b  如果a 为 true ，那么返回a，否则返回b
+		-- a or b  如果a 为 true 返回a,否则返回b。
 		for i ,token in ipairs(tokens) do
 			local t = token.type
 			buf[#buf+1] =
@@ -94,6 +99,7 @@ local function compile_tokens(tokens,originTemplate)
 			t == "name" and rnd:_name(token.value,ctx,true) or
 			t == "text" and token.value or ""
 		end
+		--将渲染后的buf表连接成字符串。
 		return table_concat(buf)
 	end
 	return render
@@ -211,7 +217,7 @@ local function make_context(view)
 	if not view then
 		return view
 	end
-	return view.magic == "1235123123" and view or Context:new(view)
+	return getmetatable(view) == Context and view or Context:new(view)
 end
 
 -- 创建一个render
@@ -225,7 +231,9 @@ end
 -- 返回的是一个函数
 -- tokens是模板字符串，tags 是默认的分隔符号，比如 {{}}
 -- 过程：
--- 首先将模板字符串分解成一个个token数组。这个
+-- 首先将模板字符串分解成一个个token数组。
+-- originTemplate 是原来的模板字符串
+-- fan
 function renderer:compile(tokens,tags,originTemplate)
 	tags = tags or self.tags
 	
@@ -273,8 +281,38 @@ function renderer:render(template,view,partials)
 	return fn(view)
 end
 
---token是一个数组 其中的每一个元素也是一个表
+
+--[[{
+	{
+	
+		name  =  "bruce"
+	}
+} --]]
+function renderer:_name(name,context,escape) 
+	local value = context:lookup(name)
+	
+	if(type(name) == "function") then
+		value = value(context.view)
+	end
+	local str = value == nil and "" or value
+	str = tostring(str)
+	
+	if escape then
+		return string_gsub(str,'[&<>"\'/]',function(s) return html_escape_charaters[s] end)
+	end
+	
+	return str
+
+end
+
+--token是一个数组 其中的每一个元素也是一个表。
+--如何渲染section？
+--首先查看标签的名字获取，然后查看view中该名字对应的值
+--然后根据不同的值类型来渲染。
+--如果是table
+--如果是函数
 function renderer:_seciton(token,context,callback,originTemplate) 
+	
 	local value = context:lookup(token.value)
 	
 	if type(value) == "table" then
@@ -300,7 +338,7 @@ function renderer:_seciton(token,context,callback,originTemplate)
 	return ""
 	
 end
-
+--
 function renderer:_inverted(name,context,callback)
 	local value = context:lookup(name)
 	
