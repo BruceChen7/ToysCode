@@ -38,7 +38,7 @@ type Reader struct {
 	buf          []byte
 	rd           io.Reader // reader provided by the client  数据源 
                            //io.Reader是一个接口。Read(p []byte) (n int, err error)。
-	r, w         int       // buf read and write positions
+	r, w         int       // buf read and write positions 缓冲区读写的输入和写的位置
 	err          error   //错误
 	lastByte     int
 	lastRuneSize int
@@ -55,6 +55,7 @@ const maxConsecutiveEmptyReads = 100
 // size, it returns the underlying Reader.
 // 创建指定大小的Reader
 // 如果
+// 注意命名的方式是NewXXXX 后面返回的都是指针
 func NewReaderSize(rd io.Reader, size int) *Reader {
 	// Is it already a Reader?
 	b, ok := rd.(*Reader)
@@ -78,9 +79,11 @@ func NewReader(rd io.Reader) *Reader {
 // the buffered reader to read from r.
 // 丢弃所有的缓冲的数据
 func (b *Reader) Reset(r io.Reader) {
+    
 	b.reset(b.buf, r)
 }
 
+//更新所有的状态，将输入源变成r
 func (b *Reader) reset(buf []byte, r io.Reader) {
 	*b = Reader{
 		buf:          buf,
@@ -525,8 +528,8 @@ func (b *Reader) writeBuf(w io.Writer) (int64, error) {
 type Writer struct {
 	err error
 	buf []byte
-	n   int
-	wr  io.Writer
+	n   int    
+	wr  io.Writer  //输出的数据的地方，由客户提供（终端？文件？套件值）
 }
 
 // NewWriterSize returns a new Writer whose buffer has at least the specified
@@ -548,6 +551,7 @@ func NewWriterSize(w io.Writer, size int) *Writer {
 }
 
 // NewWriter returns a new Writer whose buffer has the default size.
+// 改变输出的目的地。
 func NewWriter(w io.Writer) *Writer {
 	return NewWriterSize(w, defaultBufSize)
 }
@@ -561,6 +565,7 @@ func (b *Writer) Reset(w io.Writer) {
 }
 
 // Flush writes any buffered data to the underlying io.Writer.
+// 将有的数据输出
 func (b *Writer) Flush() error {
 	err := b.flush()
 	return err
@@ -573,7 +578,11 @@ func (b *Writer) flush() error {
 	if b.n == 0 {
 		return nil
 	}
+    // 将所有的缓冲区中所有的数据输出
+    // 注意切片的方式，类似Python
 	n, err := b.wr.Write(b.buf[0:b.n])
+    
+    //如果输出的直接少于n
 	if n < b.n && err == nil {
 		err = io.ErrShortWrite
 	}
@@ -590,8 +599,10 @@ func (b *Writer) flush() error {
 }
 
 // Available returns how many bytes are unused in the buffer.
+// 查看当前有多少字节的缓冲缓冲区可以用
 func (b *Writer) Available() int { return len(b.buf) - b.n }
 
+// 查看缓冲了多少直接的数据
 // Buffered returns the number of bytes that have been written into the current buffer.
 func (b *Writer) Buffered() int { return b.n }
 
