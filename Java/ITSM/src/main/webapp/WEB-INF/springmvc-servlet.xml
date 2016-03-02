@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    ">
+    <!-- 防止@responseBody返回视图出现乱码，所以手动配置Bean，它不能和 <mvc:annotation-driven />一起使用 -->
+	<!--<bean-->
+		<!--class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">-->
+		<!--<property name="messageConverters">-->
+			<!--<list>-->
+				<!--<bean-->
+					<!--class="org.springframework.http.converter.StringHttpMessageConverter">-->
+					<!--<property name="supportedMediaTypes">-->
+						<!--<list>-->
+							<!--<value>text/plain;charset=UTF-8</value>-->
+						<!--</list>-->
+					<!--</property>-->
+				<!--</bean>-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	    <!-- 自動掃描此包，產生 需要的beans-->
+    <context:component-scan base-package="com.itsm.controller"/>
+	<!-- 添加注解驱动 -->
+	 <mvc:annotation-driven />
+	<!-- 对静态资源文件的访问 -->
+	<!-- mvc:resources mapping="/images/**" location="/images/" /> -->
+	<!-- 使用容器默认的Servlet来响应静态文件 -->
+	
+	<mvc:default-servlet-handler />
+	 <!-- tiles视图解析器 --> 
+	<bean id="tilesResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass">
+			<value>org.springframework.web.servlet.view.tiles2.TilesView</value>
+		</property>
+		<property name="order">
+			<value>1</value>
+		</property>
+	</bean>
+	<!-- 配置Ties模板位置 -->
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				
+				<value>/WEB-INF/tiles-defs/front-tiles-defs.xml</value>
+				<value>/WEB-INF/tiles-defs/tiles-defs.xml</value>
+				<value>/WEB-INF/tiles-defs/backend-tiles-defs.xml</value>
+			</list>
+		</property>
+		<property name="preparerFactoryClass"
+			value="org.springframework.web.servlet.view.tiles2.SpringBeanPreparerFactory" />
+	</bean>
+	<!-- 定义jsp视图解析器 -->
+    <bean name="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/view/" />
+		<property name="contentType" value="text/html; charset=utf-8" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+    <bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+		p:defaultEncoding="utf-8" 
+		p:maxUploadSize="5120000" 
+		p:maxInMemorySize="512" />
+		<!-- <bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.sql.SQLException">outException</prop>
+                <prop key="java.io.IOException">outException</prop>
+            </props>
+        </property>
+    </bean> -->
+
+</beans>
