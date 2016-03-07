@@ -17,7 +17,7 @@
         <script src = "js/collections/todos.js"> </script>
         <script src = "js/views/todos.js"> </script>
         <script src = "js/views/app.js"> </script>
-        <!--<script src = "js/routers/router.js"> </script> -->
+        <script src = "js/routers/router.js"> </script> 
         <script src = "js/app.js"> </script>
         
         
@@ -30,31 +30,33 @@
             <input value="<%- title %>" class="edit">
         </script>
         
-        <script type = "text/template" id = "stats-template"> 
-            <span id="todo-count">
-                <strong><%= remaining %></strong>
-                <%= remaining ===1 ? 'item': 'items' %> left 
-            </span>
-            <ul class="filters">
-                <li><a href="#" class = "selected">All</a></li>
-                <li><a href="#/active" >Active</a></li>
-                <li><a href="#/complete"> Complete</a></li>
-            </ul>
-            
-            <% if (completed) { %>
-            <button id="clear-complete">Clear completed (<%= completed %>)</button>
-             <% } %>
-        </script>
+       <script type="text/template" id="stats-template">
+			<span class="todo-count"><strong><%= remaining %></strong> <%= remaining === 1 ? 'item' : 'items' %> left</span>
+			<ul class="filters">
+				<li>
+					<a class="selected" href="#/">All</a>
+				</li>
+				<li>
+					<a href="#/active">Active</a>
+				</li>
+				<li>
+					<a href="#/completed">Completed</a>
+				</li>
+			</ul>
+			<% if (completed) { %>
+			<button class="clear-completed">Clear completed</button>
+			<% } %>
+		</script>
         
         <section class="todoapp">
             <header class = "header">
                 <h1>todos</h1>
-                   <input class = "new-todo" placeholder="what needs to be done?" autofocus>
+                   <input class = "new-todo" placeholder="what needs to be done?" autofocus="">
             </header>
-            <section id = "main">
+            <section class = "main">
                 <input id = "toggle-all" class="toggle-all" type = "checkbox">
                 <label for = "toggle-all"> Mark all as complete </label>
-                <ul id = "todo-list"> </ul>
+                <ul class= "todo-list"> </ul>
             </section>
             <footer class = "footer"> </footer>
 

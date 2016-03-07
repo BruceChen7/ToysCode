@@ -9,10 +9,10 @@ app.AppView = Backbone.View.extend({
         this.allCheckbox = this.$('.toggle-all')[0];
          
         //获取#todoapp 下对应的子元素input，其ID为new-todo
-        this.$input = this.$('#new-todo');
+        this.$input = this.$('.new-todo');
          
-        this.$footer = this.$("#footer");
-        this.$main = this.$('#main');
+        this.$footer = this.$(".footer");
+        this.$main = this.$('.main');
         
         
         this.listenTo(app.Todos, 'add', this.addOne);
@@ -25,9 +25,12 @@ app.AppView = Backbone.View.extend({
         app.Todos.fetch();
     } ,
     
+    //添加一个todo item 到 <ul class = 'todo-list'> 中
     addOne: function(todo) {
+        
         var view = new app.TodoView({model: todo});
-        $('#todo-list').append(view.render.el);
+        //添加视图
+        $('.todo-list').append(view.render().el);
     },
     
     addAll:function() {
@@ -37,28 +40,31 @@ app.AppView = Backbone.View.extend({
     
     // 添加事件
     events: {
-      "keypress #new-todo": 'createOnEnter',
+      "keypress .new-todo": 'createOnEnter',
       'click #clear-completed': 'clearCompleted',
-      'click #toggle-all': 'toggleAllComplete'  
+      'click .toggle-all': 'toggleAllComplete'  
     },
     
     render: function() {
         var completed = app.Todos.completed().length;
-        var remaining = app.Todos.remaining().length;
-        
+        var remaining = app.Todos.remaining().length;   
+        console.log("completed num are " + completed);
+     
+        console.log("todo num are　" +　app.Todos.length);
         
         if(app.Todos.length) {
             this.$main.show();
             this.$footer.show();
-            
+          
+           
             this.$footer.html(this.statsTemplate({
-                complete: completed,
+                completed: completed,
                 remaining: remaining
-            }))
+            }));
             
             this.$('#filters li a')
             .removeClass('selected')
-            .filter('[href="#/]' + (app.TodoFilter || '') + '"]')
+            .filter('[href="#/]' + (app.TodoFilter || '') + '"]');
         } else {
             
             this.$main.hide();
@@ -88,11 +94,15 @@ app.AppView = Backbone.View.extend({
     // 用户在input 元素上按回车键的时候，创建一个新的Todo模型，并保存到localStorage中
     // 并且重置input元素
     createOnEnter: function(event) {
-        if(event.which !== ENTER_KEY || !this.$input.val().trim()) {
-            return ;
+        
+        if(event.which === ENTER_KEY && this.$input.val().trim()) {
+            //创建新的Todo选项
+            var data = this.newAttributes();
+            app.Todos.create(data);
+            //将该行冲洗设置为空
+            this.$input.val('');
         }
-        app.Todos.create(this.newAttributes());
-        this.$input.val('');
+   
     },
     
     // 用户选中clear-completed的复选框的时候，删除所有已完成的todo选项

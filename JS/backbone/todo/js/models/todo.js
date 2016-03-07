@@ -1,7 +1,8 @@
 var app = app || {};
-
+//数据模型
 app.Todo = Backbone.Model.extend({
     defaults: {
+        //默认值设置
         title: "",
         completed:false
     },
@@ -11,4 +12,4 @@ app.Todo = Backbone.Model.extend({
           completed: !this.get("completed")
       });
     }
-})
+});

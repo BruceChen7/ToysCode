@@ -4,13 +4,11 @@ var TodoList = Backbone.Collection.extend({
     localStorage: new Backbone.LocalStorage('todos-backbone'),
     
     completed: function() {
-        return this.filter(function(todo){
-           return todo.get('complete');       
-        });
+        return  this.where({completed: true});
     },
     
     remaining: function() {
-        return this.without.apply(this, this.completed());
+        return this.where({completed: false});
     },
     
     nextOrder: function() {
@@ -25,4 +23,5 @@ var TodoList = Backbone.Collection.extend({
     }
 });
 
+//创建一个全局的数据
 app.Todos = new TodoList();
