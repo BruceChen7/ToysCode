@@ -34,12 +34,13 @@ var (
 // Buffered input.
 
 // Reader implements buffering for an io.Reader object.
+// 指定读缓冲输入,输入是任何实现了io.Reader的接口
 type Reader struct {
 	buf          []byte
-	rd           io.Reader // reader provided by the client  数据源 
+	rd           io.Reader // reader provided by the client  du数据源 
                            //io.Reader是一个接口。Read(p []byte) (n int, err error)。
 	r, w         int       // buf read and write positions 缓冲区读写的输入和写的位置
-	err          error   //错误
+	err          error   //错误，注意这种错误处理方式,将错误内嵌到数据结构中
 	lastByte     int
 	lastRuneSize int
 }
@@ -56,6 +57,7 @@ const maxConsecutiveEmptyReads = 100
 // 创建指定大小的Reader
 // 如果
 // 注意命名的方式是NewXXXX 后面返回的都是指针
+// 首字母大写，表示这个方法是公共的。
 func NewReaderSize(rd io.Reader, size int) *Reader {
 	// Is it already a Reader?
 	b, ok := rd.(*Reader)
@@ -93,6 +95,7 @@ func (b *Reader) reset(buf []byte, r io.Reader) {
 	}
 }
 
+//
 var errNegativeRead = errors.New("bufio: reader returned negative count from Read")
 
 // fill reads a new chunk into the buffer.
