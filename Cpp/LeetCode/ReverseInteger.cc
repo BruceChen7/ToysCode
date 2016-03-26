@@ -17,10 +17,10 @@ class Solution {
 				int new_num = 0;
 
 				while (x != 0) {
-				    
+
 					int digit = x % 10;
-                    
-                    //溢出，返回0
+
+          //溢出，返回0
 					if (new_num > max_positive_num / 10 || new_num < max_negative_num / 10) {
 						return 0;
 					}
@@ -28,12 +28,12 @@ class Solution {
 
 					x = x / 10;
 				}
-				
+
 				return new_num;
 			}
 			else {
 				return 0;
 			}
-			
+
 		}
 };

@@ -8,7 +8,7 @@
 
 // 注意这种风格，这个包是用来实现有缓冲的I/O
 // 命名方式： 包名都是小写的方式，导出的符号是Pascal风格，
-// 
+//
 package bufio
 
 import (
@@ -37,7 +37,7 @@ var (
 // 指定读缓冲输入,输入是任何实现了io.Reader的接口
 type Reader struct {
 	buf          []byte
-	rd           io.Reader // reader provided by the client  du数据源 
+	rd           io.Reader // reader provided by the client  du数据源
                            //io.Reader是一个接口。Read(p []byte) (n int, err error)。
 	r, w         int       // buf read and write positions 缓冲区读写的输入和写的位置
 	err          error   //错误，注意这种错误处理方式,将错误内嵌到数据结构中
@@ -81,11 +81,11 @@ func NewReader(rd io.Reader) *Reader {
 // the buffered reader to read from r.
 // 丢弃所有的缓冲的数据
 func (b *Reader) Reset(r io.Reader) {
-    
+
 	b.reset(b.buf, r)
 }
 
-//更新所有的状态，将输入源变成r
+// 更新所有的状态，将输入源变成r
 func (b *Reader) reset(buf []byte, r io.Reader) {
 	*b = Reader{
 		buf:          buf,
@@ -531,7 +531,7 @@ func (b *Reader) writeBuf(w io.Writer) (int64, error) {
 type Writer struct {
 	err error
 	buf []byte
-	n   int    
+	n   int
 	wr  io.Writer  //输出的数据的地方，由客户提供（终端？文件？套件值）
 }
 
@@ -584,7 +584,7 @@ func (b *Writer) flush() error {
     // 将所有的缓冲区中所有的数据输出
     // 注意切片的方式，类似Python
 	n, err := b.wr.Write(b.buf[0:b.n])
-    
+
     //如果输出的直接少于n
 	if n < b.n && err == nil {
 		err = io.ErrShortWrite

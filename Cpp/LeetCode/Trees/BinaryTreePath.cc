@@ -32,14 +32,15 @@ private:
 					binaryTreePathsHelper(root->right, path, ans);
 					path.pop_back();
 				}
-				 
+
 			}
-			 
+
 
 
 		}
 
 	}
+	// 将数字改成字符串表示的Path
 	void convertIntVecToPath(vector<int>& path, vector<string>& ans) {
 		int i = 0;
 		stringstream ss;
@@ -52,5 +53,5 @@ private:
 		}
 		ans.push_back(ss.str());
 	}
-	 
+
 };
