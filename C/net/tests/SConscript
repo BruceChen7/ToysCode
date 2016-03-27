@@ -1,4 +1,4 @@
 Import('env')
-env.Program('test_echo_client',  ['#echo_client.c', 'test_echo_client.c'], variant_dir = '#build/tests', duplicate = 0)
-env.Program('test_echo_server',  ['#echo_server.c','test_echo_server.c'], variant_dir = '#build/tests', duplicate = 0)
+env.Program('test_echo_client',  ['#echo_client.c', 'test_echo_client.c'])
+env.Program('test_echo_server',  ['#echo_server.c','test_echo_server.c']) 
 
