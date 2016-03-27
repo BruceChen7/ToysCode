@@ -1,0 +1,4 @@
+VariantDir('build','tests') 
+env = Environment(CC = "gcc", CCFLAGS = "-O2 -lpthread", CPPPATH = "#")
+src_files = Split('#echo_client.c')
+SConscript("tests/SConscript", ['src_files', 'env'])

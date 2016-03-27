@@ -1,0 +1,3 @@
+Import('env','src_files')
+VariantDir('build', 'tests')
+env.Program('test_echo_client', src_files + ['test_echo_client.c'], variant_dir = '#build/tests', duplicate = 0)

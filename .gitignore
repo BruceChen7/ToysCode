@@ -7,3 +7,4 @@ Java/DesignPattern/out
 *.class
 target
 tags
+*.dblite
