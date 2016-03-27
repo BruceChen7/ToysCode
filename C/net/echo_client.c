@@ -30,7 +30,7 @@ int connect_to_server(char* ip, int port) {
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sockfd == -1) {
-        fprintf(stdout, "can't create socket %s", strerror(errno));
+        fprintf(stdout, "can't create socket %s\n", strerror(errno));
     }
     // Init the server_addr
     bzero(&server_addr, sizeof(server_addr));
@@ -43,7 +43,7 @@ int connect_to_server(char* ip, int port) {
         return -1;
     }
 
-    if (connect(socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+    if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         fprintf(stdout, "can't connect server %s", strerror(errno));
         return -1;
     } 
