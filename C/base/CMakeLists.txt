@@ -1,20 +1,12 @@
-cmake_minimum_required(VERSION 2.8)
-project(TOYS_C C)
-set(EXECUTABLE_OUTPUT_PATH,${PROJECT_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH,${PROJECT_BINARY_DIR}/lib)
-add_subdirectory(test)
+add_subdirectory(tests) 
 
-
-set(Toy_C_SRC
+set(BaseSrc
     toys_sds.c
     toys_list.c
     toys_mem.c
-    toys_skiplist.c
+    sort.c
     )
 
-add_library(Toys_C_CODE ${Toy_C_SRC})
+add_library(base ${BaseSrc})
 
-enable_testing()
-add_test(NAME sds_test COMMAND sds_test)
-add_test(NAME list_test COMMAND list_test)
 

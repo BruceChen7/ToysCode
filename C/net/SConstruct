@@ -1,2 +1,0 @@
-env = Environment(CC = "gcc", CCFLAGS = "-O2 -lpthread", CPPPATH = "#")
-SConscript("tests/SConscript", ['env'], variant_dir = 'build/tests', duplicate = 0)

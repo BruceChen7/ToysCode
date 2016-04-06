@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "client.h"
+#include "net/client.h"
 #include <assert.h>
 int main(int argc, char* argv[]) {
     if(argc != 2) { 

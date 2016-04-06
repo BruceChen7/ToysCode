@@ -3,43 +3,36 @@
 #include <stdlib.h>
 
 void swap(int a[], int pos, int another_pos) {
-  int temp = a[pos];
-  a[pos] = a[another_pos];
-  a[another_pos] = temp;
+    int temp = a[pos];
+    a[pos] = a[another_pos];
+    a[another_pos] = temp;
 }
 
-//快速排序
-//使用随机产生哨兵值,然后交换到第一个
+// Quick Sort
 void my_quick_sort(int a[], int n) {
-  if (n <= 1)
-    return;
+    if (n <= 1)
+        return; 
+    int pivot = rand() % n; 
+    // Swap the privot element to the position 0
+    swap(a, 0, pivot);
 
-  int pivot = rand() % n;
+    int i = 1;
 
-  //交换哨兵元素到0位置
-  swap(a, 0, pivot);
+    int last = 0;
 
-  int i = 1;
-
-  //下一个小于a[0]元素将要存放的位置-1
-  int last = 0;
-
-  for (i = 1; i < n; i++) {
-    if (a[i] < a[0]) {
-      swap(a, ++last, i);
-    }
-  }
-
-  swap(a, 0, last);
-
-  my_quick_sort(a, last);
-  my_quick_sort(a + last + 1, n - last - 1);
+    for (i = 1; i < n; i++) {
+        if (a[i] < a[0]) {
+          swap(a, ++last, i);
+        }
+    } 
+    swap(a, 0, last); 
+    my_quick_sort(a, last);
+    my_quick_sort(a + last + 1, n - last - 1);
 }
 
 void my_merge_sort(int a[], int left, int right) {
   if (left < right) {
-    int mid = left + (right - left) / 2;
-
+    int mid = left + (right - left) / 2; 
     my_merge_sort(a, left, mid);
     my_merge_sort(a, mid + 1, right);
     my_merge_util(a, left, mid, right);
