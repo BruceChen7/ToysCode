@@ -4,7 +4,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 add_subdirectory(utils)
 add_subdirectory(tests)
 
-set(src mpc.c calculate.c)
+set(src mpc.c calculate.c utils/utils.h)
 add_library(mpc ${src})
 
 add_executable(calculate calculate.c mpc.c)

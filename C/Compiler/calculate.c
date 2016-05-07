@@ -6,16 +6,7 @@
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
-
-static char buffer[2048];
-char* readline(char* prompt) {
-    fputs(prompt, stdout);
-    fgets(buffer, 2048,  stdin);
-    char* cpy = malloc(strlen(buffer) + 1);
-    strcpy(cpy, buffer);
-    cpy[strlen(cpy)-1] = '\0';
-    return  cpy;
-}
+#include "utils/utils.h"
 
 int main() {
     // definition of number;
@@ -27,9 +18,9 @@ int main() {
     mpca_lang(MPCA_LANG_DEFAULT,
               "                                                      \
                   number    : /-?[0-9]+/;                            \
-                  operator  : '+'/'-'/'*'/'/';                       \
+                  operator  : '+'|'-'|'*'|'/';                       \
                   expr      : <number> | '('<operator><expr>+ ')';   \
-                  lispy     : /^/<opeator> <expr>+ /$/;              \
+                  lispy     : /^/<operator> <expr>+ /$/;              \
               ",
               Number, Operator, Expr, Lispy);
     puts("Lispy version 0.0.0.0.2");
