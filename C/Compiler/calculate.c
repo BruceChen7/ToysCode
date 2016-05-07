@@ -8,32 +8,103 @@
 #include <stdlib.h>
 #include "utils/utils.h"
 
-long eval_op(long x, char* op, long y) {
+enum {
+    LERR_DIV_ZERO,
+    LERR_BAD_OP,
+    LERR_BAD_NUM
+};
+
+enum {
+    LVAL_NUM,
+    LVAL_ERR
+};
+
+typedef struct {
+    int type;
+    long num;
+    int err;
+} lval;
+
+lval lval_num(long x) {
+    lval v;
+    v.type = LVAL_NUM;
+    v.num = x;
+    return v;
+}
+
+lval lval_err(int x) {
+    lval v;
+    v.type = LVAL_ERR;
+    v.err = x;
+    return v;
+}
+
+void lval_print(lval v) {
+    switch(v.type) {
+        case LVAL_NUM:
+            printf("%li", v.num);
+            break;
+        case LVAL_ERR:
+            switch(v.err) {
+                case LERR_DIV_ZERO:
+                    printf("Error: Division by zero!");
+                    break;
+                case LERR_BAD_NUM:
+                    printf("Error: Invalid Number!");
+                    break;
+                case LERR_BAD_OP:
+                    printf("Error: Invalid Operations");
+                    break;
+
+            }
+            break;
+
+    }
+}
+
+void lval_println(lval v) {
+    lval_print(v);
+    putchar('\n');
+}
+
+lval eval_op(lval x, char* op, lval y) {
+
+    if(x.type == LVAL_ERR) {
+        return x;
+    }
+    if(y.type == LVAL_ERR) {
+        return y;
+    }
+
     if(strcmp(op, "+") == 0) {
-        return x + y;
+        return lval_num(x.num + y.num);
     }
     if(strcmp(op, "-")== 0) {
-        return x - y ;
+        return lval_num(x.num - y.num) ;
     }
 
     if(strcmp(op, "*") == 0) {
-        return x * y;
+        return lval_num(x.num * y.num);
     }
 
     if(strcmp(op, "/") == 0) {
-        return x / y;
+        return y.num == 0
+               ? lval_err(LERR_DIV_ZERO)
+               : lval_num(x.num / y.num);
     }
-    return 0;
+   return lval_err(LERR_BAD_OP);
 }
 
-long eval(mpc_ast_t* t) {
+lval eval(mpc_ast_t* t) {
     if(strstr(t->tag, "number")) {
-        return atoi(t->contents);
+        errno = 0;
+        long x = atoi(t->contents);
+        return errno !=  ERANGE ? lval_num(x) : lval_err(LERR_BAD_NUM);
     }
 
     char* op = t->children[1]->contents;
-    // 计算第二个表达式的值
-    long x = eval(t->children[2]);
+    // Calculate the second value
+    lval x = eval(t->children[2]);
     int i = 3;
 
     while(strstr(t->children[i]->tag,"exp")) {
@@ -58,7 +129,7 @@ int main() {
                   number    : /-?[0-9]+/;                            \
                   operator  : '+'|'-'|'*'|'/';                       \
                   expr      : <number> | '('<operator><expr>+ ')';   \
-                  lispy     : /^/<operator> <expr>+ /$/;              \
+                  lispy     : /^/<operator> <expr>+ /$/;             \
               ",
               Number, Operator, Expr, Lispy);
     puts("Lispy version 0.0.0.0.2");
@@ -69,8 +140,8 @@ int main() {
         mpc_result_t r;
         if(mpc_parse("<stdin>", input, Lispy, &r)) {
             mpc_ast_print(r.output);
-            long result = eval(r.output);
-            printf("result is %li\n", result);
+            lval result = eval(r.output);
+            lval_println(result);
             mpc_ast_delete(r.output);
         } else {
             mpc_err_print(r.error);
