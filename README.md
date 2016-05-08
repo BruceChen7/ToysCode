@@ -1,31 +1,10 @@
-# About 
-This is a code repository  for me to understand some conception and familiar with some API usage.
+# About
+This is a code repository  for me to understand some basic computer technology conception and familiar with some API usage.
 
-# Source Code Directory
-	├── C
-	│   └── base  Some Basic Structures Implementations
-	│      
-	├── Cpp
-	│   ├── catch.hpp A Unit Test Header 
-	│   ├── Compiler  A C Compiler Code Source,I think I can not complete it in a short time
-	|   |	
-	│   ├── Stone   A Toy Interpreter to be used to study compiler  principles
-	│   │ 
-	│   └── Utilities  Some Useful Utilities Completed by C plus plus 
-	│       
-	├── Dotfiles
-	|   |
-	|   |__ .vimrc   My Vim Configuration
-	|  
-	├── Python      Some Messy Python Code
-	│   ├── network
-	│   │   ├── echo_client.py
-	│   │   ├── echo_muliprocess_server.py
-	│   │   └── echo_single_process_server.py
-	│   ├── src
-	│   │   ├── __init__.py
-	│   │   └── utils.py
-	│   └── system
-	│       └── parse_command_line_option.py
-	└── README.md
 
+### Resource
+
+- [Manual](#manual)
+
+##  Manual
+* [Linux System API](http://man7.org/linux/man-pages/dir_all_by_section.html)
