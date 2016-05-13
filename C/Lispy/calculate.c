@@ -18,6 +18,7 @@ enum {
 };
 
 typedef struct lval{
+    // What the value is
     int type;
     long num;
     // For the error code string
@@ -29,6 +30,7 @@ typedef struct lval{
     struct lval** cell;
 } lval;
 
+// ctor to num
 lval* lval_num(long x) {
     lval* v = malloc(sizeof(lval));
     v->type = LVAL_NUM,
@@ -53,13 +55,14 @@ lval* lval_sym(char* s) {
     return v;
 }
 
-lval* lval_sexpr() {
+lval* lval_sexpr(void) {
     lval* v = malloc(sizeof(lval));
     v->type = LVAL_SEPR;
     v->cell= NULL;
     v->count = 0;
     return v;
 }
+
 
 
 void lval_del(lval* v) {
@@ -86,10 +89,24 @@ void lval_del(lval* v) {
 lval* lval_add(lval* v, lval* x) {
     v->count++;
     v->cell = realloc(v->cell, sizeof(lval*) * v->count);
-    v->cell[v->count -1] = x;
+    v->cell[v->count-1] = x;
     return v;
 }
 
+// Delete a value
+lval* lval_pop(lval* v, int i) {
+    lval* x = v->cell[i];
+    memmove(&(v->cell[i]), &v->cell[i+1], sizeof(lval*) * (v->count-i-1));
+    v->count--;
+    v->cell = realloc(v->cell, sizeof(lval*) * v->count);
+    return x;
+}
+
+lval* lval_take(lval* v, int i) {
+    lval* x = lval_pop(v, i);
+    lval_del(v);
+    return x;
+}
 
 lval* lval_read(mpc_ast_t* t) {
 
@@ -98,6 +115,7 @@ lval* lval_read(mpc_ast_t* t) {
     if(strstr(t->tag, "number")) {
         return lval_read_num(t);
     }
+    // If it's just a symbol
     if(strstr(t->tag, "symbol")) {
         return lval_sym(t->contents);
     }
@@ -132,6 +150,7 @@ lval* lval_read(mpc_ast_t* t) {
         }
         x = lval_add(x, lval_read(t->children[i]));
     }
+    return x;
 }
 
 
@@ -174,6 +193,25 @@ void lval_println(lval* v) {
     putchar('\n');
 }
 
+lval* buildin_op(lval* a, char* op) {
+    for(int i =  0 ; i < a->count; i++) {
+        if(a->cell[i]->type != LVAL_NUM) {
+            lval_del(a);
+            return lval_err("Can't operate on non-number");
+        }
+    }
+
+    lval* x = lval_pop(a, 0);
+    if((strcmp(op, "-") == 0 ) && a->count == 0) {
+        x->num = -x->num;
+    }
+
+    while(a->count > 0) {
+        lval* y = lval_pop(a, 0);
+    }
+
+    lval_del(x);
+}
 
 int main() {
     // definition of number;
@@ -199,10 +237,10 @@ int main() {
         char* input = readline("lispy> ");
         mpc_result_t r;
         if(mpc_parse("<stdin>", input, Lispy, &r)) {
-            mpc_ast_print(r.output);
-            //lval* x = lval_read(r.output);
-            //lval_println(x);
-            // lval_del(x);
+//            mpc_ast_print(r.output);
+            lval* x = lval_read(r.output);
+            lval_println(x);
+            lval_del(x);
             mpc_ast_delete(r.output);
         } else {
             mpc_err_print(r.error);
