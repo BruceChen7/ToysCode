@@ -39,6 +39,7 @@ void my_merge_sort(int a[], int left, int right) {
   }
 }
 
+
 void my_merge_util(int a[], int left, int mid, int right) {
   assert(mid >= left);
   assert(right >= mid);
@@ -87,3 +88,44 @@ void my_merge_util(int a[], int left, int mid, int right) {
     k++;
   }
 }
+
+// 冒泡排序
+void bubbleSort(int* arr, int n) {
+    for(int i = n-1; i>=0; i--) {
+        for(int j = 0; j <=i; j++) {
+            if(arr[i] > arr[i+1]) {
+                swap(arr[i], arr[i+1]);
+            }            
+        }
+    }
+
+}
+
+
+// 选择排序
+void selectSort(int* arr, int n) {
+    for(int i = 0; i < n; i++) {
+        int min = arr[i];
+        int k = i;
+        for(int j = i + 1; j < n; j++)  {
+            if(arr[j]  < min) {
+                min = arr[j];
+                k = j;
+            }
+        }
+ 
+        swap(arr[i], arr[k]);
+    } 
+}
+
+// 插入排序
+void insertSort(int* arr, int n) {
+    for(int i = 0; i < n ; i++) {
+        for(int j = i+1 ; j >= 0 ; j--) {
+            if(j>=1 && arr[j] < arr[j-1]) {
+                swap(arr[j], arr[j-1]);
+            }
+        }
+    }
+} 
+
