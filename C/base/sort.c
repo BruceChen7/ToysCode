@@ -153,6 +153,6 @@ void heapSort(int* arr, int n) {
 
     for(int i = n - 1; i >= 0; i --) {
         swap(arr, 0, i);
-        heapSortMaintain(arr, n, 0);
+        heapSortMaintain(arr, i, 0);
     }
 }

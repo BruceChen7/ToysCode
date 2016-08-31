@@ -106,5 +106,6 @@ int main() {
     testSelectSort();
     testQuickSort();
     testMergeSort();
+    testHeapSort();
     return 0;
 }
