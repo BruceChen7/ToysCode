@@ -1,10 +1,18 @@
 #ifndef __SORT_H__
 #define __SORT_H__
 
-void my_quick_sort(int a[],int n);
+void quickSort(int a[],int n);
 
-//used by my_merge_sort
-void my_merge_util(int a[],int left,int mid,int right);
-void my_merge_sort(int a[],int left, int right);
+// used by my_merge_sort
+
+// Insert Sort
+void insertSort(int* arr, int n);
+
+// Bubble Sort
+void bubbleSort(int* arr, int n);
+// Select Sort
+void selectSort(int* arr, int n);
+// Merge Sort
+void mergeSort(int* arr, int n);
 
 #endif

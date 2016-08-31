@@ -8,101 +8,48 @@ void swap(int a[], int pos, int another_pos) {
     a[another_pos] = temp;
 }
 
+
+static int partition(int* a, int from, int end) {
+    int i = from;
+    int last = from;
+    for (i = from + 1; i <=  end - 1; i++) {
+        if (a[i] < a[from]) {
+          swap(a, ++last, i);
+        }
+    } 
+    swap(a, from, last);
+    return last;
+}
+
+
+
 // Quick Sort
-void my_quick_sort(int a[], int n) {
+void quickSort(int a[], int n) {
     if (n <= 1)
         return; 
     int pivot = rand() % n; 
     // Swap the privot element to the position 0
     swap(a, 0, pivot);
-
-    int i = 1;
-
-    int last = 0;
-
-    for (i = 1; i < n; i++) {
-        if (a[i] < a[0]) {
-          swap(a, ++last, i);
-        }
-    } 
-    swap(a, 0, last); 
-    my_quick_sort(a, last);
-    my_quick_sort(a + last + 1, n - last - 1);
+    int last = partition(a, 0, n);
+    quickSort(a, last);
+    quickSort(a + last + 1, n - last - 1);
 }
 
-void my_merge_sort(int a[], int left, int right) {
-  if (left < right) {
-    int mid = left + (right - left) / 2; 
-    my_merge_sort(a, left, mid);
-    my_merge_sort(a, mid + 1, right);
-    my_merge_util(a, left, mid, right);
-  }
-}
-
-
-void my_merge_util(int a[], int left, int mid, int right) {
-  assert(mid >= left);
-  assert(right >= mid);
-
-  int left_array_length = mid - left + 1;
-  int right_array_length = right - mid;
-
-  int left_array[left_array_length];
-  int right_array[right_array_length];
-
-  int i, j;
-
-  for (i = 0; i < left_array_length; i++)
-    left_array[i] = a[left + i];
-
-  for (j = 0; j < right_array_length; j++)
-    right_array[j] = a[j + 1 + mid];
-
-  i = 0;
-  j = 0;
-
-  // Be careful
-  // Here is left
-  int k = left;
-
-  while (i < left_array_length && j < right_array_length) {
-    if (left_array[i] <= right_array[j]) {
-      a[k] = left_array[i];
-      i++;
-    } else {
-      a[k] = right_array[j];
-      j++;
-    }
-    k++;
-  }
-
-  while (i < left_array_length) {
-    a[k] = left_array[i];
-    i++;
-    k++;
-  }
-
-  while (j < right_array_length) {
-    a[k] = right_array[j];
-    j++;
-    k++;
-  }
-}
-
-// 冒泡排序
+// Bubble sort
 void bubbleSort(int* arr, int n) {
+
     for(int i = n-1; i>=0; i--) {
-        for(int j = 0; j <=i; j++) {
-            if(arr[i] > arr[i+1]) {
-                swap(arr[i], arr[i+1]);
+        for(int j = 0; j <= i-1; j++) {
+            if(arr[j] > arr[j+1]) {
+                swap(arr, j, j+1);
             }            
         }
     }
-
 }
 
 
-// 选择排序
+
+// Select sort
 void selectSort(int* arr, int n) {
     for(int i = 0; i < n; i++) {
         int min = arr[i];
@@ -114,18 +61,70 @@ void selectSort(int* arr, int n) {
             }
         }
  
-        swap(arr[i], arr[k]);
+        swap(arr,i, k);
     } 
 }
 
-// 插入排序
+// Insert Sort
 void insertSort(int* arr, int n) {
     for(int i = 0; i < n ; i++) {
         for(int j = i+1 ; j >= 0 ; j--) {
             if(j>=1 && arr[j] < arr[j-1]) {
-                swap(arr[j], arr[j-1]);
+                swap(arr, j, j-1);
             }
         }
     }
 } 
+
+void mergeFromTo(int* arr, int from, int mid, int to) {
+
+    assert(from <= mid);
+    assert(mid <= to);
+
+    if(from == to) {
+        return; 
+    }   
+    int* a = (int *) malloc(to - from + 1);
+    int i = mid; 
+    int j = to;
+    int k = to - from ;
+  
+    while( i>= from && j>= mid + 1) {
+        if(arr[i] > arr[j]) {
+            a[k--] = arr[i--]; 
+        } else {
+            a[k--] = arr[j--];
+        }
+    }
+
+    assert(i < from || j == mid);
+    
+    while(i >= from )  {
+        a[k--] = arr[i--];
+    }
+    
+    while(j >= mid+1) {
+        a[k--] = arr[j--];
+    }
+    assert(k == -1);
+    k = 0;
+    for(int i = from ; i <= to ; i++) {
+        arr[i] = a[k++];
+    }
+
+    free(a);
+}
+
+void mergeSortHelper(int* arr, int from, int to) {
+    if(from >= to) {
+        return;
+    }
+    mergeSortHelper(arr, from,  from + (to - from) / 2);
+    mergeSortHelper(arr, from + (to - from) /2  + 1, to);
+    mergeFromTo(arr, from ,from + (to - from)/2 , to);
+}
+
+void mergeSort(int* arr, int n) {
+    mergeSortHelper(arr, 0, n-1);
+}
 
