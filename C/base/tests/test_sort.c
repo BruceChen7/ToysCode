@@ -79,7 +79,26 @@ static void testMergeSort() {
     printArr(arr3, 5);
     printArr(arr4, 5);
     printArr(arr5, 5);
+}
 
+static void testHeapSort() {
+    int arr1[] = {1, 5, 3, 4, 2};
+    int arr2[] = {2, 1, 4, 3, 5};
+    int arr3[] = {1, 1, 1, 1, 1};
+    int arr4[] = {5, 4, 3, 2, 1};
+    int arr5[] = {6, 2, 1, 3, 4};
+    int arr6[] = {6, 5, 4, 3, 2};  
+    heapSort(arr1, 5);
+    heapSort(arr2, 5);
+    heapSort(arr3, 5);
+    heapSort(arr4, 5);
+    heapSort(arr5, 5);
+    heapSort(arr6, 5);
+    printArr(arr1, 5);
+    printArr(arr2, 5);
+    printArr(arr3, 5);
+    printArr(arr4, 5);
+    printArr(arr5, 5);
 }
 
 int main() {

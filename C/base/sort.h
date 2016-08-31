@@ -15,4 +15,9 @@ void selectSort(int* arr, int n);
 // Merge Sort
 void mergeSort(int* arr, int n);
 
+// Heap Sort 
+void heapSort(int* arr, int n);
+
+
+
 #endif

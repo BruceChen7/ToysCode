@@ -128,3 +128,31 @@ void mergeSort(int* arr, int n) {
     mergeSortHelper(arr, 0, n-1);
 }
 
+static void heapSortMaintain(int* arr, int n , int i) {
+    int left = i * 2 + 1;
+    int right = i * 2 + 2;
+
+    int largest = i;
+    if(left < n &&  arr[left] > arr[largest])  {
+        largest = left;
+    }   
+    if(right < n  && arr[right] > arr[largest]) {
+        largest = right;
+    }
+    
+    if(largest != i) {
+        swap(arr, i, largest);
+        heapSortMaintain(arr, n, largest);
+    }
+}
+
+void heapSort(int* arr, int n) {
+    for(int i = n/2 -1 ; i>=0 ; i--) {
+        heapSortMaintain(arr, n, i);
+    }
+
+    for(int i = n - 1; i >= 0; i --) {
+        swap(arr, 0, i);
+        heapSortMaintain(arr, n, 0);
+    }
+}
