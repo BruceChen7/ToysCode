@@ -41,10 +41,12 @@ static void testSelectSort() {
     selectSort(arr3, 5);
     selectSort(arr4, 5);
     selectSort(arr5, 5);
+    selectSort(arr6, 6);
     printArr(arr2, 5);
     printArr(arr3, 5);
     printArr(arr4, 5);
     printArr(arr5, 5);
+    printArr(arr6, 5);
 }
 
 static void testQuickSort() {
@@ -54,14 +56,18 @@ static void testQuickSort() {
     int arr4[] = {5, 4, 3, 2, 1};
     int arr5[] = {6, 2, 1, 3, 4};
     int arr6[] = {6, 5, 4, 3, 2};
+    quickSort(arr1, 5);
     quickSort(arr2, 5);
     quickSort(arr3, 5);
     quickSort(arr4, 5);
     quickSort(arr5, 5);
+    quickSort(arr6, 5);
+    printArr(arr1, 5);
     printArr(arr2, 5);
     printArr(arr3, 5);
     printArr(arr4, 5);
     printArr(arr5, 5);
+    printArr(arr6, 6);
 }
 
 static void testMergeSort() {

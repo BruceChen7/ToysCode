@@ -6,3 +6,6 @@ target_link_libraries(test_toys_list base)
 
 add_executable(test_toys_sort test_sort.c)
 target_link_libraries(test_toys_sort base)
+
+add_executable(test_graph test_graph.c)
+target_link_libraries(test_graph base)
