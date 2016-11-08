@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-void swap(int a[], int pos, int another_pos) {
+static void swap(int a[], int pos, int another_pos) {
     int temp = a[pos];
     a[pos] = a[another_pos];
     a[another_pos] = temp;
@@ -76,7 +76,7 @@ void insertSort(int* arr, int n) {
     }
 } 
 
-void mergeFromTo(int* arr, int from, int mid, int to) {
+static void mergeFromTo(int* arr, int from, int mid, int to) {
 
     assert(from <= mid);
     assert(mid <= to);
@@ -115,7 +115,7 @@ void mergeFromTo(int* arr, int from, int mid, int to) {
     free(a);
 }
 
-void mergeSortHelper(int* arr, int from, int to) {
+static void mergeSortHelper(int* arr, int from, int to) {
     if(from >= to) {
         return;
     }

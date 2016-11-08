@@ -6,7 +6,7 @@
 void createMGraph(MGraph* g) {
     assert(g != NULL);
     printf("please input the num of vertexes and edges \n");
-    scanf("%d %d", &(g->numVertexes), &g->numEdges);
+    scanf("%d %d", &(g->numVertexes), &(g->numEdges));
     printf("please input the vertexes num \n");
     int i, j;
     for(i = 0 ; i < g->numVertexes; i++) {

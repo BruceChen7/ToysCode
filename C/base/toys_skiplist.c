@@ -38,7 +38,7 @@ void toys_sl_free_node(toys_skip_list_node *sl_node)
     TOYS_FREE(sl_node);
 }
 
-//return a random level for the new skip list  node we are going to create
+//return a random level for the new skip list  Node we are going to create
 //the new level is between 1 to TOYS_SKIP_LIST_MAX_LEVEL (include TOYS_SKIP_LIST_MAX_LEVEL)
 //
 int  toys_sl_random_level(void)
@@ -85,7 +85,7 @@ toys_skip_list_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
             x = x->level[i].forward;
             rank[i] += x->level[i].span; 
         } 
-        //reserve the new node's forward pointer
+        //reserve the new Node's forward pointer
         update[i] = x;
     }
 
@@ -102,7 +102,7 @@ toys_skip_list_node* toys_sl_insert(toys_skip_list *sl,double score,void *value)
         sl->level = level; 
     }
 
-    //insert the new node into the skip_list
+    //insert the new Node into the skip_list
     x = toys_sl_create_node(level,score,value);
     
     for(i = 0 ;i < level; i++)

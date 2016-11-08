@@ -5,10 +5,10 @@
 #include <stdarg.h>
 
 typedef  char* sds;
-#define SDS_HDR_SIZE sizeof(struct toys_sds_hdr)
+#define SDS_HDR_SIZE sizeof(struct sdsHdr)
 #define SDS_MAX_PRESIZE (1024 * 1024)
 
-struct toys_sds_hdr {
+struct sdsHdr {
     //the length of the c-style string 
     unsigned int len;
     // the free space which can be used

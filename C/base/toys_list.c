@@ -36,7 +36,7 @@ void toys_list_release(toys_list *list)
 
         if(list->free)
             list->free(cur->value);
-        //delete the node
+        //delete the Node
         free(cur);
         cur = next;
     }
@@ -45,7 +45,7 @@ void toys_list_release(toys_list *list)
 }
 
 /*
- * add a new node to the head of the list
+ * add a new Node to the head of the list
  *
  * On error,NULL is returned and no operation is performed
  *
@@ -129,13 +129,13 @@ void toys_list_del_node(toys_list *list, toys_list_node *node)
     if(node->prev != NULL)
         node->prev->next = node->next;
     else 
-    /* if node is the first 'list node' */
+    /* if Node is the first 'list Node' */
         list->head = node->next; 
 
     if(node->next !=NULL)
         node->next->prev = node->prev;
     else
-        /* if node is the last 'list node' */
+        /* if Node is the last 'list Node' */
         list->tail = node->prev;
 
     if(list->free)
@@ -197,7 +197,7 @@ toys_list_node* toys_list_search_key(toys_list *list,void *key)
 
 }
 
-//find the common node both 'l1' and 'l2' have , not l1 and l2 has the same value but the same node in address space
+//find the common Node both 'l1' and 'l2' have , not l1 and l2 has the same value but the same Node in address space
 //the algorithm complexity is O(n)
 //
 toys_list_node* toys_list_find_common_node(toys_list *l1,toys_list *l2)

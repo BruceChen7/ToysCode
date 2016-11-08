@@ -1,10 +1,10 @@
 #include "binary_tree.h"
-struct node* creat_new_node(int data)
+struct Node* creat_new_node(int data)
 {   
-    struct node *new_node = malloc(sizeof(*new_node));
+    struct Node *new_node = malloc(sizeof(*new_node));
     
     if(new_node == NULL)
-        fprintf(stderr,"can't creat a new node\n");
+        fprintf(stderr,"can't creat a new Node\n");
     new_node->value = data;
     new_node->left = NULL;
     new_node->right = NULL;
@@ -12,10 +12,8 @@ struct node* creat_new_node(int data)
 }
 
 //inorder traversal
-void print_in_order(struct node *root)
-{
-    if(root != NULL)
-    {
+void print_in_order(struct Node *root) {
+    if(root != NULL) {
         print_in_order(root->left);
         fprintf(stdout,"%d ",root->value);
        
@@ -24,7 +22,7 @@ void print_in_order(struct node *root)
     
 }
 
-void print_post_order(struct node *root)
+void print_post_order(struct Node *root)
 {
     if(root != NULL)
     {
@@ -33,7 +31,7 @@ void print_post_order(struct node *root)
         fprintf(stdout,"%d",root->value); 
     }
 }
-struct node* remove_half_leaf(struct node* root)
+struct Node* remove_half_leaf(struct Node* root)
 {
     if(root == NULL)
         return NULL;
@@ -45,13 +43,13 @@ struct node* remove_half_leaf(struct node* root)
 
     if(root->left == NULL)
     {
-       struct node *new_node = root->right;
+       struct Node *new_node = root->right;
        free(root); 
        return new_node;
     }
     if(root->right == NULL)
     {
-       struct node *new_node = root->left; 
+       struct Node *new_node = root->left;
        free(root);
        return new_node; 
     }
@@ -59,7 +57,7 @@ struct node* remove_half_leaf(struct node* root)
 }
 
 //binary search tree insert 
-struct node* bst_insert(struct node *root, int data) {
+struct Node* bst_insert(struct Node *root, int data) {
     if(root == NULL) {
         return creat_new_node(data);
     } else if(data < root->value) {
@@ -70,7 +68,7 @@ struct node* bst_insert(struct node *root, int data) {
     return root;
 }
 
-int get_binary_tree_depth(struct node* root) {
+int get_binary_tree_depth(struct Node* root) {
     int depth;
     if(root == NULL) {
         return 0;
@@ -84,7 +82,7 @@ int get_binary_tree_depth(struct node* root) {
     return depth; 
 }
 
-void  kth_largetst_node_for_bst_uitl(struct node* root, int k, int* cnt, struct node **kth_node) {
+void  kth_largetst_node_for_bst_uitl(struct Node* root, int k, int* cnt, struct Node **kth_node) {
 
     if(root == NULL || *cnt >= k) {
         return ;
@@ -104,9 +102,9 @@ void  kth_largetst_node_for_bst_uitl(struct node* root, int k, int* cnt, struct 
 
 
 // Get the kth most  largest value
-struct node*  kth_largetst_node_for_bst(struct node *root, int k) { 
+struct Node*  kth_largetst_node_for_bst(struct Node *root, int k) {
     int cnt = 0;
-    struct node * kth_node  = NULL;
+    struct Node * kth_node  = NULL;
     
     kth_largetst_node_for_bst_uitl(root,k,&cnt,&kth_node); 
 
@@ -115,14 +113,14 @@ struct node*  kth_largetst_node_for_bst(struct node *root, int k) {
 }
 
 //swap the left and right  subtree
-void swap_left_right_child_tree(struct node * node)
+void swap_left_right_child_tree(struct Node * node)
 {
     if(node == NULL)
         return;
     swap_left_right_child_tree(node->left);
     swap_left_right_child_tree(node->right); 
 
-    struct node *temp = node->left; 
+    struct Node *temp = node->left;
     node->left = node->right;
     node->right = temp;
 

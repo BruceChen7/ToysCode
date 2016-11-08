@@ -8,7 +8,7 @@
 // obtain the length of sds 
 size_t toys_sds_len(const sds s)
 {
-    struct toys_sds_hdr *sh = (void *)(s-SDS_HDR_SIZE);
+    struct sdsHdr *sh = (void *)(s-SDS_HDR_SIZE);
     return sh->len ; 
 }
 
@@ -16,7 +16,7 @@ size_t toys_sds_len(const sds s)
 //creat a new sds string which content is specified with init
 sds toys_sds_new_len(const void *init,size_t init_len)
 {
-    struct toys_sds_hdr *new_sds  = NULL;
+    struct sdsHdr *new_sds  = NULL;
 
     if(init) 
     {
@@ -58,7 +58,7 @@ sds toys_sds_empty(void)
 
 sds toys_sds_expand_size(sds s,size_t add_len)
 {
-    struct toys_sds_hdr* sh, *new_sh;
+    struct sdsHdr* sh, *new_sh;
     sh = (void *)(s-SDS_HDR_SIZE); 
 
     size_t free_size = toys_sds_avail(s); 
@@ -87,13 +87,13 @@ sds toys_sds_expand_size(sds s,size_t add_len)
 
 void toys_sds_free(sds s)
 {
-    struct toys_sds_hdr *sh  = (void *)(s-SDS_HDR_SIZE);
+    struct sdsHdr *sh  = (void *)(s-SDS_HDR_SIZE);
     free(sh);
 }
 
 size_t toys_sds_avail(const sds s)
 {
-    struct toys_sds_hdr* sh = (void *)(s-SDS_HDR_SIZE);
+    struct sdsHdr* sh = (void *)(s-SDS_HDR_SIZE);
     return sh->free;    
 }
 
@@ -101,7 +101,7 @@ sds toys_sds_cat_len(sds s,const void *t,size_t len)
 { 
     size_t avail_len = toys_sds_avail(s); 
     size_t s_len = toys_sds_len(s);
-    struct toys_sds_hdr *sh = (void *)(s-SDS_HDR_SIZE);
+    struct sdsHdr *sh = (void *)(s-SDS_HDR_SIZE);
 
     if(avail_len  < len) {
          s = toys_sds_expand_size(s,len); 
@@ -124,7 +124,7 @@ sds toys_sds_cat(sds s,const void *t)
 
 sds toys_sds_cpy_len(sds s,const void *t ,size_t len)
 {
-    struct toys_sds_hdr *sh = (void *)(s - SDS_HDR_SIZE);
+    struct sdsHdr *sh = (void *)(s - SDS_HDR_SIZE);
     size_t t_len = len;
     size_t s_total_len = sh->free + sh->len;
     
@@ -159,7 +159,7 @@ sds toys_sds_dup(const sds s )
 //update s's free space 
 void toys_sds_clear(sds s) 
 {
-    struct toys_sds_hdr* sh  = (void *)(s-SDS_HDR_SIZE);
+    struct sdsHdr* sh  = (void *)(s-SDS_HDR_SIZE);
     sh->free = sh->len;
     sh->len = 0; 
     sh->buf[0] = '\0' ;
