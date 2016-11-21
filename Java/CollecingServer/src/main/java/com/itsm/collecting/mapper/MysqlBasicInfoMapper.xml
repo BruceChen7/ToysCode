@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itsm.collecting.dao.MysqlBasicInfoMapper">
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.MysqlBasicInfo">
+    <id column="mysql_id" jdbcType="INTEGER" property="mysqlId" />
+    <result column="mysql_version" jdbcType="VARCHAR" property="mysqlVersion" />
+    <result column="mysql_base_dir" jdbcType="VARCHAR" property="mysqlBaseDir" />
+    <result column="mysql_data_dir" jdbcType="VARCHAR" property="mysqlDataDir" />
+    <result column="mysql_host_name" jdbcType="VARCHAR" property="mysqlHostName" />
+    <result column="mysql_host_os" jdbcType="VARCHAR" property="mysqlHostOs" />
+    <result column="mysql_db_size_list" jdbcType="VARCHAR" property="mysqlDbSizeList" />
+    <result column="mysql_db_name_list" jdbcType="VARCHAR" property="mysqlDbNameList" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    mysql_id, mysql_version, mysql_base_dir, mysql_data_dir, mysql_host_name, mysql_host_os, 
+    mysql_db_size_list, mysql_db_name_list
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from mysql_basic_info
+    where mysql_id = #{mysqlId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from mysql_basic_info
+    where mysql_id = #{mysqlId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.MysqlBasicInfo">
+    insert into mysql_basic_info (mysql_id, mysql_version, mysql_base_dir, 
+      mysql_data_dir, mysql_host_name, mysql_host_os, 
+      mysql_db_size_list, mysql_db_name_list)
+    values (#{mysqlId,jdbcType=INTEGER}, #{mysqlVersion,jdbcType=VARCHAR}, #{mysqlBaseDir,jdbcType=VARCHAR}, 
+      #{mysqlDataDir,jdbcType=VARCHAR}, #{mysqlHostName,jdbcType=VARCHAR}, #{mysqlHostOs,jdbcType=VARCHAR}, 
+      #{mysqlDbSizeList,jdbcType=VARCHAR}, #{mysqlDbNameList,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.MysqlBasicInfo">
+    insert into mysql_basic_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mysqlId != null">
+        mysql_id,
+      </if>
+      <if test="mysqlVersion != null">
+        mysql_version,
+      </if>
+      <if test="mysqlBaseDir != null">
+        mysql_base_dir,
+      </if>
+      <if test="mysqlDataDir != null">
+        mysql_data_dir,
+      </if>
+      <if test="mysqlHostName != null">
+        mysql_host_name,
+      </if>
+      <if test="mysqlHostOs != null">
+        mysql_host_os,
+      </if>
+      <if test="mysqlDbSizeList != null">
+        mysql_db_size_list,
+      </if>
+      <if test="mysqlDbNameList != null">
+        mysql_db_name_list,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mysqlId != null">
+        #{mysqlId,jdbcType=INTEGER},
+      </if>
+      <if test="mysqlVersion != null">
+        #{mysqlVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlBaseDir != null">
+        #{mysqlBaseDir,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlDataDir != null">
+        #{mysqlDataDir,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlHostName != null">
+        #{mysqlHostName,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlHostOs != null">
+        #{mysqlHostOs,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlDbSizeList != null">
+        #{mysqlDbSizeList,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlDbNameList != null">
+        #{mysqlDbNameList,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.MysqlBasicInfo">
+    update mysql_basic_info
+    <set>
+      <if test="mysqlVersion != null">
+        mysql_version = #{mysqlVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlBaseDir != null">
+        mysql_base_dir = #{mysqlBaseDir,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlDataDir != null">
+        mysql_data_dir = #{mysqlDataDir,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlHostName != null">
+        mysql_host_name = #{mysqlHostName,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlHostOs != null">
+        mysql_host_os = #{mysqlHostOs,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlDbSizeList != null">
+        mysql_db_size_list = #{mysqlDbSizeList,jdbcType=VARCHAR},
+      </if>
+      <if test="mysqlDbNameList != null">
+        mysql_db_name_list = #{mysqlDbNameList,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mysql_id = #{mysqlId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.MysqlBasicInfo">
+    update mysql_basic_info
+    set mysql_version = #{mysqlVersion,jdbcType=VARCHAR},
+      mysql_base_dir = #{mysqlBaseDir,jdbcType=VARCHAR},
+      mysql_data_dir = #{mysqlDataDir,jdbcType=VARCHAR},
+      mysql_host_name = #{mysqlHostName,jdbcType=VARCHAR},
+      mysql_host_os = #{mysqlHostOs,jdbcType=VARCHAR},
+      mysql_db_size_list = #{mysqlDbSizeList,jdbcType=VARCHAR},
+      mysql_db_name_list = #{mysqlDbNameList,jdbcType=VARCHAR}
+    where mysql_id = #{mysqlId,jdbcType=INTEGER}
+  </update>
+</mapper>

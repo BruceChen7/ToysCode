@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.MySqlMonitorInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.MySqlMonitorInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="db_id" property="dbId" jdbcType="INTEGER" />
+    <result column="connection_time" property="connectionTime" jdbcType="INTEGER" />
+    <result column="request_rate" property="requestRate" jdbcType="INTEGER" />
+    <result column="receive_byte_rate" property="receiveByteRate" jdbcType="INTEGER" />
+    <result column="send_byte_rate" property="sendByteRate" jdbcType="INTEGER" />
+    <result column="open_connection_num" property="openConnectionNum" jdbcType="INTEGER" />
+    <result column="terminate_connection_num" property="terminateConnectionNum" jdbcType="INTEGER" />
+    <result column="terminate_client_num" property="terminateClientNum" jdbcType="INTEGER" />
+    <result column="use_thread_num" property="useThreadNum" jdbcType="INTEGER" />
+    <result column="cached_memory_thread_num" property="cachedMemoryThreadNum" jdbcType="INTEGER" />
+    <result column="cached_memory_size" property="cachedMemorySize" jdbcType="INTEGER" />
+    <result column="db_name" property="dbName" jdbcType="VARCHAR" />
+    <result column="db_size" property="dbSize" jdbcType="INTEGER" />
+    <result column="immediate_lock_num" property="immediateLockNum" jdbcType="INTEGER" />
+    <result column="wait_lock_num" property="waitLockNum" jdbcType="INTEGER" />
+    <result column="key_hit_num" property="keyHitNum" jdbcType="INTEGER" />
+    <result column="used_cached_key_size" property="usedCachedKeySize" jdbcType="INTEGER" />
+    <result column="key_cacehd_size" property="keyCacehdSize" jdbcType="INTEGER" />
+    <result column="request_cached_hit_rate" property="requestCachedHitRate" jdbcType="INTEGER" />
+    <result column="request_cached_size" property="requestCachedSize" jdbcType="INTEGER" />
+    <result column="request_cached_max_size" property="requestCachedMaxSize" jdbcType="INTEGER" />
+    <result column="health_status" property="healthStatus" jdbcType="INTEGER" />
+    <result column="monitor_time" property="monitorTime" jdbcType="INTEGER" />
+    <result column="up_time" property="upTime" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, db_id, connection_time, request_rate, receive_byte_rate, send_byte_rate, open_connection_num, 
+    terminate_connection_num, terminate_client_num, use_thread_num, cached_memory_thread_num, 
+    cached_memory_size, db_name, db_size, immediate_lock_num, wait_lock_num, key_hit_num, 
+    used_cached_key_size, key_cacehd_size, request_cached_hit_rate, request_cached_size, 
+    request_cached_max_size, health_status, monitor_time, up_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from mysql_monitor_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mysql_monitor_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.MySqlMonitorInfo" >
+    insert into mysql_monitor_info (id, db_id, connection_time, 
+      request_rate, receive_byte_rate, send_byte_rate, 
+      open_connection_num, terminate_connection_num, 
+      terminate_client_num, use_thread_num, cached_memory_thread_num, 
+      cached_memory_size, db_name, db_size, 
+      immediate_lock_num, wait_lock_num, key_hit_num, 
+      used_cached_key_size, key_cacehd_size, request_cached_hit_rate, 
+      request_cached_size, request_cached_max_size, 
+      health_status, monitor_time, up_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{dbId,jdbcType=INTEGER}, #{connectionTime,jdbcType=INTEGER}, 
+      #{requestRate,jdbcType=INTEGER}, #{receiveByteRate,jdbcType=INTEGER}, #{sendByteRate,jdbcType=INTEGER}, 
+      #{openConnectionNum,jdbcType=INTEGER}, #{terminateConnectionNum,jdbcType=INTEGER}, 
+      #{terminateClientNum,jdbcType=INTEGER}, #{useThreadNum,jdbcType=INTEGER}, #{cachedMemoryThreadNum,jdbcType=INTEGER}, 
+      #{cachedMemorySize,jdbcType=INTEGER}, #{dbName,jdbcType=VARCHAR}, #{dbSize,jdbcType=INTEGER}, 
+      #{immediateLockNum,jdbcType=INTEGER}, #{waitLockNum,jdbcType=INTEGER}, #{keyHitNum,jdbcType=INTEGER}, 
+      #{usedCachedKeySize,jdbcType=INTEGER}, #{keyCacehdSize,jdbcType=INTEGER}, #{requestCachedHitRate,jdbcType=INTEGER}, 
+      #{requestCachedSize,jdbcType=INTEGER}, #{requestCachedMaxSize,jdbcType=INTEGER}, 
+      #{healthStatus,jdbcType=INTEGER}, #{monitorTime,jdbcType=INTEGER}, #{upTime,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.MySqlMonitorInfo" >
+    insert into mysql_monitor_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dbId != null" >
+        db_id,
+      </if>
+      <if test="connectionTime != null" >
+        connection_time,
+      </if>
+      <if test="requestRate != null" >
+        request_rate,
+      </if>
+      <if test="receiveByteRate != null" >
+        receive_byte_rate,
+      </if>
+      <if test="sendByteRate != null" >
+        send_byte_rate,
+      </if>
+      <if test="openConnectionNum != null" >
+        open_connection_num,
+      </if>
+      <if test="terminateConnectionNum != null" >
+        terminate_connection_num,
+      </if>
+      <if test="terminateClientNum != null" >
+        terminate_client_num,
+      </if>
+      <if test="useThreadNum != null" >
+        use_thread_num,
+      </if>
+      <if test="cachedMemoryThreadNum != null" >
+        cached_memory_thread_num,
+      </if>
+      <if test="cachedMemorySize != null" >
+        cached_memory_size,
+      </if>
+      <if test="dbName != null" >
+        db_name,
+      </if>
+      <if test="dbSize != null" >
+        db_size,
+      </if>
+      <if test="immediateLockNum != null" >
+        immediate_lock_num,
+      </if>
+      <if test="waitLockNum != null" >
+        wait_lock_num,
+      </if>
+      <if test="keyHitNum != null" >
+        key_hit_num,
+      </if>
+      <if test="usedCachedKeySize != null" >
+        used_cached_key_size,
+      </if>
+      <if test="keyCacehdSize != null" >
+        key_cacehd_size,
+      </if>
+      <if test="requestCachedHitRate != null" >
+        request_cached_hit_rate,
+      </if>
+      <if test="requestCachedSize != null" >
+        request_cached_size,
+      </if>
+      <if test="requestCachedMaxSize != null" >
+        request_cached_max_size,
+      </if>
+      <if test="healthStatus != null" >
+        health_status,
+      </if>
+      <if test="monitorTime != null" >
+        monitor_time,
+      </if>
+      <if test="upTime != null" >
+        up_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="dbId != null" >
+        #{dbId,jdbcType=INTEGER},
+      </if>
+      <if test="connectionTime != null" >
+        #{connectionTime,jdbcType=INTEGER},
+      </if>
+      <if test="requestRate != null" >
+        #{requestRate,jdbcType=INTEGER},
+      </if>
+      <if test="receiveByteRate != null" >
+        #{receiveByteRate,jdbcType=INTEGER},
+      </if>
+      <if test="sendByteRate != null" >
+        #{sendByteRate,jdbcType=INTEGER},
+      </if>
+      <if test="openConnectionNum != null" >
+        #{openConnectionNum,jdbcType=INTEGER},
+      </if>
+      <if test="terminateConnectionNum != null" >
+        #{terminateConnectionNum,jdbcType=INTEGER},
+      </if>
+      <if test="terminateClientNum != null" >
+        #{terminateClientNum,jdbcType=INTEGER},
+      </if>
+      <if test="useThreadNum != null" >
+        #{useThreadNum,jdbcType=INTEGER},
+      </if>
+      <if test="cachedMemoryThreadNum != null" >
+        #{cachedMemoryThreadNum,jdbcType=INTEGER},
+      </if>
+      <if test="cachedMemorySize != null" >
+        #{cachedMemorySize,jdbcType=INTEGER},
+      </if>
+      <if test="dbName != null" >
+        #{dbName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbSize != null" >
+        #{dbSize,jdbcType=INTEGER},
+      </if>
+      <if test="immediateLockNum != null" >
+        #{immediateLockNum,jdbcType=INTEGER},
+      </if>
+      <if test="waitLockNum != null" >
+        #{waitLockNum,jdbcType=INTEGER},
+      </if>
+      <if test="keyHitNum != null" >
+        #{keyHitNum,jdbcType=INTEGER},
+      </if>
+      <if test="usedCachedKeySize != null" >
+        #{usedCachedKeySize,jdbcType=INTEGER},
+      </if>
+      <if test="keyCacehdSize != null" >
+        #{keyCacehdSize,jdbcType=INTEGER},
+      </if>
+      <if test="requestCachedHitRate != null" >
+        #{requestCachedHitRate,jdbcType=INTEGER},
+      </if>
+      <if test="requestCachedSize != null" >
+        #{requestCachedSize,jdbcType=INTEGER},
+      </if>
+      <if test="requestCachedMaxSize != null" >
+        #{requestCachedMaxSize,jdbcType=INTEGER},
+      </if>
+      <if test="healthStatus != null" >
+        #{healthStatus,jdbcType=INTEGER},
+      </if>
+      <if test="monitorTime != null" >
+        #{monitorTime,jdbcType=INTEGER},
+      </if>
+      <if test="upTime != null" >
+        #{upTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.MySqlMonitorInfo" >
+    update mysql_monitor_info
+    <set >
+      <if test="dbId != null" >
+        db_id = #{dbId,jdbcType=INTEGER},
+      </if>
+      <if test="connectionTime != null" >
+        connection_time = #{connectionTime,jdbcType=INTEGER},
+      </if>
+      <if test="requestRate != null" >
+        request_rate = #{requestRate,jdbcType=INTEGER},
+      </if>
+      <if test="receiveByteRate != null" >
+        receive_byte_rate = #{receiveByteRate,jdbcType=INTEGER},
+      </if>
+      <if test="sendByteRate != null" >
+        send_byte_rate = #{sendByteRate,jdbcType=INTEGER},
+      </if>
+      <if test="openConnectionNum != null" >
+        open_connection_num = #{openConnectionNum,jdbcType=INTEGER},
+      </if>
+      <if test="terminateConnectionNum != null" >
+        terminate_connection_num = #{terminateConnectionNum,jdbcType=INTEGER},
+      </if>
+      <if test="terminateClientNum != null" >
+        terminate_client_num = #{terminateClientNum,jdbcType=INTEGER},
+      </if>
+      <if test="useThreadNum != null" >
+        use_thread_num = #{useThreadNum,jdbcType=INTEGER},
+      </if>
+      <if test="cachedMemoryThreadNum != null" >
+        cached_memory_thread_num = #{cachedMemoryThreadNum,jdbcType=INTEGER},
+      </if>
+      <if test="cachedMemorySize != null" >
+        cached_memory_size = #{cachedMemorySize,jdbcType=INTEGER},
+      </if>
+      <if test="dbName != null" >
+        db_name = #{dbName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbSize != null" >
+        db_size = #{dbSize,jdbcType=INTEGER},
+      </if>
+      <if test="immediateLockNum != null" >
+        immediate_lock_num = #{immediateLockNum,jdbcType=INTEGER},
+      </if>
+      <if test="waitLockNum != null" >
+        wait_lock_num = #{waitLockNum,jdbcType=INTEGER},
+      </if>
+      <if test="keyHitNum != null" >
+        key_hit_num = #{keyHitNum,jdbcType=INTEGER},
+      </if>
+      <if test="usedCachedKeySize != null" >
+        used_cached_key_size = #{usedCachedKeySize,jdbcType=INTEGER},
+      </if>
+      <if test="keyCacehdSize != null" >
+        key_cacehd_size = #{keyCacehdSize,jdbcType=INTEGER},
+      </if>
+      <if test="requestCachedHitRate != null" >
+        request_cached_hit_rate = #{requestCachedHitRate,jdbcType=INTEGER},
+      </if>
+      <if test="requestCachedSize != null" >
+        request_cached_size = #{requestCachedSize,jdbcType=INTEGER},
+      </if>
+      <if test="requestCachedMaxSize != null" >
+        request_cached_max_size = #{requestCachedMaxSize,jdbcType=INTEGER},
+      </if>
+      <if test="healthStatus != null" >
+        health_status = #{healthStatus,jdbcType=INTEGER},
+      </if>
+      <if test="monitorTime != null" >
+        monitor_time = #{monitorTime,jdbcType=INTEGER},
+      </if>
+      <if test="upTime != null" >
+        up_time = #{upTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.MySqlMonitorInfo" >
+    update mysql_monitor_info
+    set db_id = #{dbId,jdbcType=INTEGER},
+      connection_time = #{connectionTime,jdbcType=INTEGER},
+      request_rate = #{requestRate,jdbcType=INTEGER},
+      receive_byte_rate = #{receiveByteRate,jdbcType=INTEGER},
+      send_byte_rate = #{sendByteRate,jdbcType=INTEGER},
+      open_connection_num = #{openConnectionNum,jdbcType=INTEGER},
+      terminate_connection_num = #{terminateConnectionNum,jdbcType=INTEGER},
+      terminate_client_num = #{terminateClientNum,jdbcType=INTEGER},
+      use_thread_num = #{useThreadNum,jdbcType=INTEGER},
+      cached_memory_thread_num = #{cachedMemoryThreadNum,jdbcType=INTEGER},
+      cached_memory_size = #{cachedMemorySize,jdbcType=INTEGER},
+      db_name = #{dbName,jdbcType=VARCHAR},
+      db_size = #{dbSize,jdbcType=INTEGER},
+      immediate_lock_num = #{immediateLockNum,jdbcType=INTEGER},
+      wait_lock_num = #{waitLockNum,jdbcType=INTEGER},
+      key_hit_num = #{keyHitNum,jdbcType=INTEGER},
+      used_cached_key_size = #{usedCachedKeySize,jdbcType=INTEGER},
+      key_cacehd_size = #{keyCacehdSize,jdbcType=INTEGER},
+      request_cached_hit_rate = #{requestCachedHitRate,jdbcType=INTEGER},
+      request_cached_size = #{requestCachedSize,jdbcType=INTEGER},
+      request_cached_max_size = #{requestCachedMaxSize,jdbcType=INTEGER},
+      health_status = #{healthStatus,jdbcType=INTEGER},
+      monitor_time = #{monitorTime,jdbcType=INTEGER},
+      up_time = #{upTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.DatabaseBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.DatabaseBasicInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="db_name" property="dbName" jdbcType="VARCHAR" />
+    <result column="db_ip" property="dbIp" jdbcType="VARCHAR" />
+    <result column="db_port" property="dbPort" jdbcType="VARCHAR" />
+    <result column="db_type" property="dbType" jdbcType="VARCHAR" />
+    <result column="app_system" property="appSystem" jdbcType="VARCHAR" />
+    <result column="db_status" property="dbStatus" jdbcType="INTEGER" />
+    <result column="db_username" property="dbUsername" jdbcType="VARCHAR" />
+    <result column="db_password" property="dbPassword" jdbcType="VARCHAR" />
+    <result column="db_oracle_sid" property="dbOracleSid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, db_name, db_ip, db_port, db_type, app_system, db_status, db_username, db_password, 
+    db_oracle_sid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from database_basic_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  
+   <select id="selectAllDatabaseInUse" resultMap="BaseResultMap">
+        select * from database_basic_info where db_status = 1
+    </select>
+    
+    <select id="selectByIpAndType" resultType="java.lang.Integer">
+        select id from database_basic_info where db_status =1 and db_ip=#{db_ip} and db_type =#{db_type}
+    </select>
+  
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from database_basic_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.DatabaseBasicInfo" >
+    insert into database_basic_info (id, db_name, db_ip, 
+      db_port, db_type, app_system, 
+      db_status, db_username, db_password, 
+      db_oracle_sid)
+    values (#{id,jdbcType=INTEGER}, #{dbName,jdbcType=VARCHAR}, #{dbIp,jdbcType=VARCHAR}, 
+      #{dbPort,jdbcType=VARCHAR}, #{dbType,jdbcType=VARCHAR}, #{appSystem,jdbcType=VARCHAR}, 
+      #{dbStatus,jdbcType=INTEGER}, #{dbUsername,jdbcType=VARCHAR}, #{dbPassword,jdbcType=VARCHAR}, 
+      #{dbOracleSid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.DatabaseBasicInfo" >
+    insert into database_basic_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dbName != null" >
+        db_name,
+      </if>
+      <if test="dbIp != null" >
+        db_ip,
+      </if>
+      <if test="dbPort != null" >
+        db_port,
+      </if>
+      <if test="dbType != null" >
+        db_type,
+      </if>
+      <if test="appSystem != null" >
+        app_system,
+      </if>
+      <if test="dbStatus != null" >
+        db_status,
+      </if>
+      <if test="dbUsername != null" >
+        db_username,
+      </if>
+      <if test="dbPassword != null" >
+        db_password,
+      </if>
+      <if test="dbOracleSid != null" >
+        db_oracle_sid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="dbName != null" >
+        #{dbName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbIp != null" >
+        #{dbIp,jdbcType=VARCHAR},
+      </if>
+      <if test="dbPort != null" >
+        #{dbPort,jdbcType=VARCHAR},
+      </if>
+      <if test="dbType != null" >
+        #{dbType,jdbcType=VARCHAR},
+      </if>
+      <if test="appSystem != null" >
+        #{appSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="dbStatus != null" >
+        #{dbStatus,jdbcType=INTEGER},
+      </if>
+      <if test="dbUsername != null" >
+        #{dbUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="dbPassword != null" >
+        #{dbPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="dbOracleSid != null" >
+        #{dbOracleSid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.DatabaseBasicInfo" >
+    update database_basic_info
+    <set >
+      <if test="dbName != null" >
+        db_name = #{dbName,jdbcType=VARCHAR},
+      </if>
+      <if test="dbIp != null" >
+        db_ip = #{dbIp,jdbcType=VARCHAR},
+      </if>
+      <if test="dbPort != null" >
+        db_port = #{dbPort,jdbcType=VARCHAR},
+      </if>
+      <if test="dbType != null" >
+        db_type = #{dbType,jdbcType=VARCHAR},
+      </if>
+      <if test="appSystem != null" >
+        app_system = #{appSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="dbStatus != null" >
+        db_status = #{dbStatus,jdbcType=INTEGER},
+      </if>
+      <if test="dbUsername != null" >
+        db_username = #{dbUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="dbPassword != null" >
+        db_password = #{dbPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="dbOracleSid != null" >
+        db_oracle_sid = #{dbOracleSid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.DatabaseBasicInfo" >
+    update database_basic_info
+    set db_name = #{dbName,jdbcType=VARCHAR},
+      db_ip = #{dbIp,jdbcType=VARCHAR},
+      db_port = #{dbPort,jdbcType=VARCHAR},
+      db_type = #{dbType,jdbcType=VARCHAR},
+      app_system = #{appSystem,jdbcType=VARCHAR},
+      db_status = #{dbStatus,jdbcType=INTEGER},
+      db_username = #{dbUsername,jdbcType=VARCHAR},
+      db_password = #{dbPassword,jdbcType=VARCHAR},
+      db_oracle_sid = #{dbOracleSid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

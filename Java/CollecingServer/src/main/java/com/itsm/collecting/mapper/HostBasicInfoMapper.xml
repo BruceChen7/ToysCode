@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.HostBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.HostBasicInfo" >
+    <id column="host_id" property="hostId" jdbcType="INTEGER" />
+    <result column="host_ip" property="hostIp" jdbcType="VARCHAR" />
+    <result column="host_os" property="hostOs" jdbcType="VARCHAR" />
+    <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+    <result column="host_name" property="hostName" jdbcType="VARCHAR" />
+    <result column="host_type" property="hostType" jdbcType="INTEGER" />
+    <result column="host_apply_system" property="hostApplySystem" jdbcType="VARCHAR" />
+    <result column="host_status" property="hostStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    host_id, host_ip, host_os, device_name, host_name, host_type, host_apply_system, 
+    host_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from host_basic_info
+    where host_id = #{hostId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from host_basic_info
+    where host_id = #{hostId,jdbcType=INTEGER}
+  </delete>
+
+    <select id="selectAllNeedToCollectHost" resultMap="BaseResultMap">
+      select * from host_basic_info where  host_status = 0
+    </select>
+
+  <insert id="insert" parameterType="com.itsm.collecting.model.HostBasicInfo" >
+    insert into host_basic_info (host_id, host_ip, host_os, 
+      device_name, host_name, host_type, 
+      host_apply_system, host_status)
+    values (#{hostId,jdbcType=INTEGER}, #{hostIp,jdbcType=VARCHAR}, #{hostOs,jdbcType=VARCHAR}, 
+      #{deviceName,jdbcType=VARCHAR}, #{hostName,jdbcType=VARCHAR}, #{hostType,jdbcType=INTEGER}, 
+      #{hostApplySystem,jdbcType=VARCHAR}, #{hostStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.HostBasicInfo" >
+    insert into host_basic_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="hostId != null" >
+        host_id,
+      </if>
+      <if test="hostIp != null" >
+        host_ip,
+      </if>
+      <if test="hostOs != null" >
+        host_os,
+      </if>
+      <if test="deviceName != null" >
+        device_name,
+      </if>
+      <if test="hostName != null" >
+        host_name,
+      </if>
+      <if test="hostType != null" >
+        host_type,
+      </if>
+      <if test="hostApplySystem != null" >
+        host_apply_system,
+      </if>
+      <if test="hostStatus != null" >
+        host_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="hostId != null" >
+        #{hostId,jdbcType=INTEGER},
+      </if>
+      <if test="hostIp != null" >
+        #{hostIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hostOs != null" >
+        #{hostOs,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceName != null" >
+        #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostType != null" >
+        #{hostType,jdbcType=INTEGER},
+      </if>
+      <if test="hostApplySystem != null" >
+        #{hostApplySystem,jdbcType=VARCHAR},
+      </if>
+      <if test="hostStatus != null" >
+        #{hostStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.HostBasicInfo" >
+    update host_basic_info
+    <set >
+      <if test="hostIp != null" >
+        host_ip = #{hostIp,jdbcType=VARCHAR},
+      </if>
+      <if test="hostOs != null" >
+        host_os = #{hostOs,jdbcType=VARCHAR},
+      </if>
+      <if test="deviceName != null" >
+        device_name = #{deviceName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostName != null" >
+        host_name = #{hostName,jdbcType=VARCHAR},
+      </if>
+      <if test="hostType != null" >
+        host_type = #{hostType,jdbcType=INTEGER},
+      </if>
+      <if test="hostApplySystem != null" >
+        host_apply_system = #{hostApplySystem,jdbcType=VARCHAR},
+      </if>
+      <if test="hostStatus != null" >
+        host_status = #{hostStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where host_id = #{hostId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.HostBasicInfo" >
+    update host_basic_info
+    set host_ip = #{hostIp,jdbcType=VARCHAR},
+      host_os = #{hostOs,jdbcType=VARCHAR},
+      device_name = #{deviceName,jdbcType=VARCHAR},
+      host_name = #{hostName,jdbcType=VARCHAR},
+      host_type = #{hostType,jdbcType=INTEGER},
+      host_apply_system = #{hostApplySystem,jdbcType=VARCHAR},
+      host_status = #{hostStatus,jdbcType=INTEGER}
+    where host_id = #{hostId,jdbcType=INTEGER}
+  </update>
+</mapper>

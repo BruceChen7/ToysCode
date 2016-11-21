@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.OracleMonitorInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.OracleMonitorInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="db_id" property="dbId" jdbcType="INTEGER" />
+    <result column="sga_cache_hitrate" property="sgaCacheHitrate" jdbcType="INTEGER" />
+    <result column="sga_dictionary_hitrate" property="sgaDictionaryHitrate" jdbcType="INTEGER" />
+    <result column="sga_library_hitrate" property="sgaLibraryHitrate" jdbcType="INTEGER" />
+    <result column="sga_free_mem_size" property="sgaFreeMemSize" jdbcType="INTEGER" />
+    <result column="sga_buffer_cache_size" property="sgaBufferCacheSize" jdbcType="INTEGER" />
+    <result column="sga_shared_pool_size" property="sgaSharedPoolSize" jdbcType="INTEGER" />
+    <result column="sga_log_buffer_size" property="sgaLogBufferSize" jdbcType="INTEGER" />
+    <result column="sga_library_cache_size" property="sgaLibraryCacheSize" jdbcType="INTEGER" />
+    <result column="sga_dictionary_cache_size" property="sgaDictionaryCacheSize" jdbcType="INTEGER" />
+    <result column="sga_sql_cache_size" property="sgaSqlCacheSize" jdbcType="INTEGER" />
+    <result column="sga_size" property="sgaSize" jdbcType="INTEGER" />
+    <result column="connection_time" property="connectionTime" jdbcType="INTEGER" />
+    <result column="monitor_time" property="monitorTime" jdbcType="INTEGER" />
+    <result column="health_status" property="healthStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, db_id, sga_cache_hitrate, sga_dictionary_hitrate, sga_library_hitrate, sga_free_mem_size, 
+    sga_buffer_cache_size, sga_shared_pool_size, sga_log_buffer_size, sga_library_cache_size, 
+    sga_dictionary_cache_size, sga_sql_cache_size, sga_size, connection_time, monitor_time, 
+    health_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from oracle_monitor_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from oracle_monitor_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.OracleMonitorInfo" >
+    insert into oracle_monitor_info (id, db_id, sga_cache_hitrate, 
+      sga_dictionary_hitrate, sga_library_hitrate, 
+      sga_free_mem_size, sga_buffer_cache_size, sga_shared_pool_size, 
+      sga_log_buffer_size, sga_library_cache_size, 
+      sga_dictionary_cache_size, sga_sql_cache_size, 
+      sga_size, connection_time, monitor_time, 
+      health_status)
+    values (#{id,jdbcType=BIGINT}, #{dbId,jdbcType=INTEGER}, #{sgaCacheHitrate,jdbcType=INTEGER}, 
+      #{sgaDictionaryHitrate,jdbcType=INTEGER}, #{sgaLibraryHitrate,jdbcType=INTEGER}, 
+      #{sgaFreeMemSize,jdbcType=INTEGER}, #{sgaBufferCacheSize,jdbcType=INTEGER}, #{sgaSharedPoolSize,jdbcType=INTEGER}, 
+      #{sgaLogBufferSize,jdbcType=INTEGER}, #{sgaLibraryCacheSize,jdbcType=INTEGER}, 
+      #{sgaDictionaryCacheSize,jdbcType=INTEGER}, #{sgaSqlCacheSize,jdbcType=INTEGER}, 
+      #{sgaSize,jdbcType=INTEGER}, #{connectionTime,jdbcType=INTEGER}, #{monitorTime,jdbcType=INTEGER}, 
+      #{healthStatus,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.OracleMonitorInfo" >
+    insert into oracle_monitor_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dbId != null" >
+        db_id,
+      </if>
+      <if test="sgaCacheHitrate != null" >
+        sga_cache_hitrate,
+      </if>
+      <if test="sgaDictionaryHitrate != null" >
+        sga_dictionary_hitrate,
+      </if>
+      <if test="sgaLibraryHitrate != null" >
+        sga_library_hitrate,
+      </if>
+      <if test="sgaFreeMemSize != null" >
+        sga_free_mem_size,
+      </if>
+      <if test="sgaBufferCacheSize != null" >
+        sga_buffer_cache_size,
+      </if>
+      <if test="sgaSharedPoolSize != null" >
+        sga_shared_pool_size,
+      </if>
+      <if test="sgaLogBufferSize != null" >
+        sga_log_buffer_size,
+      </if>
+      <if test="sgaLibraryCacheSize != null" >
+        sga_library_cache_size,
+      </if>
+      <if test="sgaDictionaryCacheSize != null" >
+        sga_dictionary_cache_size,
+      </if>
+      <if test="sgaSqlCacheSize != null" >
+        sga_sql_cache_size,
+      </if>
+      <if test="sgaSize != null" >
+        sga_size,
+      </if>
+      <if test="connectionTime != null" >
+        connection_time,
+      </if>
+      <if test="monitorTime != null" >
+        monitor_time,
+      </if>
+      <if test="healthStatus != null" >
+        health_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="dbId != null" >
+        #{dbId,jdbcType=INTEGER},
+      </if>
+      <if test="sgaCacheHitrate != null" >
+        #{sgaCacheHitrate,jdbcType=INTEGER},
+      </if>
+      <if test="sgaDictionaryHitrate != null" >
+        #{sgaDictionaryHitrate,jdbcType=INTEGER},
+      </if>
+      <if test="sgaLibraryHitrate != null" >
+        #{sgaLibraryHitrate,jdbcType=INTEGER},
+      </if>
+      <if test="sgaFreeMemSize != null" >
+        #{sgaFreeMemSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaBufferCacheSize != null" >
+        #{sgaBufferCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaSharedPoolSize != null" >
+        #{sgaSharedPoolSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaLogBufferSize != null" >
+        #{sgaLogBufferSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaLibraryCacheSize != null" >
+        #{sgaLibraryCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaDictionaryCacheSize != null" >
+        #{sgaDictionaryCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaSqlCacheSize != null" >
+        #{sgaSqlCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaSize != null" >
+        #{sgaSize,jdbcType=INTEGER},
+      </if>
+      <if test="connectionTime != null" >
+        #{connectionTime,jdbcType=INTEGER},
+      </if>
+      <if test="monitorTime != null" >
+        #{monitorTime,jdbcType=INTEGER},
+      </if>
+      <if test="healthStatus != null" >
+        #{healthStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.OracleMonitorInfo" >
+    update oracle_monitor_info
+    <set >
+      <if test="dbId != null" >
+        db_id = #{dbId,jdbcType=INTEGER},
+      </if>
+      <if test="sgaCacheHitrate != null" >
+        sga_cache_hitrate = #{sgaCacheHitrate,jdbcType=INTEGER},
+      </if>
+      <if test="sgaDictionaryHitrate != null" >
+        sga_dictionary_hitrate = #{sgaDictionaryHitrate,jdbcType=INTEGER},
+      </if>
+      <if test="sgaLibraryHitrate != null" >
+        sga_library_hitrate = #{sgaLibraryHitrate,jdbcType=INTEGER},
+      </if>
+      <if test="sgaFreeMemSize != null" >
+        sga_free_mem_size = #{sgaFreeMemSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaBufferCacheSize != null" >
+        sga_buffer_cache_size = #{sgaBufferCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaSharedPoolSize != null" >
+        sga_shared_pool_size = #{sgaSharedPoolSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaLogBufferSize != null" >
+        sga_log_buffer_size = #{sgaLogBufferSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaLibraryCacheSize != null" >
+        sga_library_cache_size = #{sgaLibraryCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaDictionaryCacheSize != null" >
+        sga_dictionary_cache_size = #{sgaDictionaryCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaSqlCacheSize != null" >
+        sga_sql_cache_size = #{sgaSqlCacheSize,jdbcType=INTEGER},
+      </if>
+      <if test="sgaSize != null" >
+        sga_size = #{sgaSize,jdbcType=INTEGER},
+      </if>
+      <if test="connectionTime != null" >
+        connection_time = #{connectionTime,jdbcType=INTEGER},
+      </if>
+      <if test="monitorTime != null" >
+        monitor_time = #{monitorTime,jdbcType=INTEGER},
+      </if>
+      <if test="healthStatus != null" >
+        health_status = #{healthStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.OracleMonitorInfo" >
+    update oracle_monitor_info
+    set db_id = #{dbId,jdbcType=INTEGER},
+      sga_cache_hitrate = #{sgaCacheHitrate,jdbcType=INTEGER},
+      sga_dictionary_hitrate = #{sgaDictionaryHitrate,jdbcType=INTEGER},
+      sga_library_hitrate = #{sgaLibraryHitrate,jdbcType=INTEGER},
+      sga_free_mem_size = #{sgaFreeMemSize,jdbcType=INTEGER},
+      sga_buffer_cache_size = #{sgaBufferCacheSize,jdbcType=INTEGER},
+      sga_shared_pool_size = #{sgaSharedPoolSize,jdbcType=INTEGER},
+      sga_log_buffer_size = #{sgaLogBufferSize,jdbcType=INTEGER},
+      sga_library_cache_size = #{sgaLibraryCacheSize,jdbcType=INTEGER},
+      sga_dictionary_cache_size = #{sgaDictionaryCacheSize,jdbcType=INTEGER},
+      sga_sql_cache_size = #{sgaSqlCacheSize,jdbcType=INTEGER},
+      sga_size = #{sgaSize,jdbcType=INTEGER},
+      connection_time = #{connectionTime,jdbcType=INTEGER},
+      "monitor _time" = #{monitorTime,jdbcType=INTEGER},
+      health_status = #{healthStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

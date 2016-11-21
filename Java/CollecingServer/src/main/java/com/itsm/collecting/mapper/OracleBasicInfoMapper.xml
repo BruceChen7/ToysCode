@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.OracleBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.OracleBasicInfo" >
+    <id column="oracle_id" property="oracleId" jdbcType="INTEGER" />
+    <result column="oracle_version" property="oracleVersion" jdbcType="VARCHAR" />
+    <result column="oracle_start_time" property="oracleStartTime" jdbcType="INTEGER" />
+    <result column="oracle_found_time" property="oracleFoundTime" jdbcType="INTEGER" />
+    <result column="oracle_open_type" property="oracleOpenType" jdbcType="VARCHAR" />
+    <result column="oracle_log_type" property="oracleLogType" jdbcType="VARCHAR" />
+    <result column="oracle_size" property="oracleSize" jdbcType="INTEGER" />
+    <result column="oracle_read_num" property="oracleReadNum" jdbcType="INTEGER" />
+    <result column="oracle_write_num" property="oracleWriteNum" jdbcType="INTEGER" />
+    <result column="oracle_block_size" property="oracleBlockSize" jdbcType="INTEGER" />
+    <result column="tablespace_name" property="tablespaceName" jdbcType="VARCHAR" />
+    <result column="tablespace_byte_num" property="tablespaceByteNum" jdbcType="VARCHAR" />
+    <result column="tablesapce_block_num" property="tablesapceBlockNum" jdbcType="VARCHAR" />
+    <result column="tablespace_file_num" property="tablespaceFileNum" jdbcType="VARCHAR" />
+    <result column="tablespace_status" property="tablespaceStatus" jdbcType="VARCHAR" />
+    <result column="tablespace_free_byte" property="tablespaceFreeByte" jdbcType="VARCHAR" />
+    <result column="tablespace_free_block" property="tablespaceFreeBlock" jdbcType="VARCHAR" />
+    <result column="tablespace_read_num" property="tablespaceReadNum" jdbcType="VARCHAR" />
+    <result column="tablespace_write_num" property="tablespaceWriteNum" jdbcType="VARCHAR" />
+    <result column="tablespace_read_time" property="tablespaceReadTime" jdbcType="VARCHAR" />
+    <result column="tablespace_write_time" property="tablespaceWriteTime" jdbcType="VARCHAR" />
+    <result column="data_file_name" property="dataFileName" jdbcType="VARCHAR" />
+    <result column="data_file_tablespace" property="dataFileTablespace" jdbcType="VARCHAR" />
+    <result column="data_file_status" property="dataFileStatus" jdbcType="VARCHAR" />
+    <result column="data_file_create_size" property="dataFileCreateSize" jdbcType="VARCHAR" />
+    <result column="data_file_read_num" property="dataFileReadNum" jdbcType="VARCHAR" />
+    <result column="data_file_write_num" property="dataFileWriteNum" jdbcType="VARCHAR" />
+    <result column="data_file_avg_read_time" property="dataFileAvgReadTime" jdbcType="VARCHAR" />
+    <result column="data_file_avg_write_time" property="dataFileAvgWriteTime" jdbcType="VARCHAR" />
+    <result column="session_id" property="sessionId" jdbcType="VARCHAR" />
+    <result column="session_status" property="sessionStatus" jdbcType="VARCHAR" />
+    <result column="session_out_user_name" property="sessionOutUserName" jdbcType="VARCHAR" />
+    <result column="session_db_user_name" property="sessionDbUserName" jdbcType="VARCHAR" />
+    <result column="session_log_time" property="sessionLogTime" jdbcType="VARCHAR" />
+    <result column="session_cpu_use_time" property="sessionCpuUseTime" jdbcType="VARCHAR" />
+    <result column="session_memory_size" property="sessionMemorySize" jdbcType="VARCHAR" />
+    <result column="session_table_num" property="sessionTableNum" jdbcType="VARCHAR" />
+    <result column="session_phyread_num" property="sessionPhyreadNum" jdbcType="VARCHAR" />
+    <result column="session_logiread_num" property="sessionLogireadNum" jdbcType="VARCHAR" />
+    <result column="session_submit_num" property="sessionSubmitNum" jdbcType="VARCHAR" />
+    <result column="session_cursor_num" property="sessionCursorNum" jdbcType="VARCHAR" />
+    <result column="session_cache_hit_rate" property="sessionCacheHitRate" jdbcType="VARCHAR" />
+    <result column="rollback_seg_name" property="rollbackSegName" jdbcType="VARCHAR" />
+    <result column="rollback_seg_tablespace" property="rollbackSegTablespace" jdbcType="VARCHAR" />
+    <result column="rollback_seg_status" property="rollbackSegStatus" jdbcType="VARCHAR" />
+    <result column="rollback_seg_current_size" property="rollbackSegCurrentSize" jdbcType="VARCHAR" />
+    <result column="rollback_seg_init_size" property="rollbackSegInitSize" jdbcType="VARCHAR" />
+    <result column="rollback_seg_next_size" property="rollbackSegNextSize" jdbcType="VARCHAR" />
+    <result column="rollback_seg_min_extent" property="rollbackSegMinExtent" jdbcType="VARCHAR" />
+    <result column="rollback_seg_max_extent" property="rollbackSegMaxExtent" jdbcType="VARCHAR" />
+    <result column="rollback_seg_hit_rate" property="rollbackSegHitRate" jdbcType="VARCHAR" />
+    <result column="rollback_seg_HWMSize" property="rollbackSegHwmsize" jdbcType="VARCHAR" />
+    <result column="rollback_seg_SHRINKS" property="rollbackSegShrinks" jdbcType="VARCHAR" />
+    <result column="rollback_seg_WRAPS" property="rollbackSegWraps" jdbcType="VARCHAR" />
+    <result column="rollback_seg_EXTENDS" property="rollbackSegExtends" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    oracle_id, oracle_version, oracle_start_time, oracle_found_time, oracle_open_type, 
+    oracle_log_type, oracle_size, oracle_read_num, oracle_write_num, oracle_block_size, 
+    tablespace_name, tablespace_byte_num, tablesapce_block_num, tablespace_file_num, 
+    tablespace_status, tablespace_free_byte, tablespace_free_block, tablespace_read_num, 
+    tablespace_write_num, tablespace_read_time, tablespace_write_time, data_file_name, 
+    data_file_tablespace, data_file_status, data_file_create_size, data_file_read_num, 
+    data_file_write_num, data_file_avg_read_time, data_file_avg_write_time, session_id, 
+    session_status, session_out_user_name, session_db_user_name, session_log_time, session_cpu_use_time, 
+    session_memory_size, session_table_num, session_phyread_num, session_logiread_num, 
+    session_submit_num, session_cursor_num, session_cache_hit_rate, rollback_seg_name, 
+    rollback_seg_tablespace, rollback_seg_status, rollback_seg_current_size, rollback_seg_init_size, 
+    rollback_seg_next_size, rollback_seg_min_extent, rollback_seg_max_extent, rollback_seg_hit_rate, 
+    rollback_seg_HWMSize, rollback_seg_SHRINKS, rollback_seg_WRAPS, rollback_seg_EXTENDS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from oracle_basic_info
+    where oracle_id = #{oracleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from oracle_basic_info
+    where oracle_id = #{oracleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.OracleBasicInfo" >
+    insert into oracle_basic_info (oracle_id, oracle_version, oracle_start_time, 
+      oracle_found_time, oracle_open_type, oracle_log_type, 
+      oracle_size, oracle_read_num, oracle_write_num, 
+      oracle_block_size, tablespace_name, tablespace_byte_num, 
+      tablesapce_block_num, tablespace_file_num, 
+      tablespace_status, tablespace_free_byte, tablespace_free_block, 
+      tablespace_read_num, tablespace_write_num, 
+      tablespace_read_time, tablespace_write_time, 
+      data_file_name, data_file_tablespace, data_file_status, 
+      data_file_create_size, data_file_read_num, data_file_write_num, 
+      data_file_avg_read_time, data_file_avg_write_time, 
+      session_id, session_status, session_out_user_name, 
+      session_db_user_name, session_log_time, session_cpu_use_time, 
+      session_memory_size, session_table_num, session_phyread_num, 
+      session_logiread_num, session_submit_num, session_cursor_num, 
+      session_cache_hit_rate, rollback_seg_name, rollback_seg_tablespace, 
+      rollback_seg_status, rollback_seg_current_size, 
+      rollback_seg_init_size, rollback_seg_next_size, 
+      rollback_seg_min_extent, rollback_seg_max_extent, 
+      rollback_seg_hit_rate, rollback_seg_HWMSize, 
+      rollback_seg_SHRINKS, rollback_seg_WRAPS, rollback_seg_EXTENDS
+      )
+    values (#{oracleId,jdbcType=INTEGER}, #{oracleVersion,jdbcType=VARCHAR}, #{oracleStartTime,jdbcType=INTEGER}, 
+      #{oracleFoundTime,jdbcType=INTEGER}, #{oracleOpenType,jdbcType=VARCHAR}, #{oracleLogType,jdbcType=VARCHAR}, 
+      #{oracleSize,jdbcType=INTEGER}, #{oracleReadNum,jdbcType=INTEGER}, #{oracleWriteNum,jdbcType=INTEGER}, 
+      #{oracleBlockSize,jdbcType=INTEGER}, #{tablespaceName,jdbcType=VARCHAR}, #{tablespaceByteNum,jdbcType=VARCHAR}, 
+      #{tablesapceBlockNum,jdbcType=VARCHAR}, #{tablespaceFileNum,jdbcType=VARCHAR}, 
+      #{tablespaceStatus,jdbcType=VARCHAR}, #{tablespaceFreeByte,jdbcType=VARCHAR}, #{tablespaceFreeBlock,jdbcType=VARCHAR}, 
+      #{tablespaceReadNum,jdbcType=VARCHAR}, #{tablespaceWriteNum,jdbcType=VARCHAR}, 
+      #{tablespaceReadTime,jdbcType=VARCHAR}, #{tablespaceWriteTime,jdbcType=VARCHAR}, 
+      #{dataFileName,jdbcType=VARCHAR}, #{dataFileTablespace,jdbcType=VARCHAR}, #{dataFileStatus,jdbcType=VARCHAR}, 
+      #{dataFileCreateSize,jdbcType=VARCHAR}, #{dataFileReadNum,jdbcType=VARCHAR}, #{dataFileWriteNum,jdbcType=VARCHAR}, 
+      #{dataFileAvgReadTime,jdbcType=VARCHAR}, #{dataFileAvgWriteTime,jdbcType=VARCHAR}, 
+      #{sessionId,jdbcType=VARCHAR}, #{sessionStatus,jdbcType=VARCHAR}, #{sessionOutUserName,jdbcType=VARCHAR}, 
+      #{sessionDbUserName,jdbcType=VARCHAR}, #{sessionLogTime,jdbcType=VARCHAR}, #{sessionCpuUseTime,jdbcType=VARCHAR}, 
+      #{sessionMemorySize,jdbcType=VARCHAR}, #{sessionTableNum,jdbcType=VARCHAR}, #{sessionPhyreadNum,jdbcType=VARCHAR}, 
+      #{sessionLogireadNum,jdbcType=VARCHAR}, #{sessionSubmitNum,jdbcType=VARCHAR}, #{sessionCursorNum,jdbcType=VARCHAR}, 
+      #{sessionCacheHitRate,jdbcType=VARCHAR}, #{rollbackSegName,jdbcType=VARCHAR}, #{rollbackSegTablespace,jdbcType=VARCHAR}, 
+      #{rollbackSegStatus,jdbcType=VARCHAR}, #{rollbackSegCurrentSize,jdbcType=VARCHAR}, 
+      #{rollbackSegInitSize,jdbcType=VARCHAR}, #{rollbackSegNextSize,jdbcType=VARCHAR}, 
+      #{rollbackSegMinExtent,jdbcType=VARCHAR}, #{rollbackSegMaxExtent,jdbcType=VARCHAR}, 
+      #{rollbackSegHitRate,jdbcType=VARCHAR}, #{rollbackSegHwmsize,jdbcType=VARCHAR}, 
+      #{rollbackSegShrinks,jdbcType=VARCHAR}, #{rollbackSegWraps,jdbcType=VARCHAR}, #{rollbackSegExtends,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.OracleBasicInfo" >
+    insert into oracle_basic_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oracleId != null" >
+        oracle_id,
+      </if>
+      <if test="oracleVersion != null" >
+        oracle_version,
+      </if>
+      <if test="oracleStartTime != null" >
+        oracle_start_time,
+      </if>
+      <if test="oracleFoundTime != null" >
+        oracle_found_time,
+      </if>
+      <if test="oracleOpenType != null" >
+        oracle_open_type,
+      </if>
+      <if test="oracleLogType != null" >
+        oracle_log_type,
+      </if>
+      <if test="oracleSize != null" >
+        oracle_size,
+      </if>
+      <if test="oracleReadNum != null" >
+        oracle_read_num,
+      </if>
+      <if test="oracleWriteNum != null" >
+        oracle_write_num,
+      </if>
+      <if test="oracleBlockSize != null" >
+        oracle_block_size,
+      </if>
+      <if test="tablespaceName != null" >
+        tablespace_name,
+      </if>
+      <if test="tablespaceByteNum != null" >
+        tablespace_byte_num,
+      </if>
+      <if test="tablesapceBlockNum != null" >
+        tablesapce_block_num,
+      </if>
+      <if test="tablespaceFileNum != null" >
+        tablespace_file_num,
+      </if>
+      <if test="tablespaceStatus != null" >
+        tablespace_status,
+      </if>
+      <if test="tablespaceFreeByte != null" >
+        tablespace_free_byte,
+      </if>
+      <if test="tablespaceFreeBlock != null" >
+        tablespace_free_block,
+      </if>
+      <if test="tablespaceReadNum != null" >
+        tablespace_read_num,
+      </if>
+      <if test="tablespaceWriteNum != null" >
+        tablespace_write_num,
+      </if>
+      <if test="tablespaceReadTime != null" >
+        tablespace_read_time,
+      </if>
+      <if test="tablespaceWriteTime != null" >
+        tablespace_write_time,
+      </if>
+      <if test="dataFileName != null" >
+        data_file_name,
+      </if>
+      <if test="dataFileTablespace != null" >
+        data_file_tablespace,
+      </if>
+      <if test="dataFileStatus != null" >
+        data_file_status,
+      </if>
+      <if test="dataFileCreateSize != null" >
+        data_file_create_size,
+      </if>
+      <if test="dataFileReadNum != null" >
+        data_file_read_num,
+      </if>
+      <if test="dataFileWriteNum != null" >
+        data_file_write_num,
+      </if>
+      <if test="dataFileAvgReadTime != null" >
+        data_file_avg_read_time,
+      </if>
+      <if test="dataFileAvgWriteTime != null" >
+        data_file_avg_write_time,
+      </if>
+      <if test="sessionId != null" >
+        session_id,
+      </if>
+      <if test="sessionStatus != null" >
+        session_status,
+      </if>
+      <if test="sessionOutUserName != null" >
+        session_out_user_name,
+      </if>
+      <if test="sessionDbUserName != null" >
+        session_db_user_name,
+      </if>
+      <if test="sessionLogTime != null" >
+        session_log_time,
+      </if>
+      <if test="sessionCpuUseTime != null" >
+        session_cpu_use_time,
+      </if>
+      <if test="sessionMemorySize != null" >
+        session_memory_size,
+      </if>
+      <if test="sessionTableNum != null" >
+        session_table_num,
+      </if>
+      <if test="sessionPhyreadNum != null" >
+        session_phyread_num,
+      </if>
+      <if test="sessionLogireadNum != null" >
+        session_logiread_num,
+      </if>
+      <if test="sessionSubmitNum != null" >
+        session_submit_num,
+      </if>
+      <if test="sessionCursorNum != null" >
+        session_cursor_num,
+      </if>
+      <if test="sessionCacheHitRate != null" >
+        session_cache_hit_rate,
+      </if>
+      <if test="rollbackSegName != null" >
+        rollback_seg_name,
+      </if>
+      <if test="rollbackSegTablespace != null" >
+        rollback_seg_tablespace,
+      </if>
+      <if test="rollbackSegStatus != null" >
+        rollback_seg_status,
+      </if>
+      <if test="rollbackSegCurrentSize != null" >
+        rollback_seg_current_size,
+      </if>
+      <if test="rollbackSegInitSize != null" >
+        rollback_seg_init_size,
+      </if>
+      <if test="rollbackSegNextSize != null" >
+        rollback_seg_next_size,
+      </if>
+      <if test="rollbackSegMinExtent != null" >
+        rollback_seg_min_extent,
+      </if>
+      <if test="rollbackSegMaxExtent != null" >
+        rollback_seg_max_extent,
+      </if>
+      <if test="rollbackSegHitRate != null" >
+        rollback_seg_hit_rate,
+      </if>
+      <if test="rollbackSegHwmsize != null" >
+        rollback_seg_HWMSize,
+      </if>
+      <if test="rollbackSegShrinks != null" >
+        rollback_seg_SHRINKS,
+      </if>
+      <if test="rollbackSegWraps != null" >
+        rollback_seg_WRAPS,
+      </if>
+      <if test="rollbackSegExtends != null" >
+        rollback_seg_EXTENDS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oracleId != null" >
+        #{oracleId,jdbcType=INTEGER},
+      </if>
+      <if test="oracleVersion != null" >
+        #{oracleVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="oracleStartTime != null" >
+        #{oracleStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="oracleFoundTime != null" >
+        #{oracleFoundTime,jdbcType=INTEGER},
+      </if>
+      <if test="oracleOpenType != null" >
+        #{oracleOpenType,jdbcType=VARCHAR},
+      </if>
+      <if test="oracleLogType != null" >
+        #{oracleLogType,jdbcType=VARCHAR},
+      </if>
+      <if test="oracleSize != null" >
+        #{oracleSize,jdbcType=INTEGER},
+      </if>
+      <if test="oracleReadNum != null" >
+        #{oracleReadNum,jdbcType=INTEGER},
+      </if>
+      <if test="oracleWriteNum != null" >
+        #{oracleWriteNum,jdbcType=INTEGER},
+      </if>
+      <if test="oracleBlockSize != null" >
+        #{oracleBlockSize,jdbcType=INTEGER},
+      </if>
+      <if test="tablespaceName != null" >
+        #{tablespaceName,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceByteNum != null" >
+        #{tablespaceByteNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablesapceBlockNum != null" >
+        #{tablesapceBlockNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceFileNum != null" >
+        #{tablespaceFileNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceStatus != null" >
+        #{tablespaceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceFreeByte != null" >
+        #{tablespaceFreeByte,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceFreeBlock != null" >
+        #{tablespaceFreeBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceReadNum != null" >
+        #{tablespaceReadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceWriteNum != null" >
+        #{tablespaceWriteNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceReadTime != null" >
+        #{tablespaceReadTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceWriteTime != null" >
+        #{tablespaceWriteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileName != null" >
+        #{dataFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileTablespace != null" >
+        #{dataFileTablespace,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileStatus != null" >
+        #{dataFileStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileCreateSize != null" >
+        #{dataFileCreateSize,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileReadNum != null" >
+        #{dataFileReadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileWriteNum != null" >
+        #{dataFileWriteNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileAvgReadTime != null" >
+        #{dataFileAvgReadTime,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileAvgWriteTime != null" >
+        #{dataFileAvgWriteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionId != null" >
+        #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionStatus != null" >
+        #{sessionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionOutUserName != null" >
+        #{sessionOutUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionDbUserName != null" >
+        #{sessionDbUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionLogTime != null" >
+        #{sessionLogTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionCpuUseTime != null" >
+        #{sessionCpuUseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionMemorySize != null" >
+        #{sessionMemorySize,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionTableNum != null" >
+        #{sessionTableNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionPhyreadNum != null" >
+        #{sessionPhyreadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionLogireadNum != null" >
+        #{sessionLogireadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionSubmitNum != null" >
+        #{sessionSubmitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionCursorNum != null" >
+        #{sessionCursorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionCacheHitRate != null" >
+        #{sessionCacheHitRate,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegName != null" >
+        #{rollbackSegName,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegTablespace != null" >
+        #{rollbackSegTablespace,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegStatus != null" >
+        #{rollbackSegStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegCurrentSize != null" >
+        #{rollbackSegCurrentSize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegInitSize != null" >
+        #{rollbackSegInitSize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegNextSize != null" >
+        #{rollbackSegNextSize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegMinExtent != null" >
+        #{rollbackSegMinExtent,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegMaxExtent != null" >
+        #{rollbackSegMaxExtent,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegHitRate != null" >
+        #{rollbackSegHitRate,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegHwmsize != null" >
+        #{rollbackSegHwmsize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegShrinks != null" >
+        #{rollbackSegShrinks,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegWraps != null" >
+        #{rollbackSegWraps,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegExtends != null" >
+        #{rollbackSegExtends,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.OracleBasicInfo" >
+    update oracle_basic_info
+    <set >
+      <if test="oracleVersion != null" >
+        oracle_version = #{oracleVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="oracleStartTime != null" >
+        oracle_start_time = #{oracleStartTime,jdbcType=INTEGER},
+      </if>
+      <if test="oracleFoundTime != null" >
+        oracle_found_time = #{oracleFoundTime,jdbcType=INTEGER},
+      </if>
+      <if test="oracleOpenType != null" >
+        oracle_open_type = #{oracleOpenType,jdbcType=VARCHAR},
+      </if>
+      <if test="oracleLogType != null" >
+        oracle_log_type = #{oracleLogType,jdbcType=VARCHAR},
+      </if>
+      <if test="oracleSize != null" >
+        oracle_size = #{oracleSize,jdbcType=INTEGER},
+      </if>
+      <if test="oracleReadNum != null" >
+        oracle_read_num = #{oracleReadNum,jdbcType=INTEGER},
+      </if>
+      <if test="oracleWriteNum != null" >
+        oracle_write_num = #{oracleWriteNum,jdbcType=INTEGER},
+      </if>
+      <if test="oracleBlockSize != null" >
+        oracle_block_size = #{oracleBlockSize,jdbcType=INTEGER},
+      </if>
+      <if test="tablespaceName != null" >
+        tablespace_name = #{tablespaceName,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceByteNum != null" >
+        tablespace_byte_num = #{tablespaceByteNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablesapceBlockNum != null" >
+        tablesapce_block_num = #{tablesapceBlockNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceFileNum != null" >
+        tablespace_file_num = #{tablespaceFileNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceStatus != null" >
+        tablespace_status = #{tablespaceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceFreeByte != null" >
+        tablespace_free_byte = #{tablespaceFreeByte,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceFreeBlock != null" >
+        tablespace_free_block = #{tablespaceFreeBlock,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceReadNum != null" >
+        tablespace_read_num = #{tablespaceReadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceWriteNum != null" >
+        tablespace_write_num = #{tablespaceWriteNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceReadTime != null" >
+        tablespace_read_time = #{tablespaceReadTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tablespaceWriteTime != null" >
+        tablespace_write_time = #{tablespaceWriteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileName != null" >
+        data_file_name = #{dataFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileTablespace != null" >
+        data_file_tablespace = #{dataFileTablespace,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileStatus != null" >
+        data_file_status = #{dataFileStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileCreateSize != null" >
+        data_file_create_size = #{dataFileCreateSize,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileReadNum != null" >
+        data_file_read_num = #{dataFileReadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileWriteNum != null" >
+        data_file_write_num = #{dataFileWriteNum,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileAvgReadTime != null" >
+        data_file_avg_read_time = #{dataFileAvgReadTime,jdbcType=VARCHAR},
+      </if>
+      <if test="dataFileAvgWriteTime != null" >
+        data_file_avg_write_time = #{dataFileAvgWriteTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionId != null" >
+        session_id = #{sessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionStatus != null" >
+        session_status = #{sessionStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionOutUserName != null" >
+        session_out_user_name = #{sessionOutUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionDbUserName != null" >
+        session_db_user_name = #{sessionDbUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionLogTime != null" >
+        session_log_time = #{sessionLogTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionCpuUseTime != null" >
+        session_cpu_use_time = #{sessionCpuUseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionMemorySize != null" >
+        session_memory_size = #{sessionMemorySize,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionTableNum != null" >
+        session_table_num = #{sessionTableNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionPhyreadNum != null" >
+        session_phyread_num = #{sessionPhyreadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionLogireadNum != null" >
+        session_logiread_num = #{sessionLogireadNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionSubmitNum != null" >
+        session_submit_num = #{sessionSubmitNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionCursorNum != null" >
+        session_cursor_num = #{sessionCursorNum,jdbcType=VARCHAR},
+      </if>
+      <if test="sessionCacheHitRate != null" >
+        session_cache_hit_rate = #{sessionCacheHitRate,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegName != null" >
+        rollback_seg_name = #{rollbackSegName,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegTablespace != null" >
+        rollback_seg_tablespace = #{rollbackSegTablespace,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegStatus != null" >
+        rollback_seg_status = #{rollbackSegStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegCurrentSize != null" >
+        rollback_seg_current_size = #{rollbackSegCurrentSize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegInitSize != null" >
+        rollback_seg_init_size = #{rollbackSegInitSize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegNextSize != null" >
+        rollback_seg_next_size = #{rollbackSegNextSize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegMinExtent != null" >
+        rollback_seg_min_extent = #{rollbackSegMinExtent,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegMaxExtent != null" >
+        rollback_seg_max_extent = #{rollbackSegMaxExtent,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegHitRate != null" >
+        rollback_seg_hit_rate = #{rollbackSegHitRate,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegHwmsize != null" >
+        rollback_seg_HWMSize = #{rollbackSegHwmsize,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegShrinks != null" >
+        rollback_seg_SHRINKS = #{rollbackSegShrinks,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegWraps != null" >
+        rollback_seg_WRAPS = #{rollbackSegWraps,jdbcType=VARCHAR},
+      </if>
+      <if test="rollbackSegExtends != null" >
+        rollback_seg_EXTENDS = #{rollbackSegExtends,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where oracle_id = #{oracleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.OracleBasicInfo" >
+    update oracle_basic_info
+    set oracle_version = #{oracleVersion,jdbcType=VARCHAR},
+      oracle_start_time = #{oracleStartTime,jdbcType=INTEGER},
+      oracle_found_time = #{oracleFoundTime,jdbcType=INTEGER},
+      oracle_open_type = #{oracleOpenType,jdbcType=VARCHAR},
+      oracle_log_type = #{oracleLogType,jdbcType=VARCHAR},
+      oracle_size = #{oracleSize,jdbcType=INTEGER},
+      oracle_read_num = #{oracleReadNum,jdbcType=INTEGER},
+      oracle_write_num = #{oracleWriteNum,jdbcType=INTEGER},
+      oracle_block_size = #{oracleBlockSize,jdbcType=INTEGER},
+      tablespace_name = #{tablespaceName,jdbcType=VARCHAR},
+      tablespace_byte_num = #{tablespaceByteNum,jdbcType=VARCHAR},
+      tablesapce_block_num = #{tablesapceBlockNum,jdbcType=VARCHAR},
+      tablespace_file_num = #{tablespaceFileNum,jdbcType=VARCHAR},
+      tablespace_status = #{tablespaceStatus,jdbcType=VARCHAR},
+      tablespace_free_byte = #{tablespaceFreeByte,jdbcType=VARCHAR},
+      tablespace_free_block = #{tablespaceFreeBlock,jdbcType=VARCHAR},
+      tablespace_read_num = #{tablespaceReadNum,jdbcType=VARCHAR},
+      tablespace_write_num = #{tablespaceWriteNum,jdbcType=VARCHAR},
+      tablespace_read_time = #{tablespaceReadTime,jdbcType=VARCHAR},
+      tablespace_write_time = #{tablespaceWriteTime,jdbcType=VARCHAR},
+      data_file_name = #{dataFileName,jdbcType=VARCHAR},
+      data_file_tablespace = #{dataFileTablespace,jdbcType=VARCHAR},
+      data_file_status = #{dataFileStatus,jdbcType=VARCHAR},
+      data_file_create_size = #{dataFileCreateSize,jdbcType=VARCHAR},
+      data_file_read_num = #{dataFileReadNum,jdbcType=VARCHAR},
+      data_file_write_num = #{dataFileWriteNum,jdbcType=VARCHAR},
+      data_file_avg_read_time = #{dataFileAvgReadTime,jdbcType=VARCHAR},
+      data_file_avg_write_time = #{dataFileAvgWriteTime,jdbcType=VARCHAR},
+      session_id = #{sessionId,jdbcType=VARCHAR},
+      session_status = #{sessionStatus,jdbcType=VARCHAR},
+      session_out_user_name = #{sessionOutUserName,jdbcType=VARCHAR},
+      session_db_user_name = #{sessionDbUserName,jdbcType=VARCHAR},
+      session_log_time = #{sessionLogTime,jdbcType=VARCHAR},
+      session_cpu_use_time = #{sessionCpuUseTime,jdbcType=VARCHAR},
+      session_memory_size = #{sessionMemorySize,jdbcType=VARCHAR},
+      session_table_num = #{sessionTableNum,jdbcType=VARCHAR},
+      session_phyread_num = #{sessionPhyreadNum,jdbcType=VARCHAR},
+      session_logiread_num = #{sessionLogireadNum,jdbcType=VARCHAR},
+      session_submit_num = #{sessionSubmitNum,jdbcType=VARCHAR},
+      session_cursor_num = #{sessionCursorNum,jdbcType=VARCHAR},
+      session_cache_hit_rate = #{sessionCacheHitRate,jdbcType=VARCHAR},
+      rollback_seg_name = #{rollbackSegName,jdbcType=VARCHAR},
+      rollback_seg_tablespace = #{rollbackSegTablespace,jdbcType=VARCHAR},
+      rollback_seg_status = #{rollbackSegStatus,jdbcType=VARCHAR},
+      rollback_seg_current_size = #{rollbackSegCurrentSize,jdbcType=VARCHAR},
+      rollback_seg_init_size = #{rollbackSegInitSize,jdbcType=VARCHAR},
+      rollback_seg_next_size = #{rollbackSegNextSize,jdbcType=VARCHAR},
+      rollback_seg_min_extent = #{rollbackSegMinExtent,jdbcType=VARCHAR},
+      rollback_seg_max_extent = #{rollbackSegMaxExtent,jdbcType=VARCHAR},
+      rollback_seg_hit_rate = #{rollbackSegHitRate,jdbcType=VARCHAR},
+      rollback_seg_HWMSize = #{rollbackSegHwmsize,jdbcType=VARCHAR},
+      rollback_seg_SHRINKS = #{rollbackSegShrinks,jdbcType=VARCHAR},
+      rollback_seg_WRAPS = #{rollbackSegWraps,jdbcType=VARCHAR},
+      rollback_seg_EXTENDS = #{rollbackSegExtends,jdbcType=VARCHAR}
+    where oracle_id = #{oracleId,jdbcType=INTEGER}
+  </update>
+</mapper>

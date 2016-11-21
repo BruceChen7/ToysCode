@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.MssqlBasicInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.MssqlBasicInfo" >
+    <id column="mssql_id" property="mssqlId" jdbcType="INTEGER" />
+    <result column="mssql_version" property="mssqlVersion" jdbcType="VARCHAR" />
+    <result column="mssql_monitor_service_type" property="mssqlMonitorServiceType" jdbcType="VARCHAR" />
+    <result column="mssql_odbc_version" property="mssqlOdbcVersion" jdbcType="VARCHAR" />
+    <result column="mssql_host_name" property="mssqlHostName" jdbcType="VARCHAR" />
+    <result column="mssql_host_os" property="mssqlHostOs" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mssql_id, mssql_version, mssql_monitor_service_type, mssql_odbc_version, mssql_host_name, 
+    mssql_host_os
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mssql_basic_info
+    where mssql_id = #{mssqlId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mssql_basic_info
+    where mssql_id = #{mssqlId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.MssqlBasicInfo" >
+    insert into mssql_basic_info (mssql_id, mssql_version, mssql_monitor_service_type, 
+      mssql_odbc_version, mssql_host_name, mssql_host_os
+      )
+    values (#{mssqlId,jdbcType=INTEGER}, #{mssqlVersion,jdbcType=VARCHAR}, #{mssqlMonitorServiceType,jdbcType=VARCHAR}, 
+      #{mssqlOdbcVersion,jdbcType=VARCHAR}, #{mssqlHostName,jdbcType=VARCHAR}, #{mssqlHostOs,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.MssqlBasicInfo" >
+    insert into mssql_basic_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="mssqlId != null" >
+        mssql_id,
+      </if>
+      <if test="mssqlVersion != null" >
+        mssql_version,
+      </if>
+      <if test="mssqlMonitorServiceType != null" >
+        mssql_monitor_service_type,
+      </if>
+      <if test="mssqlOdbcVersion != null" >
+        mssql_odbc_version,
+      </if>
+      <if test="mssqlHostName != null" >
+        mssql_host_name,
+      </if>
+      <if test="mssqlHostOs != null" >
+        mssql_host_os,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="mssqlId != null" >
+        #{mssqlId,jdbcType=INTEGER},
+      </if>
+      <if test="mssqlVersion != null" >
+        #{mssqlVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlMonitorServiceType != null" >
+        #{mssqlMonitorServiceType,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlOdbcVersion != null" >
+        #{mssqlOdbcVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlHostName != null" >
+        #{mssqlHostName,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlHostOs != null" >
+        #{mssqlHostOs,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.MssqlBasicInfo" >
+    update mssql_basic_info
+    <set >
+      <if test="mssqlVersion != null" >
+        mssql_version = #{mssqlVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlMonitorServiceType != null" >
+        mssql_monitor_service_type = #{mssqlMonitorServiceType,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlOdbcVersion != null" >
+        mssql_odbc_version = #{mssqlOdbcVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlHostName != null" >
+        mssql_host_name = #{mssqlHostName,jdbcType=VARCHAR},
+      </if>
+      <if test="mssqlHostOs != null" >
+        mssql_host_os = #{mssqlHostOs,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where mssql_id = #{mssqlId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.MssqlBasicInfo" >
+    update mssql_basic_info
+    set mssql_version = #{mssqlVersion,jdbcType=VARCHAR},
+      mssql_monitor_service_type = #{mssqlMonitorServiceType,jdbcType=VARCHAR},
+      mssql_odbc_version = #{mssqlOdbcVersion,jdbcType=VARCHAR},
+      mssql_host_name = #{mssqlHostName,jdbcType=VARCHAR},
+      mssql_host_os = #{mssqlHostOs,jdbcType=VARCHAR}
+    where mssql_id = #{mssqlId,jdbcType=INTEGER}
+  </update>
+</mapper>

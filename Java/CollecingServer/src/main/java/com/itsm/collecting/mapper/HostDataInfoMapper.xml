@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.HostDataInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.HostDataInfo" >
+    <id column="record_id" property="recordId" jdbcType="INTEGER" />
+    <result column="host_id" property="hostId" jdbcType="INTEGER" />
+    <result column="date_time" property="dateTime" jdbcType="INTEGER" />
+    <result column="cpu_usage_rate" property="cpuUsageRate" jdbcType="DOUBLE" />
+    <result column="memory_capacity" property="memoryCapacity" jdbcType="BIGINT" />
+    <result column="memory_usage" property="memoryUsage" jdbcType="BIGINT" />
+    <result column="disk_total_size" property="diskTotalSize" jdbcType="BIGINT" />
+    <result column="disk_partition_usage" property="diskPartitionUsage" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    record_id, host_id, date_time, cpu_usage_rate, memory_capacity, memory_usage, disk_total_size, 
+    disk_partition_usage
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from host_data_info
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from host_data_info
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.HostDataInfo" >
+    insert into host_data_info (record_id, host_id, date_time, 
+      cpu_usage_rate, memory_capacity, memory_usage, 
+      disk_total_size, disk_partition_usage)
+    values (#{recordId,jdbcType=INTEGER}, #{hostId,jdbcType=INTEGER}, #{dateTime,jdbcType=INTEGER}, 
+      #{cpuUsageRate,jdbcType=DOUBLE}, #{memoryCapacity,jdbcType=BIGINT}, #{memoryUsage,jdbcType=BIGINT}, 
+      #{diskTotalSize,jdbcType=BIGINT}, #{diskPartitionUsage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.HostDataInfo" >
+    insert into host_data_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recordId != null" >
+        record_id,
+      </if>
+      <if test="hostId != null" >
+        host_id,
+      </if>
+      <if test="dateTime != null" >
+        date_time,
+      </if>
+      <if test="cpuUsageRate != null" >
+        cpu_usage_rate,
+      </if>
+      <if test="memoryCapacity != null" >
+        memory_capacity,
+      </if>
+      <if test="memoryUsage != null" >
+        memory_usage,
+      </if>
+      <if test="diskTotalSize != null" >
+        disk_total_size,
+      </if>
+      <if test="diskPartitionUsage != null" >
+        disk_partition_usage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recordId != null" >
+        #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="hostId != null" >
+        #{hostId,jdbcType=INTEGER},
+      </if>
+      <if test="dateTime != null" >
+        #{dateTime,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsageRate != null" >
+        #{cpuUsageRate,jdbcType=DOUBLE},
+      </if>
+      <if test="memoryCapacity != null" >
+        #{memoryCapacity,jdbcType=BIGINT},
+      </if>
+      <if test="memoryUsage != null" >
+        #{memoryUsage,jdbcType=BIGINT},
+      </if>
+      <if test="diskTotalSize != null" >
+        #{diskTotalSize,jdbcType=BIGINT},
+      </if>
+      <if test="diskPartitionUsage != null" >
+        #{diskPartitionUsage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.HostDataInfo" >
+    update host_data_info
+    <set >
+      <if test="hostId != null" >
+        host_id = #{hostId,jdbcType=INTEGER},
+      </if>
+      <if test="dateTime != null" >
+        date_time = #{dateTime,jdbcType=INTEGER},
+      </if>
+      <if test="cpuUsageRate != null" >
+        cpu_usage_rate = #{cpuUsageRate,jdbcType=DOUBLE},
+      </if>
+      <if test="memoryCapacity != null" >
+        memory_capacity = #{memoryCapacity,jdbcType=BIGINT},
+      </if>
+      <if test="memoryUsage != null" >
+        memory_usage = #{memoryUsage,jdbcType=BIGINT},
+      </if>
+      <if test="diskTotalSize != null" >
+        disk_total_size = #{diskTotalSize,jdbcType=BIGINT},
+      </if>
+      <if test="diskPartitionUsage != null" >
+        disk_partition_usage = #{diskPartitionUsage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.HostDataInfo" >
+    update host_data_info
+    set host_id = #{hostId,jdbcType=INTEGER},
+      date_time = #{dateTime,jdbcType=INTEGER},
+      cpu_usage_rate = #{cpuUsageRate,jdbcType=DOUBLE},
+      memory_capacity = #{memoryCapacity,jdbcType=BIGINT},
+      memory_usage = #{memoryUsage,jdbcType=BIGINT},
+      disk_total_size = #{diskTotalSize,jdbcType=BIGINT},
+      disk_partition_usage = #{diskPartitionUsage,jdbcType=VARCHAR}
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+</mapper>

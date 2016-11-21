@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="jdbc.properties"></properties>
+
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value= "${driver}"/>
+                <property name="url" value="${url}" />
+                <property name="username" value="${username}" />
+                <property name="password" value="${password}" />
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="com/itsm/collecting/mapper/HostBasicInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/HostDataInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/DatabaseBasicInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/MySqlMonitorInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/MysqlBasicInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/MssqlMonitorInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/MssqlBasicInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/OracleMonitorInfoMapper.xml" />
+        <mapper resource="com/itsm/collecting/mapper/OracleBasicInfoMapper.xml" />
+	</mappers>
+</configuration>

@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itsm.collecting.dao.MssqlMonitorInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.itsm.collecting.model.MssqlMonitorInfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="db_id" property="dbId" jdbcType="INTEGER" />
+    <result column="total_memory" property="totalMemory" jdbcType="INTEGER" />
+    <result column="sql_cached_memory" property="sqlCachedMemory" jdbcType="INTEGER" />
+    <result column="locked_memory" property="lockedMemory" jdbcType="INTEGER" />
+    <result column="optimized_memory" property="optimizedMemory" jdbcType="INTEGER" />
+    <result column="connect_memeory" property="connectMemeory" jdbcType="INTEGER" />
+    <result column="execute_process_total_memory" property="executeProcessTotalMemory" jdbcType="INTEGER" />
+    <result column="wait_workspace_process_num" property="waitWorkspaceProcessNum" jdbcType="INTEGER" />
+    <result column="get_workspace_success_process_num" property="getWorkspaceSuccessProcessNum" jdbcType="INTEGER" />
+    <result column="buffer_hit_rate" property="bufferHitRate" jdbcType="INTEGER" />
+    <result column="page_check_num" property="pageCheckNum" jdbcType="INTEGER" />
+    <result column="read_page_num_per_minute" property="readPageNumPerMinute" jdbcType="INTEGER" />
+    <result column="write_page_num_per_minute" property="writePageNumPerMinute" jdbcType="INTEGER" />
+    <result column="total_buffer_page_num" property="totalBufferPageNum" jdbcType="INTEGER" />
+    <result column="db_num" property="dbNum" jdbcType="INTEGER" />
+    <result column="free_page_num" property="freePageNum" jdbcType="INTEGER" />
+    <result column="connection_time" property="connectionTime" jdbcType="INTEGER" />
+    <result column="connection_num" property="connectionNum" jdbcType="INTEGER" />
+    <result column="login_num_per_minute" property="loginNumPerMinute" jdbcType="INTEGER" />
+    <result column="logout_num_per_minute" property="logoutNumPerMinute" jdbcType="INTEGER" />
+    <result column="cache_hit_rate" property="cacheHitRate" jdbcType="INTEGER" />
+    <result column="used_cache_per_minute" property="usedCachePerMinute" jdbcType="INTEGER" />
+    <result column="cache_count" property="cacheCount" jdbcType="INTEGER" />
+    <result column="cache_page_num" property="cachePageNum" jdbcType="INTEGER" />
+    <result column="lock_request_num_per_minute" property="lockRequestNumPerMinute" jdbcType="INTEGER" />
+    <result column="lock_wait_time_per_minute" property="lockWaitTimePerMinute" jdbcType="INTEGER" />
+    <result column="lock_time_out_num_per_minute" property="lockTimeOutNumPerMinute" jdbcType="INTEGER" />
+    <result column="deadlock_num_per_minute" property="deadlockNumPerMinute" jdbcType="INTEGER" />
+    <result column="avg_lock_wait_time" property="avgLockWaitTime" jdbcType="INTEGER" />
+    <result column="lot_sizing_request_num_per_minute" property="lotSizingRequestNumPerMinute" jdbcType="INTEGER" />
+    <result column="sql_compile_num_per_minute" property="sqlCompileNumPerMinute" jdbcType="INTEGER" />
+    <result column="sql_recompile_num_per_minute" property="sqlRecompileNumPerMinute" jdbcType="INTEGER" />
+    <result column="auto_parameter_num_per_minute" property="autoParameterNumPerMinute" jdbcType="INTEGER" />
+    <result column="fail_auto_parameter_num_per_minute" property="failAutoParameterNumPerMinute" jdbcType="INTEGER" />
+    <result column="consume_io_most" property="consumeIoMost" jdbcType="INTEGER" />
+    <result column="consume_cpu_most" property="consumeCpuMost" jdbcType="INTEGER" />
+    <result column="latch_wait_num_per_minute" property="latchWaitNumPerMinute" jdbcType="INTEGER" />
+    <result column="avg_latch_wait_time" property="avgLatchWaitTime" jdbcType="INTEGER" />
+    <result column="full_scan_num_per_minute" property="fullScanNumPerMinute" jdbcType="INTEGER" />
+    <result column="range_scan_num_per_minute" property="rangeScanNumPerMinute" jdbcType="INTEGER" />
+    <result column="probe_scan_num_per_minute" property="probeScanNumPerMinute" jdbcType="INTEGER" />
+    <result column="data_file_size" property="dataFileSize" jdbcType="INTEGER" />
+    <result column="log_file_size" property="logFileSize" jdbcType="INTEGER" />
+    <result column="transaction_detail" property="transactionDetail" jdbcType="VARCHAR" />
+    <result column="log_refresh_detail" property="logRefreshDetail" jdbcType="VARCHAR" />
+    <result column="monitor_time" property="monitorTime" jdbcType="INTEGER" />
+    <result column="health_status" property="healthStatus" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, db_id, total_memory, sql_cached_memory, locked_memory, optimized_memory, connect_memeory, 
+    execute_process_total_memory, wait_workspace_process_num, get_workspace_success_process_num, 
+    buffer_hit_rate, page_check_num, read_page_num_per_minute, write_page_num_per_minute, 
+    total_buffer_page_num, db_num, free_page_num, connection_time, connection_num, login_num_per_minute, 
+    logout_num_per_minute, cache_hit_rate, used_cache_per_minute, cache_count, cache_page_num, 
+    lock_request_num_per_minute, lock_wait_time_per_minute, lock_time_out_num_per_minute, 
+    deadlock_num_per_minute, avg_lock_wait_time, lot_sizing_request_num_per_minute, sql_compile_num_per_minute, 
+    sql_recompile_num_per_minute, auto_parameter_num_per_minute, fail_auto_parameter_num_per_minute, 
+    consume_io_most, consume_cpu_most, latch_wait_num_per_minute, avg_latch_wait_time, 
+    full_scan_num_per_minute, range_scan_num_per_minute, probe_scan_num_per_minute, data_file_size, 
+    log_file_size, transaction_detail, log_refresh_detail, monitor_time, health_status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from mssql_monitor_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from mssql_monitor_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.itsm.collecting.model.MssqlMonitorInfo" >
+    insert into mssql_monitor_info (id, db_id, total_memory, 
+      sql_cached_memory, locked_memory, optimized_memory, 
+      connect_memeory, execute_process_total_memory, 
+      wait_workspace_process_num, get_workspace_success_process_num, 
+      buffer_hit_rate, page_check_num, read_page_num_per_minute, 
+      write_page_num_per_minute, total_buffer_page_num, 
+      db_num, free_page_num, connection_time, 
+      connection_num, login_num_per_minute, logout_num_per_minute, 
+      cache_hit_rate, used_cache_per_minute, cache_count, 
+      cache_page_num, lock_request_num_per_minute, 
+      lock_wait_time_per_minute, lock_time_out_num_per_minute, 
+      deadlock_num_per_minute, avg_lock_wait_time, 
+      lot_sizing_request_num_per_minute, sql_compile_num_per_minute, 
+      sql_recompile_num_per_minute, auto_parameter_num_per_minute, 
+      fail_auto_parameter_num_per_minute, consume_io_most, 
+      consume_cpu_most, latch_wait_num_per_minute, 
+      avg_latch_wait_time, full_scan_num_per_minute, 
+      range_scan_num_per_minute, probe_scan_num_per_minute, 
+      data_file_size, log_file_size, transaction_detail, 
+      log_refresh_detail, monitor_time, health_status
+      )
+    values (#{id,jdbcType=BIGINT}, #{dbId,jdbcType=INTEGER}, #{totalMemory,jdbcType=INTEGER}, 
+      #{sqlCachedMemory,jdbcType=INTEGER}, #{lockedMemory,jdbcType=INTEGER}, #{optimizedMemory,jdbcType=INTEGER}, 
+      #{connectMemeory,jdbcType=INTEGER}, #{executeProcessTotalMemory,jdbcType=INTEGER}, 
+      #{waitWorkspaceProcessNum,jdbcType=INTEGER}, #{getWorkspaceSuccessProcessNum,jdbcType=INTEGER}, 
+      #{bufferHitRate,jdbcType=INTEGER}, #{pageCheckNum,jdbcType=INTEGER}, #{readPageNumPerMinute,jdbcType=INTEGER}, 
+      #{writePageNumPerMinute,jdbcType=INTEGER}, #{totalBufferPageNum,jdbcType=INTEGER}, 
+      #{dbNum,jdbcType=INTEGER}, #{freePageNum,jdbcType=INTEGER}, #{connectionTime,jdbcType=INTEGER}, 
+      #{connectionNum,jdbcType=INTEGER}, #{loginNumPerMinute,jdbcType=INTEGER}, #{logoutNumPerMinute,jdbcType=INTEGER}, 
+      #{cacheHitRate,jdbcType=INTEGER}, #{usedCachePerMinute,jdbcType=INTEGER}, #{cacheCount,jdbcType=INTEGER}, 
+      #{cachePageNum,jdbcType=INTEGER}, #{lockRequestNumPerMinute,jdbcType=INTEGER}, 
+      #{lockWaitTimePerMinute,jdbcType=INTEGER}, #{lockTimeOutNumPerMinute,jdbcType=INTEGER}, 
+      #{deadlockNumPerMinute,jdbcType=INTEGER}, #{avgLockWaitTime,jdbcType=INTEGER}, 
+      #{lotSizingRequestNumPerMinute,jdbcType=INTEGER}, #{sqlCompileNumPerMinute,jdbcType=INTEGER}, 
+      #{sqlRecompileNumPerMinute,jdbcType=INTEGER}, #{autoParameterNumPerMinute,jdbcType=INTEGER}, 
+      #{failAutoParameterNumPerMinute,jdbcType=INTEGER}, #{consumeIoMost,jdbcType=INTEGER}, 
+      #{consumeCpuMost,jdbcType=INTEGER}, #{latchWaitNumPerMinute,jdbcType=INTEGER}, 
+      #{avgLatchWaitTime,jdbcType=INTEGER}, #{fullScanNumPerMinute,jdbcType=INTEGER}, 
+      #{rangeScanNumPerMinute,jdbcType=INTEGER}, #{probeScanNumPerMinute,jdbcType=INTEGER}, 
+      #{dataFileSize,jdbcType=INTEGER}, #{logFileSize,jdbcType=INTEGER}, #{transactionDetail,jdbcType=VARCHAR}, 
+      #{logRefreshDetail,jdbcType=VARCHAR}, #{monitorTime,jdbcType=INTEGER}, #{healthStatus,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.itsm.collecting.model.MssqlMonitorInfo" >
+    insert into mssql_monitor_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dbId != null" >
+        db_id,
+      </if>
+      <if test="totalMemory != null" >
+        total_memory,
+      </if>
+      <if test="sqlCachedMemory != null" >
+        sql_cached_memory,
+      </if>
+      <if test="lockedMemory != null" >
+        locked_memory,
+      </if>
+      <if test="optimizedMemory != null" >
+        optimized_memory,
+      </if>
+      <if test="connectMemeory != null" >
+        connect_memeory,
+      </if>
+      <if test="executeProcessTotalMemory != null" >
+        execute_process_total_memory,
+      </if>
+      <if test="waitWorkspaceProcessNum != null" >
+        wait_workspace_process_num,
+      </if>
+      <if test="getWorkspaceSuccessProcessNum != null" >
+        get_workspace_success_process_num,
+      </if>
+      <if test="bufferHitRate != null" >
+        buffer_hit_rate,
+      </if>
+      <if test="pageCheckNum != null" >
+        page_check_num,
+      </if>
+      <if test="readPageNumPerMinute != null" >
+        read_page_num_per_minute,
+      </if>
+      <if test="writePageNumPerMinute != null" >
+        write_page_num_per_minute,
+      </if>
+      <if test="totalBufferPageNum != null" >
+        total_buffer_page_num,
+      </if>
+      <if test="dbNum != null" >
+        db_num,
+      </if>
+      <if test="freePageNum != null" >
+        free_page_num,
+      </if>
+      <if test="connectionTime != null" >
+        connection_time,
+      </if>
+      <if test="connectionNum != null" >
+        connection_num,
+      </if>
+      <if test="loginNumPerMinute != null" >
+        login_num_per_minute,
+      </if>
+      <if test="logoutNumPerMinute != null" >
+        logout_num_per_minute,
+      </if>
+      <if test="cacheHitRate != null" >
+        cache_hit_rate,
+      </if>
+      <if test="usedCachePerMinute != null" >
+        used_cache_per_minute,
+      </if>
+      <if test="cacheCount != null" >
+        cache_count,
+      </if>
+      <if test="cachePageNum != null" >
+        cache_page_num,
+      </if>
+      <if test="lockRequestNumPerMinute != null" >
+        lock_request_num_per_minute,
+      </if>
+      <if test="lockWaitTimePerMinute != null" >
+        lock_wait_time_per_minute,
+      </if>
+      <if test="lockTimeOutNumPerMinute != null" >
+        lock_time_out_num_per_minute,
+      </if>
+      <if test="deadlockNumPerMinute != null" >
+        deadlock_num_per_minute,
+      </if>
+      <if test="avgLockWaitTime != null" >
+        avg_lock_wait_time,
+      </if>
+      <if test="lotSizingRequestNumPerMinute != null" >
+        lot_sizing_request_num_per_minute,
+      </if>
+      <if test="sqlCompileNumPerMinute != null" >
+        sql_compile_num_per_minute,
+      </if>
+      <if test="sqlRecompileNumPerMinute != null" >
+        sql_recompile_num_per_minute,
+      </if>
+      <if test="autoParameterNumPerMinute != null" >
+        auto_parameter_num_per_minute,
+      </if>
+      <if test="failAutoParameterNumPerMinute != null" >
+        fail_auto_parameter_num_per_minute,
+      </if>
+      <if test="consumeIoMost != null" >
+        consume_io_most,
+      </if>
+      <if test="consumeCpuMost != null" >
+        consume_cpu_most,
+      </if>
+      <if test="latchWaitNumPerMinute != null" >
+        latch_wait_num_per_minute,
+      </if>
+      <if test="avgLatchWaitTime != null" >
+        avg_latch_wait_time,
+      </if>
+      <if test="fullScanNumPerMinute != null" >
+        full_scan_num_per_minute,
+      </if>
+      <if test="rangeScanNumPerMinute != null" >
+        range_scan_num_per_minute,
+      </if>
+      <if test="probeScanNumPerMinute != null" >
+        probe_scan_num_per_minute,
+      </if>
+      <if test="dataFileSize != null" >
+        data_file_size,
+      </if>
+      <if test="logFileSize != null" >
+        log_file_size,
+      </if>
+      <if test="transactionDetail != null" >
+        transaction_detail,
+      </if>
+      <if test="logRefreshDetail != null" >
+        log_refresh_detail,
+      </if>
+      <if test="monitorTime != null" >
+        monitor_time,
+      </if>
+      <if test="healthStatus != null" >
+        health_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="dbId != null" >
+        #{dbId,jdbcType=INTEGER},
+      </if>
+      <if test="totalMemory != null" >
+        #{totalMemory,jdbcType=INTEGER},
+      </if>
+      <if test="sqlCachedMemory != null" >
+        #{sqlCachedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="lockedMemory != null" >
+        #{lockedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="optimizedMemory != null" >
+        #{optimizedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="connectMemeory != null" >
+        #{connectMemeory,jdbcType=INTEGER},
+      </if>
+      <if test="executeProcessTotalMemory != null" >
+        #{executeProcessTotalMemory,jdbcType=INTEGER},
+      </if>
+      <if test="waitWorkspaceProcessNum != null" >
+        #{waitWorkspaceProcessNum,jdbcType=INTEGER},
+      </if>
+      <if test="getWorkspaceSuccessProcessNum != null" >
+        #{getWorkspaceSuccessProcessNum,jdbcType=INTEGER},
+      </if>
+      <if test="bufferHitRate != null" >
+        #{bufferHitRate,jdbcType=INTEGER},
+      </if>
+      <if test="pageCheckNum != null" >
+        #{pageCheckNum,jdbcType=INTEGER},
+      </if>
+      <if test="readPageNumPerMinute != null" >
+        #{readPageNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="writePageNumPerMinute != null" >
+        #{writePageNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="totalBufferPageNum != null" >
+        #{totalBufferPageNum,jdbcType=INTEGER},
+      </if>
+      <if test="dbNum != null" >
+        #{dbNum,jdbcType=INTEGER},
+      </if>
+      <if test="freePageNum != null" >
+        #{freePageNum,jdbcType=INTEGER},
+      </if>
+      <if test="connectionTime != null" >
+        #{connectionTime,jdbcType=INTEGER},
+      </if>
+      <if test="connectionNum != null" >
+        #{connectionNum,jdbcType=INTEGER},
+      </if>
+      <if test="loginNumPerMinute != null" >
+        #{loginNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="logoutNumPerMinute != null" >
+        #{logoutNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="cacheHitRate != null" >
+        #{cacheHitRate,jdbcType=INTEGER},
+      </if>
+      <if test="usedCachePerMinute != null" >
+        #{usedCachePerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="cacheCount != null" >
+        #{cacheCount,jdbcType=INTEGER},
+      </if>
+      <if test="cachePageNum != null" >
+        #{cachePageNum,jdbcType=INTEGER},
+      </if>
+      <if test="lockRequestNumPerMinute != null" >
+        #{lockRequestNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="lockWaitTimePerMinute != null" >
+        #{lockWaitTimePerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="lockTimeOutNumPerMinute != null" >
+        #{lockTimeOutNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="deadlockNumPerMinute != null" >
+        #{deadlockNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="avgLockWaitTime != null" >
+        #{avgLockWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="lotSizingRequestNumPerMinute != null" >
+        #{lotSizingRequestNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="sqlCompileNumPerMinute != null" >
+        #{sqlCompileNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="sqlRecompileNumPerMinute != null" >
+        #{sqlRecompileNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="autoParameterNumPerMinute != null" >
+        #{autoParameterNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="failAutoParameterNumPerMinute != null" >
+        #{failAutoParameterNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="consumeIoMost != null" >
+        #{consumeIoMost,jdbcType=INTEGER},
+      </if>
+      <if test="consumeCpuMost != null" >
+        #{consumeCpuMost,jdbcType=INTEGER},
+      </if>
+      <if test="latchWaitNumPerMinute != null" >
+        #{latchWaitNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="avgLatchWaitTime != null" >
+        #{avgLatchWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="fullScanNumPerMinute != null" >
+        #{fullScanNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="rangeScanNumPerMinute != null" >
+        #{rangeScanNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="probeScanNumPerMinute != null" >
+        #{probeScanNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="dataFileSize != null" >
+        #{dataFileSize,jdbcType=INTEGER},
+      </if>
+      <if test="logFileSize != null" >
+        #{logFileSize,jdbcType=INTEGER},
+      </if>
+      <if test="transactionDetail != null" >
+        #{transactionDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="logRefreshDetail != null" >
+        #{logRefreshDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorTime != null" >
+        #{monitorTime,jdbcType=INTEGER},
+      </if>
+      <if test="healthStatus != null" >
+        #{healthStatus,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.itsm.collecting.model.MssqlMonitorInfo" >
+    update mssql_monitor_info
+    <set >
+      <if test="dbId != null" >
+        db_id = #{dbId,jdbcType=INTEGER},
+      </if>
+      <if test="totalMemory != null" >
+        total_memory = #{totalMemory,jdbcType=INTEGER},
+      </if>
+      <if test="sqlCachedMemory != null" >
+        sql_cached_memory = #{sqlCachedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="lockedMemory != null" >
+        locked_memory = #{lockedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="optimizedMemory != null" >
+        optimized_memory = #{optimizedMemory,jdbcType=INTEGER},
+      </if>
+      <if test="connectMemeory != null" >
+        connect_memeory = #{connectMemeory,jdbcType=INTEGER},
+      </if>
+      <if test="executeProcessTotalMemory != null" >
+        execute_process_total_memory = #{executeProcessTotalMemory,jdbcType=INTEGER},
+      </if>
+      <if test="waitWorkspaceProcessNum != null" >
+        wait_workspace_process_num = #{waitWorkspaceProcessNum,jdbcType=INTEGER},
+      </if>
+      <if test="getWorkspaceSuccessProcessNum != null" >
+        get_workspace_success_process_num = #{getWorkspaceSuccessProcessNum,jdbcType=INTEGER},
+      </if>
+      <if test="bufferHitRate != null" >
+        buffer_hit_rate = #{bufferHitRate,jdbcType=INTEGER},
+      </if>
+      <if test="pageCheckNum != null" >
+        page_check_num = #{pageCheckNum,jdbcType=INTEGER},
+      </if>
+      <if test="readPageNumPerMinute != null" >
+        read_page_num_per_minute = #{readPageNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="writePageNumPerMinute != null" >
+        write_page_num_per_minute = #{writePageNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="totalBufferPageNum != null" >
+        total_buffer_page_num = #{totalBufferPageNum,jdbcType=INTEGER},
+      </if>
+      <if test="dbNum != null" >
+        db_num = #{dbNum,jdbcType=INTEGER},
+      </if>
+      <if test="freePageNum != null" >
+        free_page_num = #{freePageNum,jdbcType=INTEGER},
+      </if>
+      <if test="connectionTime != null" >
+        connection_time = #{connectionTime,jdbcType=INTEGER},
+      </if>
+      <if test="connectionNum != null" >
+        connection_num = #{connectionNum,jdbcType=INTEGER},
+      </if>
+      <if test="loginNumPerMinute != null" >
+        login_num_per_minute = #{loginNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="logoutNumPerMinute != null" >
+        logout_num_per_minute = #{logoutNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="cacheHitRate != null" >
+        cache_hit_rate = #{cacheHitRate,jdbcType=INTEGER},
+      </if>
+      <if test="usedCachePerMinute != null" >
+        used_cache_per_minute = #{usedCachePerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="cacheCount != null" >
+        cache_count = #{cacheCount,jdbcType=INTEGER},
+      </if>
+      <if test="cachePageNum != null" >
+        cache_page_num = #{cachePageNum,jdbcType=INTEGER},
+      </if>
+      <if test="lockRequestNumPerMinute != null" >
+        lock_request_num_per_minute = #{lockRequestNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="lockWaitTimePerMinute != null" >
+        lock_wait_time_per_minute = #{lockWaitTimePerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="lockTimeOutNumPerMinute != null" >
+        lock_time_out_num_per_minute = #{lockTimeOutNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="deadlockNumPerMinute != null" >
+        deadlock_num_per_minute = #{deadlockNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="avgLockWaitTime != null" >
+        avg_lock_wait_time = #{avgLockWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="lotSizingRequestNumPerMinute != null" >
+        lot_sizing_request_num_per_minute = #{lotSizingRequestNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="sqlCompileNumPerMinute != null" >
+        sql_compile_num_per_minute = #{sqlCompileNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="sqlRecompileNumPerMinute != null" >
+        sql_recompile_num_per_minute = #{sqlRecompileNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="autoParameterNumPerMinute != null" >
+        auto_parameter_num_per_minute = #{autoParameterNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="failAutoParameterNumPerMinute != null" >
+        fail_auto_parameter_num_per_minute = #{failAutoParameterNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="consumeIoMost != null" >
+        consume_io_most = #{consumeIoMost,jdbcType=INTEGER},
+      </if>
+      <if test="consumeCpuMost != null" >
+        consume_cpu_most = #{consumeCpuMost,jdbcType=INTEGER},
+      </if>
+      <if test="latchWaitNumPerMinute != null" >
+        latch_wait_num_per_minute = #{latchWaitNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="avgLatchWaitTime != null" >
+        avg_latch_wait_time = #{avgLatchWaitTime,jdbcType=INTEGER},
+      </if>
+      <if test="fullScanNumPerMinute != null" >
+        full_scan_num_per_minute = #{fullScanNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="rangeScanNumPerMinute != null" >
+        range_scan_num_per_minute = #{rangeScanNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="probeScanNumPerMinute != null" >
+        probe_scan_num_per_minute = #{probeScanNumPerMinute,jdbcType=INTEGER},
+      </if>
+      <if test="dataFileSize != null" >
+        data_file_size = #{dataFileSize,jdbcType=INTEGER},
+      </if>
+      <if test="logFileSize != null" >
+        log_file_size = #{logFileSize,jdbcType=INTEGER},
+      </if>
+      <if test="transactionDetail != null" >
+        transaction_detail = #{transactionDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="logRefreshDetail != null" >
+        log_refresh_detail = #{logRefreshDetail,jdbcType=VARCHAR},
+      </if>
+      <if test="monitorTime != null" >
+        monitor_time = #{monitorTime,jdbcType=INTEGER},
+      </if>
+      <if test="healthStatus != null" >
+        health_status = #{healthStatus,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.itsm.collecting.model.MssqlMonitorInfo" >
+    update mssql_monitor_info
+    set db_id = #{dbId,jdbcType=INTEGER},
+      total_memory = #{totalMemory,jdbcType=INTEGER},
+      sql_cached_memory = #{sqlCachedMemory,jdbcType=INTEGER},
+      locked_memory = #{lockedMemory,jdbcType=INTEGER},
+      optimized_memory = #{optimizedMemory,jdbcType=INTEGER},
+      connect_memeory = #{connectMemeory,jdbcType=INTEGER},
+      execute_process_total_memory = #{executeProcessTotalMemory,jdbcType=INTEGER},
+      wait_workspace_process_num = #{waitWorkspaceProcessNum,jdbcType=INTEGER},
+      get_workspace_success_process_num = #{getWorkspaceSuccessProcessNum,jdbcType=INTEGER},
+      buffer_hit_rate = #{bufferHitRate,jdbcType=INTEGER},
+      page_check_num = #{pageCheckNum,jdbcType=INTEGER},
+      read_page_num_per_minute = #{readPageNumPerMinute,jdbcType=INTEGER},
+      write_page_num_per_minute = #{writePageNumPerMinute,jdbcType=INTEGER},
+      total_buffer_page_num = #{totalBufferPageNum,jdbcType=INTEGER},
+      db_num = #{dbNum,jdbcType=INTEGER},
+      free_page_num = #{freePageNum,jdbcType=INTEGER},
+      connection_time = #{connectionTime,jdbcType=INTEGER},
+      connection_num = #{connectionNum,jdbcType=INTEGER},
+      login_num_per_minute = #{loginNumPerMinute,jdbcType=INTEGER},
+      logout_num_per_minute = #{logoutNumPerMinute,jdbcType=INTEGER},
+      cache_hit_rate = #{cacheHitRate,jdbcType=INTEGER},
+      used_cache_per_minute = #{usedCachePerMinute,jdbcType=INTEGER},
+      cache_count = #{cacheCount,jdbcType=INTEGER},
+      cache_page_num = #{cachePageNum,jdbcType=INTEGER},
+      lock_request_num_per_minute = #{lockRequestNumPerMinute,jdbcType=INTEGER},
+      lock_wait_time_per_minute = #{lockWaitTimePerMinute,jdbcType=INTEGER},
+      lock_time_out_num_per_minute = #{lockTimeOutNumPerMinute,jdbcType=INTEGER},
+      deadlock_num_per_minute = #{deadlockNumPerMinute,jdbcType=INTEGER},
+      avg_lock_wait_time = #{avgLockWaitTime,jdbcType=INTEGER},
+      lot_sizing_request_num_per_minute = #{lotSizingRequestNumPerMinute,jdbcType=INTEGER},
+      sql_compile_num_per_minute = #{sqlCompileNumPerMinute,jdbcType=INTEGER},
+      sql_recompile_num_per_minute = #{sqlRecompileNumPerMinute,jdbcType=INTEGER},
+      auto_parameter_num_per_minute = #{autoParameterNumPerMinute,jdbcType=INTEGER},
+      fail_auto_parameter_num_per_minute = #{failAutoParameterNumPerMinute,jdbcType=INTEGER},
+      consume_io_most = #{consumeIoMost,jdbcType=INTEGER},
+      consume_cpu_most = #{consumeCpuMost,jdbcType=INTEGER},
+      latch_wait_num_per_minute = #{latchWaitNumPerMinute,jdbcType=INTEGER},
+      avg_latch_wait_time = #{avgLatchWaitTime,jdbcType=INTEGER},
+      full_scan_num_per_minute = #{fullScanNumPerMinute,jdbcType=INTEGER},
+      range_scan_num_per_minute = #{rangeScanNumPerMinute,jdbcType=INTEGER},
+      probe_scan_num_per_minute = #{probeScanNumPerMinute,jdbcType=INTEGER},
+      data_file_size = #{dataFileSize,jdbcType=INTEGER},
+      log_file_size = #{logFileSize,jdbcType=INTEGER},
+      transaction_detail = #{transactionDetail,jdbcType=VARCHAR},
+      log_refresh_detail = #{logRefreshDetail,jdbcType=VARCHAR},
+      monitor_time = #{monitorTime,jdbcType=INTEGER},
+      health_status = #{healthStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
