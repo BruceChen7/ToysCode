@@ -47,9 +47,6 @@ public class CollectingServer {
 
     }
 
-
-
-
     public static void main(String[] args) throws Exception {
 
         JedisPoolUtils.initPool();
@@ -71,6 +68,7 @@ public class CollectingServer {
 
             // redis 中没有需要监控的主机信息
             if(host == null || host.size() == 0) {
+                // 打开数据库中的主机信息
                 SqlSession s = SqlSessionUtil.getSqlSession().openSession(true);
 
                 List<HostBasicInfo> host_info;

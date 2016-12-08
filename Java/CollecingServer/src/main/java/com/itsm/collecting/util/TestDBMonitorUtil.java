@@ -34,7 +34,8 @@ public class TestDBMonitorUtil implements Callable<Integer> {
 	@Override
 	public Integer call() throws Exception {
 		// TODO Auto-generated method stub
-		Connection conn = null;
+		Connection conn;
+
 		if(this.db_type.equals(Constants.MYSQL_DB)){
 			conn = MysqlConnectionUtil.getInstance().getConnection(db_ip, db_port, null, db_user, db_pass);
 			if(conn == null){
@@ -51,21 +52,29 @@ public class TestDBMonitorUtil implements Callable<Integer> {
 			
 			st.close();
 			conn.close();
-			if(rs_1!=null&&rs_2!=null&&rs_3!=null){
+
+			if(rs_1!=null) {
 				rs_1.close();
-				rs_2.close();
-				rs_3.close();
-				return 1;
-			}
-			else{
-				rs_1.close();
-				rs_2.close();
-				rs_3.close();
+			} else {
 				return 0;
 			}
-			
+
+			if(rs_2 != null) {
+				rs_2.close();
+			} else {
+				return 0;
+			}
+
+			if(rs_3 != null) {
+                rs_3.close();
+			} else {
+				return 0;
+			}
+			return 1;
+
+
 		}
-		else if(this.db_type.equals(Constants.ORACLE_DB)){
+		else if(this.db_type.equals(Constants.ORACLE_DB)) {
 			conn = OracleConnectionUtil.getInstance().getConnection(db_ip, db_port,db_sid, db_user, db_pass);
 			if(conn==null){
 				return 0;
@@ -75,6 +84,7 @@ public class TestDBMonitorUtil implements Callable<Integer> {
 			}
 			
 		}
+
 		else if(this.db_type.equals(Constants.SQL_SERVER)){
 			conn = SqlServerConnectionUtil.getInstance().getConnection(db_ip, db_port, null, db_user, db_pass);
 			logger.info(conn);

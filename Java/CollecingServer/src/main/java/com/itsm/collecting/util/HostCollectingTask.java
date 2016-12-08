@@ -47,17 +47,20 @@ public class HostCollectingTask implements Runnable {
 
     public void run() {
     	String value = host_info.getHostIp()+":"+host_info.getHostOs() + ":" +host_info.getHostId();
+        logger.info(value);
+
     	JedisPoolUtils.initPool();
     	Jedis jedis = JedisPoolUtils.getResource();
     	List<String> coll_host_info = jedis.lrange(Constants.COLLECTING_HOST_INFO, 0, -1);
-    	logger.info(value);
     	JedisPoolUtils.returnResource(jedis);
+
     	if(!coll_host_info.contains(value)){
     		Future future = host_future_map.remove(host_info.getHostIp());
     		future.cancel(true);
     		logger.info(host_info.getHostIp()+"Collecting has been cancled");
     		return;
     	}
+
         String ip = host_info.getHostIp();
         assert (!StringUtil.isStrNull(ip));
         int ts = TimeTrans.getCurrentTimestamp();
@@ -82,7 +85,7 @@ public class HostCollectingTask implements Runnable {
                     return;
 
                 }
-            } // linux collectin end
+            } // linux collecting end
 
 
             if(os.equals("windows")) {

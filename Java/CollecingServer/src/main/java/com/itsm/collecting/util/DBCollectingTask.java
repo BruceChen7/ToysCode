@@ -35,13 +35,10 @@ public class DBCollectingTask implements Runnable {
         String port = db.getDbPort();
         String db_name = db.getDbName();
         String sid = db.getDbOracleSid();
-        
-      
-
         db_name = db_name == null ? "" : db_name;
 
 
-        String user_name =db.getDbUsername();
+        String user_name = db.getDbUsername();
         String pass = db.getDbPassword();
         
         
@@ -51,8 +48,9 @@ public class DBCollectingTask implements Runnable {
         }
         JedisPoolUtils.initPool();
         Jedis jedis = JedisPoolUtils.getResource();
-        List<String> coll_db_list = jedis.lrange(Constants.COLLECTING_DB_INFO,0,-1);
+        List<String> coll_db_list = jedis.lrange(Constants.COLLECTING_DB_INFO, 0, -1);
         JedisPoolUtils.returnResource(jedis);
+
         if(!coll_db_list.contains(value)){
         	Future future = db_future_map.remove(ip+":"+db_type);
         	future.cancel(true);
