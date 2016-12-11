@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bio/python
 #-*- coding:utf-8 -*-
 
 """
@@ -12,6 +12,14 @@ import socket
 import re
 import sys
 import commands
+import os
+import logging
+import logging.config
+
+logger_config_file = sys.path[0] + "/logger.conf"
+logging.config.fileConfig(logger_config_file)
+logger_name = "root"
+logger = logging.getLogger(logger_name)
 
 class RedisStats:
     """
@@ -97,7 +105,7 @@ def main():
             }
             p.append(i)
 
-    print json.dumps(p, sort_keys=True, indent=4)
+    logger.info(json.dumps(p, sort_keys=True, indent=4))
 
 if __name__ == '__main__':
     # Get the `redis-server `
@@ -106,4 +114,6 @@ if __name__ == '__main__':
     sys.stdout.flush()
 
     if int(PROC) < 5 and int(PROC) > 0:
+        logger.info("begin to collecting the redis status")
         main()
+        
