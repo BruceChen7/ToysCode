@@ -30,6 +30,10 @@ public class StringUtil {
         return getPropertiesValue("zookeeper.properties", "ip");
     }
 
+    public static String getZookeeperPort() {
+        return getPropertiesValue("zookeeper.properties", "port");
+    }
+
     public static String getRabbitMQIp() {
         return getPropertiesValue("rabbit.properties", "ip");
     }

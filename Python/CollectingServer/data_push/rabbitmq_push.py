@@ -20,5 +20,5 @@ def push_to_rabbitmq(host="", port=4369, data=""):
     # FixMe: json data to be sent
     channel.basic_publish(exchange="topic",
                           routing_key="redis",
-                          body = data)
+                          body = "hello")
     connection.close()

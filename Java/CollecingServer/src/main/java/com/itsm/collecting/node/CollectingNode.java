@@ -1,9 +1,12 @@
 package com.itsm.collecting.node;
 
+import com.itsm.collecting.util.StringUtil;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Random;
 
 import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
@@ -11,18 +14,35 @@ import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
 /**
  * Created by bruce on 16-11-21.
  */
-public class CollectingMasterNode implements Watcher {
+public class CollectingNode implements Watcher {
 
     private ZooKeeper zk;
-    private String hostPort;
-    private static Logger logger = Logger.getLogger(CollectingMasterNode.class);
+    private static final String hostPort = StringUtil.getZookeeperPort();
+    private static final String ip =  StringUtil.getZookeeperIp();
     private boolean isLeader = false;
     private String serverId = Integer.toHexString(new Random().nextInt());
 
-    public CollectingMasterNode(String hostPort) {
-        this.hostPort = hostPort;
+
+    private static Logger logger = Logger.getLogger(CollectingNode.class);
+    private final String masterNodeName;
+    private final String slaveNodeName;
+    private INodeTask task;
+    private static  String localHostName ;
+
+    static {
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            localHostName = addr.getHostName();
+        } catch (UnknownHostException e) {
+            logger.error(e);
+        }
     }
 
+    public CollectingNode(String masterNodeName, String slaveNodeName, INodeTask task) {
+        this.masterNodeName = masterNodeName;
+        this.task = task;
+        this.slaveNodeName = slaveNodeName;
+    }
 
     AsyncCallback.StringCallback  createParentCallback = new AsyncCallback.StringCallback() {
         public void processResult(int i, String s, Object o, String s1) {
@@ -31,10 +51,10 @@ public class CollectingMasterNode implements Watcher {
                      createParent(s, (byte[])o);
                      break;
                  case OK:
-                     logger.info("parent created");
+                     logger.info("parent created sucessfully");
                      break;
                  case NODEEXISTS:
-                     logger.info("");
+                     logger.info("parent has been created before");
              }
         }
     };
@@ -43,7 +63,8 @@ public class CollectingMasterNode implements Watcher {
     // 创建zookeeper 连接
     public void startZK() {
         try {
-            zk = new ZooKeeper(hostPort, 15000, this);
+            String addr = ip + ":" + hostPort;
+            zk = new ZooKeeper(addr, 15000, this);
         } catch (Exception e) {
 
         }
@@ -76,17 +97,15 @@ public class CollectingMasterNode implements Watcher {
 
     // 创建其他的work
     public void boostrap() {
-        createParent("/workers", new byte[0]);
-        createParent("/assign", new byte[0]);
-        createParent("/tasks", new byte[0]);
-        createParent("/assign", new byte[0]);
+        createParent(slaveNodeName, new byte[0]);
     }
 
     // 作为主节点中的管理接运行
     public void runForMaster() throws  InterruptedException {
         while (true) {
             try {
-                zk.create("/master", serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+                // 创建临时节点，挂掉了好从slave节点中选取一个从节点来代替
+                zk.create(masterNodeName, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
                 isLeader = true;
                 break;
             } catch (KeeperException.NodeExistsException e) {
@@ -96,7 +115,6 @@ public class CollectingMasterNode implements Watcher {
 
             } catch (KeeperException e) {
                 logger.info("something wrong", e);
-
             }
 
             if(checkMaster())
@@ -110,7 +128,7 @@ public class CollectingMasterNode implements Watcher {
         while(true) {
             try {
                 Stat stat = new Stat();
-                byte data[] = zk.getData("/master", false, stat);
+                byte data[] = zk.getData(masterNodeName, false, stat);
                 isLeader = new String(data).equals(serverId);
                 return true;
 
@@ -133,16 +151,61 @@ public class CollectingMasterNode implements Watcher {
         zk.close();
     }
 
-    public static  void main(String args[]) throws Exception {
-        CollectingMasterNode c = new CollectingMasterNode("127.0.0.1:2181");
-        c.startZK();
-        c.runForMaster();
-
-        if(c.isLeaderMaster()) {
-            logger.info("is master");
+    public void runNode() {
+        if(isLeaderMaster()) {
+            task.startMasterTask();
         } else {
-            logger.info("is not master");
+            registerSlaveNode();
+            task.startSlaveTask();
         }
+    }
+
+    public static  void main(String args[]) throws Exception {
+        // 创建客户端
+        CollectingNode c = new CollectingNode("/master", "/slavers", null);
+        c.startZK();
+        c.boostrap();
+        c.runForMaster();
+        if(c.isLeaderMaster()) {
+
+        } else {
+            c.registerSlaveNode();
+            logger.info("is not master" );
+        }
+        Thread.sleep(100000);
         c.stopZK();
     }
+
+    public void registerSlaveNode() {
+        String name = slaveNodeName + "/slaver-" + getUid();
+        logger.info("name is " + name);
+        zk.create(name, "Idle".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, createWorkCallback, null);
+    }
+
+    private AsyncCallback.StringCallback createWorkCallback = new AsyncCallback.StringCallback() {
+        public void processResult(int i, String s, Object o, String s1) {
+
+            switch (KeeperException.Code.get(i)) {
+                case CONNECTIONLOSS:
+                    registerSlaveNode();
+                    break;
+                case OK:
+                    logger.info("Registered sucessfully " + getUid());
+                    break;
+                case NODEEXISTS:
+                    logger.warn("Already registerd : " + getUid());
+                    break;
+                default:
+                    logger.error("something wrong :" +   KeeperException.create(KeeperException.Code.get(i), s));
+
+            }
+        }
+    };
+
+
+    private String getUid() {
+        return serverId + "-" + localHostName;
+    }
+
+
 }

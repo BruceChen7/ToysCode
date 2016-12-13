@@ -16,9 +16,6 @@ public class StoreDataConsumerNode {
     private final static String host = StringUtil.getRabbitMQIp();
     private static final Logger logger = Logger.getLogger(StoreDataConsumerNode.class);
     private static String[] bind_key = new String[] {
-            "redis",
-            "memcached",
-            "rabbitmq"
     };
 
 
