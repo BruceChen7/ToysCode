@@ -15,6 +15,7 @@ import commands
 import os
 import logging
 import logging.config
+from data_push.rabbitmq_push import push_to_rabbitmq
 
 logger_config_file = sys.path[0] + "/logger.conf"
 logging.config.fileConfig(logger_config_file)
@@ -106,6 +107,7 @@ def main():
             p.append(i)
 
     logger.info(json.dumps(p, sort_keys=True, indent=4))
+    push_to_rabbitmq(host="localhost", port=4369, data=p)
 
 if __name__ == '__main__':
     # Get the `redis-server `
@@ -116,4 +118,3 @@ if __name__ == '__main__':
     if int(PROC) < 5 and int(PROC) > 0:
         logger.info("begin to collecting the redis status")
         main()
-        

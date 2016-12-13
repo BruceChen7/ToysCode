@@ -26,7 +26,13 @@ public class StringUtil {
         return getPropertiesValue("redis.properties", "password");
     }
 
+    public static String getZookeeperIp() {
+        return getPropertiesValue("zookeeper.properties", "ip");
+    }
 
+    public static String getRabbitMQIp() {
+        return getPropertiesValue("rabbit.properties", "ip");
+    }
 
 
     public static synchronized String getPropertiesValue(String configFilePath, String Key)  {
