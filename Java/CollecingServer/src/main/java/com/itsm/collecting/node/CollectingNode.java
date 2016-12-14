@@ -82,8 +82,6 @@ public class CollectingNode implements Watcher {
                 default:
                     isLeader = false;
             }
-            logger.info("I am " );
-
         }
     };
 
@@ -109,6 +107,7 @@ public class CollectingNode implements Watcher {
                 isLeader = true;
                 break;
             } catch (KeeperException.NodeExistsException e) {
+                logger.info("master node exists");
                 isLeader = false;
                 break;
             } catch (KeeperException.ConnectionLossException e) {
@@ -144,6 +143,7 @@ public class CollectingNode implements Watcher {
     }
 
     public void process(WatchedEvent watchedEvent) {
+        logger.info("hello world");
         logger.info(watchedEvent);
     }
 
@@ -172,7 +172,7 @@ public class CollectingNode implements Watcher {
             c.registerSlaveNode();
             logger.info("is not master" );
         }
-        Thread.sleep(100000);
+        Thread.sleep(10000);
         c.stopZK();
     }
 
@@ -206,6 +206,5 @@ public class CollectingNode implements Watcher {
     private String getUid() {
         return serverId + "-" + localHostName;
     }
-
 
 }

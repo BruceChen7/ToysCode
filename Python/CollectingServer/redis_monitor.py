@@ -12,7 +12,6 @@ import socket
 import re
 import sys
 import commands
-import os
 import logging
 import logging.config
 from data_push.rabbitmq_push import push_to_rabbitmq
@@ -107,7 +106,7 @@ def main():
             p.append(i)
 
     logger.info(json.dumps(p, sort_keys=True, indent=4))
-    push_to_rabbitmq(host="localhost", port=4369, data=p)
+    push_to_rabbitmq(host="localhost", port=4369, data=json.dumps(p))
 
 if __name__ == '__main__':
     # Get the `redis-server `

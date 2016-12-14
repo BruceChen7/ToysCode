@@ -24,7 +24,7 @@ public class StoreDataConsumerNode {
         factory.setHost(host);
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
-        channel.exchangeDeclare(exchange_name, "topic");
+        channel.exchangeDeclare(exchange_name, "topic", true);
         String queue_name = channel.queueDeclare().getQueue();
 
         for(String key : bind_key) {

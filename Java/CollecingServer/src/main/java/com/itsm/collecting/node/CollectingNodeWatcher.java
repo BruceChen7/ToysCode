@@ -48,7 +48,7 @@ public class CollectingNodeWatcher implements Watcher {
                 logger.info(w);
             }
         } catch (InterruptedException e) {
-            logger.info("interrrupt in get slave nod");
+            logger.info("interrupt in get slave node");
         }
     }
 }
