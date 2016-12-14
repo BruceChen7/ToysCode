@@ -44,14 +44,14 @@ public class CollectingNode implements Watcher {
         this.slaveNodeName = slaveNodeName;
     }
 
-    AsyncCallback.StringCallback  createParentCallback = new AsyncCallback.StringCallback() {
+    // A callback to create a parent node
+    private AsyncCallback.StringCallback  createParentCallback = new AsyncCallback.StringCallback() {
         public void processResult(int i, String s, Object o, String s1) {
              switch (KeeperException.Code.get(i)) {
                  case CONNECTIONLOSS:
                      createParent(s, (byte[])o);
                      break;
                  case OK:
-                     logger.info("parent created sucessfully");
                      break;
                  case NODEEXISTS:
                      logger.info("parent has been created before");
@@ -59,8 +59,104 @@ public class CollectingNode implements Watcher {
         }
     };
 
+    // A callback to create a master node
+    private AsyncCallback.StringCallback createMasterNodeCallback = new AsyncCallback.StringCallback() {
 
-    // 创建zookeeper 连接
+        @Override
+        public void processResult(int i, String s, Object o, String s1) {
+            switch(KeeperException.Code.get(i)) {
+                case CONNECTIONLOSS:
+                    checkMaster();
+                    return;
+                case OK:
+                    isLeader = true;
+                    logger.info("I am  master node");
+                    task.startMasterTask();
+                    break;
+                case NODEEXISTS:
+                    isLeader = false;
+                    logger.info("I am slave node");
+                    task.startSlaveTask();
+                    masterExists();
+                default:
+                    isLeader = false;
+            }
+        }
+    };
+
+    // A callback to get master data callback
+    private AsyncCallback.DataCallback masterCheckCallback = new AsyncCallback.DataCallback() {
+        @Override
+        public void processResult(int i, String s, Object o, byte[] bytes, Stat stat) {
+            switch (KeeperException.Code.get(i)) {
+                case CONNECTIONLOSS:
+                    checkMaster();
+                    return;
+                case NONODE:
+                    runForMaster();
+                    return;
+            }
+        }
+
+    };
+
+    private AsyncCallback.StringCallback createSlaveCallback = new AsyncCallback.StringCallback() {
+        public void processResult(int i, String s, Object o, String s1) {
+
+            switch (KeeperException.Code.get(i)) {
+                case CONNECTIONLOSS:
+                    registerSlaveNode();
+                    break;
+                case OK:
+                    logger.info("Registered sucessfully " + getUid());
+                    break;
+                case NODEEXISTS:
+                    logger.warn("Already registerd : " + getUid());
+                    break;
+                default:
+                    logger.error("something wrong :" +   KeeperException.create(KeeperException.Code.get(i), s));
+
+            }
+        }
+    };
+
+    private AsyncCallback.StatCallback masterExistsCallback = new AsyncCallback.StatCallback() {
+        @Override
+        public void processResult(int i, String s, Object o, Stat stat) {
+            switch (KeeperException.Code.get(i)) {
+                case CONNECTIONLOSS:
+                    // ReCheck
+                    masterExists();
+                    break;
+                case OK:
+                    if(stat == null) {
+                        runForMaster();
+                    }
+                    break;
+                default:
+                    checkMaster();
+                    break;
+            }
+
+        }
+    };
+
+    public void masterExists() {
+        zk.exists(masterNodeName, masterExistsWatch, masterExistsCallback, null);
+    }
+
+    // Listen master node delete thing
+    private Watcher masterExistsWatch = new Watcher() {
+        @Override
+        public void process(WatchedEvent watchedEvent) {
+            if(watchedEvent.getType() == Event.EventType.NodeDeleted) {
+                assert masterNodeName.equals(watchedEvent.getPath());
+                runForMaster();
+            }
+        }
+    };
+
+    // Create zookeeper connection
     public void startZK() {
         try {
             String addr = ip + ":" + hostPort;
@@ -69,21 +165,6 @@ public class CollectingNode implements Watcher {
 
         }
     }
-
-    private AsyncCallback.StringCallback masterCreateCallback = new AsyncCallback.StringCallback() {
-        public void processResult(int i, String s, Object o, String s1) {
-            switch (KeeperException.Code.get(i)) {
-                case CONNECTIONLOSS:
-                    checkMaster();
-                    return;
-                case OK:
-                    isLeader = true;
-                    break;
-                default:
-                    isLeader = false;
-            }
-        }
-    };
 
     public boolean isLeaderMaster() {
         return isLeader;
@@ -94,56 +175,21 @@ public class CollectingNode implements Watcher {
     }
 
     // 创建其他的work
-    public void boostrap() {
+    public void bootstrap() {
         createParent(slaveNodeName, new byte[0]);
     }
 
     // 作为主节点中的管理接运行
-    public void runForMaster() throws  InterruptedException {
-        while (true) {
-            try {
-                // 创建临时节点，挂掉了好从slave节点中选取一个从节点来代替
-                zk.create(masterNodeName, serverId.getBytes(), OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
-                isLeader = true;
-                break;
-            } catch (KeeperException.NodeExistsException e) {
-                logger.info("master node exists");
-                isLeader = false;
-                break;
-            } catch (KeeperException.ConnectionLossException e) {
-
-            } catch (KeeperException e) {
-                logger.info("something wrong", e);
-            }
-
-            if(checkMaster())
-                break;
-        }
-
+    public void runForMaster() {
+        zk.create(masterNodeName, serverId.getBytes(), OPEN_ACL_UNSAFE,  CreateMode.EPHEMERAL, createMasterNodeCallback, null);
     }
 
-    // Whether this Server is Master node
-    private boolean checkMaster() {
-        while(true) {
-            try {
-                Stat stat = new Stat();
-                byte data[] = zk.getData(masterNodeName, false, stat);
-                isLeader = new String(data).equals(serverId);
-                return true;
-
-            } catch (KeeperException.NoNodeException e) {
-                return false;
-            } catch (InterruptedException e) {
-                return false;
-            } catch (KeeperException e) {
-                return false;
-            }
-        }
-
+    // Check whethe node is Master node
+    private void checkMaster() {
+        zk.getData(masterNodeName, false, masterCheckCallback, null);
     }
 
     public void process(WatchedEvent watchedEvent) {
-        logger.info("hello world");
         logger.info(watchedEvent);
     }
 
@@ -164,43 +210,17 @@ public class CollectingNode implements Watcher {
         // 创建客户端
         CollectingNode c = new CollectingNode("/master", "/slavers", null);
         c.startZK();
-        c.boostrap();
+        c.bootstrap();
         c.runForMaster();
-        if(c.isLeaderMaster()) {
-
-        } else {
-            c.registerSlaveNode();
-            logger.info("is not master" );
-        }
-        Thread.sleep(10000);
+        Thread.sleep(100000);
         c.stopZK();
     }
 
     public void registerSlaveNode() {
         String name = slaveNodeName + "/slaver-" + getUid();
-        logger.info("name is " + name);
-        zk.create(name, "Idle".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, createWorkCallback, null);
+        zk.create(name, "Idle".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, createSlaveCallback, null);
     }
 
-    private AsyncCallback.StringCallback createWorkCallback = new AsyncCallback.StringCallback() {
-        public void processResult(int i, String s, Object o, String s1) {
-
-            switch (KeeperException.Code.get(i)) {
-                case CONNECTIONLOSS:
-                    registerSlaveNode();
-                    break;
-                case OK:
-                    logger.info("Registered sucessfully " + getUid());
-                    break;
-                case NODEEXISTS:
-                    logger.warn("Already registerd : " + getUid());
-                    break;
-                default:
-                    logger.error("something wrong :" +   KeeperException.create(KeeperException.Code.get(i), s));
-
-            }
-        }
-    };
 
 
     private String getUid() {
