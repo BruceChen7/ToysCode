@@ -76,10 +76,11 @@ public class CollectingNode implements Watcher {
                     checkMaster();
                     return;
                 case OK:
-                    synchronized (this) {
-                        this.notify();
+                    synchronized (task) {
+                        task.notify();
                         isLeader = true;
                     }
+
                     logger.info("I am  master node " + getUid());
                     List<String> slaveNodes = getChildrenNodeName(rootSlaveName);
                     for(String node : slaveNodes) {
@@ -97,7 +98,10 @@ public class CollectingNode implements Watcher {
                     logger.info("I am slave node " + getUid());
                     break;
                 default:
-                    isLeader = false;
+                    synchronized (this) {
+                        isLeader = false;
+                    }
+
             }
         }
     };
@@ -188,7 +192,7 @@ public class CollectingNode implements Watcher {
         }
     }
 
-    public synchronized  boolean isLeaderMaster() {
+    public  synchronized  boolean isLeaderMaster() {
         return isLeader;
     }
 

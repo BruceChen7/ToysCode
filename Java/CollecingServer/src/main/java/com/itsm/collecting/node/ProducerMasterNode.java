@@ -54,17 +54,17 @@ public class ProducerMasterNode  implements  INodeTask {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws  Exception {
         ProducerMasterNode produce_node = new ProducerMasterNode();
         CollectingNode node = new CollectingNode("/master", "/slavers", produce_node);
         node.startZK();
         node.bootstrap();
         node.runForMaster();
 
-        synchronized (node) {
+        synchronized (produce_node) {
             while (!node.isLeaderMaster()) {
                 try {
-                    node.wait();
+                    produce_node.wait();
                 } catch (InterruptedException e) {
                     logger.error(e);
                 }
