@@ -106,7 +106,7 @@ def main():
             p.append(i)
 
     logger.info(json.dumps(p, sort_keys=True, indent=4))
-    push_to_rabbitmq(host="localhost", port=4369, data=json.dumps(p))
+    push_to_rabbitmq(host="localhost", data=json.dumps(p))
 
 if __name__ == '__main__':
     # Get the `redis-server `

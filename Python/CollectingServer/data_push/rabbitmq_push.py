@@ -17,7 +17,7 @@ def push_to_rabbitmq(host="", data=""):
         host = "localhost"
     connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
     channel = connection.channel()
-    channel.exchange_declare(exchange="topic", type="topic")
+    channel.exchange_declare(exchange="topic", type="topic", durable=True)
     channel.basic_publish(exchange="topic",
                           routing_key="redis",
                           body=data,

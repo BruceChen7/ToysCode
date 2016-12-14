@@ -20,27 +20,27 @@ public class StoreDataConsumerNode {
 
 
     public static void main(String[] args) throws TimeoutException, IOException, InterruptedException {
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(host);
-        Connection connection = factory.newConnection();
-        Channel channel = connection.createChannel();
-        channel.exchangeDeclare(exchange_name, "topic", true);
-        String queue_name = channel.queueDeclare().getQueue();
-
-        for(String key : bind_key) {
-            channel.queueBind(queue_name, exchange_name, key);
-        }
-
-        logger.info("wait for  messages. to exit  press Ctrl + C");
-
-        Consumer consumer = new DefaultConsumer(channel) {
-            @Override
-            public void handleDelivery(String consumerTag, Envelope envelop, AMQP.BasicProperties p, byte[] body) throws IOException {
-                String message = new String(body, "UTF-8");
-                logger.info("receive  " + message);
-
-            }
-        };
-        channel.basicConsume(queue_name, true, consumer);
+//        ConnectionFactory factory = new ConnectionFactory();
+//        factory.setHost(host);
+//        Connection connection = factory.newConnection();
+//        Channel channel = connection.createChannel();
+//        channel.exchangeDeclare(exchange_name, "topic", true);
+//        String queue_name = channel.queueDeclare().getQueue();
+//
+//        for(String key : bind_key) {
+//            channel.queueBind(queue_name, exchange_name, key);
+//        }
+//
+//        logger.info("wait for  messages. to exit  press Ctrl + C");
+//
+//        Consumer consumer = new DefaultConsumer(channel) {
+//            @Override
+//            public void handleDelivery(String consumerTag, Envelope envelop, AMQP.BasicProperties p, byte[] body) throws IOException {
+//                String message = new String(body, "UTF-8");
+//                logger.info("receive  " + message);
+//
+//            }
+//        };
+//        channel.basicConsume(queue_name, true, consumer);
     }
 }

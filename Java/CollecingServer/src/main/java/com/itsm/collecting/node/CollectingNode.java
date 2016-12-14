@@ -76,7 +76,10 @@ public class CollectingNode implements Watcher {
                     checkMaster();
                     return;
                 case OK:
-                    isLeader = true;
+                    synchronized (this) {
+                        this.notify();
+                        isLeader = true;
+                    }
                     logger.info("I am  master node " + getUid());
                     List<String> slaveNodes = getChildrenNodeName(rootSlaveName);
                     for(String node : slaveNodes) {
@@ -84,14 +87,14 @@ public class CollectingNode implements Watcher {
                             deregisterSlaveNode(slaveNodeName);
                         }
                     }
-                    task.startMasterTask();
                     break;
                 case NODEEXISTS:
-                    isLeader = false;
-                    logger.info("I am slave node " + getUid());
-                    task.startSlaveTask();
+                    synchronized (this) {
+                        isLeader = false;
+                    }
                     masterExists();
                     registerSlaveNode();
+                    logger.info("I am slave node " + getUid());
                     break;
                 default:
                     isLeader = false;
@@ -181,10 +184,11 @@ public class CollectingNode implements Watcher {
             zk = new ZooKeeper(addr, 15000, this);
         } catch (Exception e) {
 
+            logger.error(e);
         }
     }
 
-    public boolean isLeaderMaster() {
+    public synchronized  boolean isLeaderMaster() {
         return isLeader;
     }
 
@@ -215,14 +219,6 @@ public class CollectingNode implements Watcher {
         zk.close();
     }
 
-    public void runNode() {
-        if(isLeaderMaster()) {
-            task.startMasterTask();
-        } else {
-            registerSlaveNode();
-            task.startSlaveTask();
-        }
-    }
 
     public static  void main(String args[]) throws Exception {
         CollectingNode c = new CollectingNode("/master", "/slavers", null);
