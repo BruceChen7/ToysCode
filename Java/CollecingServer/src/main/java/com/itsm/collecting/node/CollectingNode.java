@@ -1,7 +1,6 @@
 package com.itsm.collecting.node;
 
 import com.itsm.collecting.util.StringUtil;
-import com.sun.glass.ui.EventLoop;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.*;
 import org.apache.zookeeper.data.Stat;
@@ -31,7 +30,7 @@ public class CollectingNode implements Watcher {
     private final String slaveNodeName;
     private final String rootSlaveName;
 
-    private INodeTask task;
+    private RabbitMQNodeTask task;
     private static  String localHostName ;
 
     static {
@@ -43,7 +42,7 @@ public class CollectingNode implements Watcher {
         }
     }
 
-    public CollectingNode(String masterNodeName, String rootSlaveNodeName, INodeTask task) {
+    public CollectingNode(String masterNodeName, String rootSlaveNodeName, RabbitMQNodeTask task) {
         this.masterNodeName = masterNodeName;
         this.task = task;
         this.rootSlaveName  = rootSlaveNodeName;
