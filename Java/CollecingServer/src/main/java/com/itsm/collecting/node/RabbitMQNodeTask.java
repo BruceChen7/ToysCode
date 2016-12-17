@@ -11,7 +11,7 @@ public abstract class RabbitMQNodeTask {
     public abstract void concreteWork();
 
     public void startTask(String master_root, String slave_root) {
-        CollectingNode node = new CollectingNode(master_root, slave_root, this);
+        PullCollectingNode node = new PullCollectingNode(master_root, slave_root, this);
         node.startZK();
         node.bootstrap();
         node.runForMaster();
@@ -27,5 +27,6 @@ public abstract class RabbitMQNodeTask {
         }
 
         concreteWork();
+
     }
 }

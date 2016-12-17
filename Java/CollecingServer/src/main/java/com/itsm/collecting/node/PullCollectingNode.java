@@ -8,30 +8,33 @@ import org.apache.zookeeper.data.Stat;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE;
 
 /**
  * Created by bruce on 16-11-21.
  */
-public class CollectingNode implements Watcher {
+public class PullCollectingNode implements Watcher {
 
     private ZooKeeper zk;
     private static final String hostPort = StringUtil.getZookeeperPort();
     private static final String ip =  StringUtil.getZookeeperIp();
     private boolean isLeader = false;
-    private String serverId = Integer.toHexString(new Random().nextInt());
 
-
-    private static Logger logger = Logger.getLogger(CollectingNode.class);
+    private static Logger logger = Logger.getLogger(PullCollectingNode.class);
+    // For example: /master
     private final String masterNodeName;
-    private final String slaveNodeName;
+    // e.g: slaver-1
+    private String path;
+    // e.g: /slavers
     private final String rootSlaveName;
+    private final String slavePrefix =  "/slave-";
 
     private RabbitMQNodeTask task;
     private static  String localHostName ;
+
 
     static {
         try {
@@ -42,12 +45,10 @@ public class CollectingNode implements Watcher {
         }
     }
 
-    public CollectingNode(String masterNodeName, String rootSlaveNodeName, RabbitMQNodeTask task) {
+    public PullCollectingNode(String masterNodeName, String rootSlaveNodeName, RabbitMQNodeTask task) {
         this.masterNodeName = masterNodeName;
         this.task = task;
         this.rootSlaveName  = rootSlaveNodeName;
-        String name = rootSlaveNodeName + "/slaver-" + getUid();
-        this.slaveNodeName = name;
     }
 
     // A callback to create a parent node
@@ -70,31 +71,43 @@ public class CollectingNode implements Watcher {
 
         @Override
         public void processResult(int i, String s, Object o, String s1) {
+            List<String>  slaveNodes = getChildrenNodeName(rootSlaveName);
+            logger.info("slave node size is " + slaveNodes.size());
+            // avoid null
+            slaveNodes = slaveNodes == null ? new ArrayList<String>(): slaveNodes;
+
             switch(KeeperException.Code.get(i)) {
                 case CONNECTIONLOSS:
                     checkMaster();
                     return;
                 case OK:
                     synchronized (task) {
+                        // notify the task can be started
                         task.notify();
                         isLeader = true;
                     }
 
-                    logger.info("I am  master node " + getUid());
-                    List<String> slaveNodes = getChildrenNodeName(rootSlaveName);
-                    for(String node : slaveNodes) {
-                        if(node.equals("slaver-" + getUid())) {
-                            deregisterSlaveNode(slaveNodeName);
-                        }
+                    logger.info("original path is " + path);
+
+                    boolean isInSlave = false;
+                    if(path != null) {
+                        isInSlave = slaveNodes.contains(path.substring(path.lastIndexOf('/') + 1));
                     }
+
+                    if(isInSlave) {
+                        logger.info("begin to deregister node " + path);
+                        deregisterSlaveNode(path);
+                    } else {
+                        logger.info("I become master node without replacing any node");
+                    }
+                    // Update self's path
+                    path = s1;
                     break;
                 case NODEEXISTS:
                     synchronized (this) {
                         isLeader = false;
                     }
-                    masterExists();
                     registerSlaveNode();
-                    logger.info("I am slave node " + getUid());
                     break;
                 default:
                     synchronized (this) {
@@ -122,6 +135,10 @@ public class CollectingNode implements Watcher {
     };
 
     private AsyncCallback.StringCallback createSlaveCallback = new AsyncCallback.StringCallback() {
+        /*
+         *  s is the path
+         *  s1 is the node_name
+         */
         public void processResult(int i, String s, Object o, String s1) {
 
             switch (KeeperException.Code.get(i)) {
@@ -129,7 +146,20 @@ public class CollectingNode implements Watcher {
                     registerSlaveNode();
                     break;
                 case OK:
-                    logger.info("Registered successfully " + getUid());
+                    logger.info("Registered slave node successfully");
+                    logger.info("I am slave node " +  s1);
+                    List<String> slaveNodes = getChildrenNodeName(rootSlaveName);
+                    Collections.sort(slaveNodes);
+                    int size = slaveNodes.size();
+
+                    if(size >= 2) {
+                        String last_node = slaveNodes.get(slaveNodes.size()-2);
+                        logger.info("last node name " + last_node);
+                        listenSlaveNode(rootSlaveName +  "/" + last_node);
+                    } else {
+                        masterExists();
+                    }
+                    path = s1;
                     break;
                 case NODEEXISTS:
                     logger.warn("Already registered : " + getUid());
@@ -164,7 +194,7 @@ public class CollectingNode implements Watcher {
         }
     };
 
-    // Listen master node delete event and run as a master to
+    // Listen master node delete event and run as a master
     private Watcher masterExistsWatch = new Watcher() {
         @Override
         public void process(WatchedEvent watchedEvent) {
@@ -175,8 +205,91 @@ public class CollectingNode implements Watcher {
         }
     };
 
+
     public void masterExists() {
         zk.exists(masterNodeName, masterExistsWatch, masterExistsCallback, null);
+    }
+
+
+    public class SlaveNodeWatcher implements Watcher {
+        private String lastWatchNode = "";
+        public String getLastWatchNode() {
+            return lastWatchNode;
+        }
+
+        public void setLastWatchNode(String lastWatchNode) {
+            this.lastWatchNode = lastWatchNode;
+        }
+
+        @Override
+        public void process(WatchedEvent watchedEvent) {
+            if(watchedEvent.getType() == Event.EventType.NodeDeleted) {
+                String last_watch_node = lastWatchNode;
+                logger.info("last watch node is" + last_watch_node);
+                List<String> nodes = getChildrenNodeName(rootSlaveName);
+                if(nodes.size() == 1) {
+                    masterExists();
+                } else {
+                    Collections.sort(nodes);
+                    int res = 0;
+                    for(int i = 0; i < nodes.size(); i++) {
+                        String node = nodes.get(i);
+                        logger.info("node is " + node);
+                        if(node.compareTo(last_watch_node) > 0 ) {
+                            res  = i;
+                            break;
+                        }
+                    }
+
+                    if(res == 0) {
+                        logger.info("I am listen master node ");
+                        masterExists();
+                    } else {
+                        String listen_node = nodes.get(res-1);
+                        logger.info("I will be listen " + listen_node + " slave node");
+                        listenSlaveNode(listen_node);
+                    }
+                }
+            }
+        }
+    }
+
+    private AsyncCallback.StatCallback slaveExistsCallback = new AsyncCallback.StatCallback() {
+        @Override
+        public void processResult(int i, String s, Object o, Stat stat) {
+            switch (KeeperException.Code.get(i)) {
+                case CONNECTIONLOSS:
+                    // ReCheck
+                    listenSlaveNode(s);
+                    break;
+                case OK:
+                    logger.info("listen slave node successfully : " + s);
+                    break;
+                default:
+                    logger.info("something wrong to listen slave node, " + KeeperException.Code.get(i));
+                    break;
+            }
+
+        }
+    };
+
+    public void process(WatchedEvent watchedEvent) {
+        logger.info(watchedEvent);
+    }
+
+    public void stopZK() {
+        try {
+            zk.close();
+        } catch (Exception e) {
+            logger.info("something error ", e);
+        }
+    }
+
+    public void listenSlaveNode(String nodeName) {
+        SlaveNodeWatcher watcher = new SlaveNodeWatcher();
+        watcher.setLastWatchNode(nodeName);
+
+        zk.exists(nodeName, watcher, slaveExistsCallback, null);
     }
 
 
@@ -191,6 +304,7 @@ public class CollectingNode implements Watcher {
         }
     }
 
+
     public  synchronized  boolean isLeaderMaster() {
         return isLeader;
     }
@@ -199,49 +313,32 @@ public class CollectingNode implements Watcher {
         zk.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT, createParentCallback, data);
     }
 
-    // 创建其他的work
+    // Create slave root nodes
     public void bootstrap() {
         createParent(rootSlaveName, new byte[0]);
     }
 
     // As a master run
     public void runForMaster() {
-        zk.create(masterNodeName, serverId.getBytes(), OPEN_ACL_UNSAFE,  CreateMode.EPHEMERAL, createMasterNodeCallback, null);
+        zk.create(masterNodeName, getUid().getBytes(), OPEN_ACL_UNSAFE,  CreateMode.EPHEMERAL, createMasterNodeCallback, null);
     }
 
-    // Check whethe node is Master node
+    // Check whether node is Master node
     private void checkMaster() {
         zk.getData(masterNodeName, false, masterCheckCallback, null);
     }
 
-    public void process(WatchedEvent watchedEvent) {
-        logger.info(watchedEvent);
-    }
-
-    public void stopZK() throws  Exception {
-        zk.close();
-    }
-
-
-    public static  void main(String args[]) throws Exception {
-        CollectingNode c = new CollectingNode("/master", "/slavers", null);
-        c.startZK();
-        c.bootstrap();
-        c.runForMaster();
-        Thread.sleep(100000);
-        c.stopZK();
-    }
-
-
     private void registerSlaveNode() {
-        zk.create(slaveNodeName, "Idle".getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, createSlaveCallback, null);
+        // Create ephemeral node
+        zk.create(rootSlaveName+slavePrefix, (getUid()).getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL, createSlaveCallback, null);
     }
 
 
     private void deregisterSlaveNode(String node) {
         try {
+
             zk.delete(node, -1);
-            logger.info("delete slave node " + slaveNodeName + " successfully");
+            logger.info("delete slave node " + path + " successfully");
         } catch (Exception e) {
             logger.error(e);
         }
@@ -249,13 +346,12 @@ public class CollectingNode implements Watcher {
 
 
     private String getUid() {
-        return serverId + "-" + localHostName;
+        return localHostName;
     }
 
     private List<String> getChildrenNodeName(String root) {
         try {
-            Stat stat = new Stat();
-            List<String> nodes = zk.getChildren(root, false, stat);
+            List<String> nodes = zk.getChildren(root, false);
             return nodes;
         } catch (KeeperException e) {
             return new ArrayList<String>();
