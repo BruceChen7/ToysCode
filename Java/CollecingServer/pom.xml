@@ -72,7 +72,12 @@
             <version>4.0.0</version>
         </dependency>
 
-
+        <!--used to parse command line-->
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.3</version>
+        </dependency>
     </dependencies>
 
     <build>
