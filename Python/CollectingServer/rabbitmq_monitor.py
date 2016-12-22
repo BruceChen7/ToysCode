@@ -3,6 +3,8 @@
 
 """
 It's python script to collect RabbitMQ status
+Doc from:
+https://raw.githack.com/rabbitmq/rabbitmq-management/rabbitmq_v3_6_6/priv/www/api/index.html
 """
 
 import json
