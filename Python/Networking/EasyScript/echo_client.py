@@ -8,7 +8,7 @@ import socket
 SOCK = socket.socket()
 
 HOST = socket.gethostname()
-PORT = 8000
+PORT = 1234
 SOCK.connect((HOST, PORT))
 
 while True:
