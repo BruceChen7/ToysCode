@@ -167,7 +167,6 @@ public class Snmp4JGet {
 				}
 			}
 		}
-
         return var_binding_list;
 	}
 
