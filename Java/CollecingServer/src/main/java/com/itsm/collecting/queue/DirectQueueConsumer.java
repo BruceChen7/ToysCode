@@ -38,9 +38,6 @@ public class DirectQueueConsumer {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelop, AMQP.BasicProperties p, byte[] body) throws IOException {
                     task.consume(body);
-                    String message = new String(body, "UTF-8");
-                    logger.info("receive  " + message);
-
                 }
             };
                 ch.basicConsume(queue_name, true, consumer);
@@ -56,6 +53,7 @@ public class DirectQueueConsumer {
             public void consume(byte[] data) {
                 try {
                     String message = new String(data, "UTF-8");
+                    logger.info("message is " + message);
                 } catch (Exception e) {
                     logger.info("something error ", e);
                 }
