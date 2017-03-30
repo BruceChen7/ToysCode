@@ -10,8 +10,8 @@ Projects are some toys code which can improve my understanding of some conceptio
 ## CPP
 
 ## Python
-    * [CollectingServer](Python/CollectingServer/) It's some script to collect status of Redis, RabbitMQ and Docker
-    * [tinyHTTP](Python/tinyHTTP) It's a toy HTTP Server
+* [CollectingServer](Python/CollectingServer/) It's some script to collect status of Redis, RabbitMQ and Docker
+* [tinyHTTP](Python/tinyHTTP) It's a toy HTTP Server
 
 ## Golang
     
