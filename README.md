@@ -2,9 +2,17 @@
 This is a code repository  for me to understand some basic computer technology conception and familiar with some API usage.
 
 
-### Resource
+# Projects
+Projects are some toys code which can improve my understanding of some conception. 
 
-- [Manual](#manual)
+## C
 
-##  Manual
-* [Linux System API](http://man7.org/linux/man-pages/dir_all_by_section.html)
+## CPP
+
+## Python
+    * [CollectingServer](Python/CollectingServer/) It's some script to collect status of Redis, RabbitMQ and Docker
+    * [tinyHTTP](Python/tinyHTTP) It's a toy HTTP Server
+
+## Golang
+    
+
