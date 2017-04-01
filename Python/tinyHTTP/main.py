@@ -67,7 +67,7 @@ def serveFiles(absolute_path, conn):
         fd.close()
 
 
-def cgiExec(absolute_path, param, conn):
+def cgiExec(absolute_path, param, conn, header, body):
     pass
 
 def handleGetRequest(uri, conn): 
@@ -105,7 +105,6 @@ def parseURL(uri, header):
         if stat.S_ISDIR(file_mode):
             absolute_path.rstrip('/')
             absolute_path = absolute_path.join("/index.html")
-        
         print absolute_path
         return absolute_path
     except OSError:
@@ -122,29 +121,37 @@ def isExecFile(file_name):
     except OSError:
         return False
 
-def readHTTPRequestHeaders(line_list):
+
+def parseHTTPRequest(line_list):
+    """
+    divide http request into three parts
+    """
+    assert len(line_list) != 0
+    first_line = line_list[0]
+    first = first_line.split(' ')
     header = dict()
-    if len(line_list) <= 1:
-        return
-    else:
-        for i in range(len(line_list)):
-            if i != 0:
-                line = line_list[i]
-                if line not in ["\r\n", "\n", ""]:
-                    key, _, value = line.partition(':')
-                    header[key.upper()] = value.strip("\r\n")
-    return header
+    body = ""
+
+    for i in range(1, len(line_list)):
+        line = line_list[i]
+
+        if line not in ["\r\n", "\n", ""]:
+            key, _, value = line.partition(':')
+            header[key.upper()] = value.strip("\r\n")
+        else:
+            body = line_list[i+1:]
+
+    return (first, header, body)
 
 def handleHTTPRequest(conn, addr):
+    """
+    handle http request
+    """
     print "Accept request from ", addr
     lines = conn.recv(4096)
     line_list = lines.splitlines()
+    http_first_header, header, body = parseHTTPRequest(line_list)
 
-    if len(line_list) == 0:
-        conn.close()
-    first_line = line_list[0]
-    http_first_header = first_line.split(' ')
-    header = readHTTPRequestHeaders(line_list)
     if len(http_first_header) != 3:
         conn.close()
         return
@@ -161,7 +168,7 @@ def handleHTTPRequest(conn, addr):
                 return
 
             if isExecFile(uri) or question != '':
-                cgiExec(url, param, conn)
+                cgiExec(url, param, conn, header, body)
                 conn.close()
             else:
                 serveFiles(uri, conn)
