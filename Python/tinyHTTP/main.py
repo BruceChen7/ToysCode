@@ -65,8 +65,7 @@ def serveFiles(absolute_path, conn):
         notFound(conn)
     finally:
         fd.close()
-
-
+        
 def cgiExec(absolute_path, param, conn, header, body):
     pass
 

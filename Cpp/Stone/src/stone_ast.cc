@@ -27,8 +27,7 @@ bool AstParser::visit(AstString *str)
     return parse_ast_leaf(str,Code_Token_Type::String);
 }
 
-bool AstParser::visit(AstIdentifier *identifier)
-{ 
+bool AstParser::visit(AstIdentifier *identifier) { 
     return parse_ast_leaf(identifier,Code_Token_Type::Identifier); 
 }
 
