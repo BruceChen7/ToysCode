@@ -2,10 +2,10 @@ About
 ---------------------------------
 ## git_commit.sh
 
-A tool to commit your directory quickly
+A tool to commit your directory quickly 
 
 ## wc.sh
-A utility to count lines of specified 
+A utility to count lines of the files of specified folder or a single file
 
 ### Usage
 

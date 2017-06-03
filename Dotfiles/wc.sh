@@ -41,8 +41,8 @@ function count_dir_file_line() {
         if [[ "$skip_file" = "$f" ]]; then
             continue
         fi
+
         # directory
-       
         if [[ -d $f ]]; then 
             count_dir_file_line $f $skip_file
             num=$?
@@ -50,9 +50,14 @@ function count_dir_file_line() {
             continue
         fi
 
+        # skip the exec file
+        if [[ -x $f ]]; then 
+            continue
+        fi
        
         if [[ -r $f ]]; then
             line_num=`count_line $f`
+            printf "%s  %d lines\n" $f, $line_num
             line=$((line + $line_num))
         fi
     done
