@@ -3,6 +3,8 @@ import os
 import stat
 import urllib
 
+from httpserver import HTTPServer
+
 _server_string = "Server: toyhttp/0.1\r\n"
 _encoding = {
     "UTF-8": "utf8"
@@ -178,11 +180,6 @@ def handleHTTPRequest(conn, addr):
             return
 
 if __name__ == "__main__":
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.bind(("", 8888))
-    s.listen(5)
-
-    while True:
-        conn, addr = s.accept()
-        handleHTTPRequest(conn, addr)
+    server = HTTPServer()
+    server.listen(64)
+    server.start()
