@@ -11,5 +11,5 @@ A utility to count lines of the files of specified folder or a single file
 
 
 ### Tasks to be done
-- [ ] Skip some executable files when counting lines
+- [x] Skip some executable files when counting lines
 - [ ] Support some regular expresion to specify files to be counted
