@@ -115,11 +115,17 @@ class IOLoop():
                 # FixMe: Use logger module instead
                 print e
 
+    def unregister(self, fd):
+        self._poller.unregister(fd)
+        self._streams.pop(fd, None)
+        self._handler.pop(fd, None)
 
     def _handle_read(self, fd):
         stream = self._streams.get(fd)
         if stream:
             stream.handle_read(fd)
+        else:
+            print "%d fd has been closed", fd
 
     def update_status(self, fd, events):
         self._poller.modify(fd, events)

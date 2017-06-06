@@ -27,12 +27,14 @@ class IOStream():
         while True:
             try:
                 data = self.sock.recv(self._max_read_buffer)
+                self._reading = True
                 if not data:
                     self.close()
                 else:
                     self._read_buffer.append(data)
             except socket.error, e:
                 if e.args[0] in (errno.EWOULDBLOCK, errno.EAGAIN):
+                    self._reading = False
                     return
             except Exception:
                 print "something error"
@@ -48,7 +50,7 @@ class IOStream():
                 self._write_buffer.popleft()
             except socket.error, e:
                 if e.args[0] in (errno.EWOULDBLOCK, errno.EAGAIN):
-                    self.writing = True
+                    self._writing = True
                     break
                 else:
                     print("Write error on %d: %s",
@@ -59,8 +61,21 @@ class IOStream():
     def get_stream_state(self):
         return self._state
 
+    def reading(self):
+        return self._reading
+
+
+    def writing(self):
+        return self._writing
+
     def close(self):
-        pass
+        """close a stream
+        """
+        if self.sock is not None:
+            self.sock.close()
+            self.sock = None
+            self.ioloop.unregister()
+
 
 def _merge_prefix(buffer, size):
         pass

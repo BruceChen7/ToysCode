@@ -29,7 +29,7 @@ class HTTPServer():
         self._ioloop.loop()
 
     def _handle_connect(self, fd, event):
-        assert fd == self.sock.fileno(), "fd must be listen fd"
+        assert fd == self.sock.fileno(), "fd  must be listen fd"
         assert event == IOLoop.READ
         while True:
             try:
