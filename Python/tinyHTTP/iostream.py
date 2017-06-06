@@ -10,7 +10,7 @@ class IOStream():
     def __init__(self, sock, addr, ioloop=None, max_buffer_size=104857600,
                  max_read_buffer = 4096):
         self.ioloop = ioloop or IOLoop.instance()
-        # accept socket fd
+        # accept socket 
         self.sock = sock
         # peer address
         self._addr = addr
@@ -62,5 +62,5 @@ class IOStream():
     def close(self):
         pass
 
-def _merge_prefix(self, buffer, size):
+def _merge_prefix(buffer, size):
         pass

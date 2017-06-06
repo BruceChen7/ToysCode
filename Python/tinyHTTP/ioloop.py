@@ -2,6 +2,8 @@ import errno
 import select
 
 class IOLoop():
+    """A class which encapsulate epoll module
+    """
     # Constants from the epoll module
     _EPOLLIN = 0x001
     _EPOLLPRI = 0x002
@@ -21,8 +23,8 @@ class IOLoop():
     def __init__(self):
         self._poller = select.epoll()
         self._handler = {}
-        self.started = False
-        self.stop = False
+        self._started = False
+        self._stop = False
         # current happening events
         self._events = {}
         self._streams = {}
@@ -40,7 +42,7 @@ class IOLoop():
         return cls._instance
 
     def loop(self):
-        assert not self.started, " io loop has been started"
+        assert not self._started, " io loop has been started"
         self.started = True
         poll_time = 0.2
 
@@ -62,8 +64,8 @@ class IOLoop():
                     self._callback(fd, event)
             except Exception, e:
                 print e
-            if self.stop:
-                    return
+            if self._stop:
+                return
 
     def add_handler(self, fd, events, handler):
         events = events | IOLoop.ERROR
@@ -79,6 +81,8 @@ class IOLoop():
             callback(fd, event, *args, **kargs)
 
     def add_stream(self, fd, stream):
+        """ Add a iostream to a ioloop
+        """
         if not self._streams.get(fd):
             self._streams[fd] = stream
             self.add_handler(fd, IOLoop.READ | IOLoop.ERROR, self._handle_events)
@@ -107,13 +111,13 @@ class IOLoop():
                     self.update_status(fd, events)
 
 
-            except:
+            except Exception, e:
                 # FixMe: Use logger module instead
-                print
+                print e
 
 
     def _handle_read(self, fd):
-        stream = self._stream.get(fd)
+        stream = self._streams.get(fd)
         if stream:
             stream.handle_read(fd)
 
@@ -121,6 +125,8 @@ class IOLoop():
         self._poller.modify(fd, events)
 
     def _handle_write(self, fd):
-        stream = self._stream.get(fd)
+        stream = self._streams.get(fd)
         if stream:
             stream.handle_write(fd)
+        else:
+            print "connection has been closed"

@@ -61,9 +61,9 @@ def serveFiles(absolute_path, conn):
         okHeaders(conn)
         line = fd.readline()
         while line:
-            conn.send(line) 
+            conn.send(line)
             line = fd.readline()
-    except IOError: 
+    except IOError:
         notFound(conn)
     finally:
         fd.close()
