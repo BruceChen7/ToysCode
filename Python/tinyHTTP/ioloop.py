@@ -95,22 +95,29 @@ class IOLoop():
                 if events & IOLoop.READ:
                     self._handle_read(fd)
 
+                stream = self._streams.get(fd)
+                if stream is None:
+                    return
+
                 if events & IOLoop.WRITE:
                     self._handle_write(fd)
 
-                if events & IOLoop.ERROR:
-                    stream.close(fd)
+                stream = self._streams.get(fd)
+                if stream is None:
+                    return
 
+                if events & IOLoop.ERROR:
+                    stream.close()
+                # Next time the events to be watched
                 state = IOLoop.ERROR
+
                 if stream.reading():
                     state = IOLoop.READ | IOLoop.ERROR
-                if stream.writing(fd):
+                if stream.writing():
                     state = IOLoop.WRITE | IOLoop.ERROR
 
                 if state != stream.get_stream_state():
-                    self.update_status(fd, events)
-
-
+                    self.update_status(fd, state)
             except Exception, e:
                 # FixMe: Use logger module instead
                 print e

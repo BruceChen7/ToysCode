@@ -1,5 +1,4 @@
 import socket
-
 import errno
 
 from ioloop import IOLoop
@@ -41,4 +40,3 @@ class HTTPServer():
 
             stream = IOStream(connection, address)
             self._ioloop.add_stream(connection.fileno(), stream)
-
