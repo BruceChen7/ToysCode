@@ -53,7 +53,8 @@ class IOStream():
                 self._write_buffer.popleft()
             except socket.error, e:
                 if e.args[0] in (errno.EWOULDBLOCK, errno.EAGAIN):
-                    self._writing = True
+                    if self._write_buffer:
+                        self._writing = True
                     break
                 else:
                     print("Write error on %d: %s",
