@@ -11,8 +11,10 @@ class Request():
 
     def _parse_headers(self):
         # HTTP request headers end with "\r\n\r\n"
-        self._parse_header(self._data, "\r\n\r\n")
+        return self._parse_header(self._data, "\r\n\r\n")
 
+    # If data is enough, return True
+    # else return False
     def _parse_header(self, data, delimiter):
         end_of_header = data.find(delimiter)
 
@@ -28,8 +30,12 @@ class Request():
             if not self._version.startswith("HTTP/"):
                 print ("Not corre")
                 # FixMe close a connection
-
             self._parse_header_field(data[pos:])
+            return True
+        else:
+            # there is no enough data which can't be constructed as a httpreqest
+            self._stream.enable_reading()
+            return False
 
     def get_method(self):
         return self._method
@@ -57,6 +63,6 @@ class Request():
                 self._headers[key] = value
 
     def response(self):
-        self._parse_headers()
-        r = HTTPResponse(self._stream, self)
-        r.response()
+        if self._parse_headers():
+            r = HTTPResponse(self._stream, self)
+            r.response()

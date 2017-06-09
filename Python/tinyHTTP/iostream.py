@@ -14,6 +14,7 @@ class IOStream():
         self.sock = sock
         # peer address
         self._addr = addr
+        #  next loop, the stream' status should be IOLoop's READ or WRITE
         self._state = IOLoop.ERROR
         self._read_buffer = collections.deque()
         self._write_buffer = collections.deque()
@@ -44,6 +45,7 @@ class IOStream():
                 print "something error"
                 self.close()
                 return
+
     def handle_write(self, fd):
         while self._write_buffer:
             try:
@@ -63,6 +65,7 @@ class IOStream():
                     return
         # FixMe:here is not right place to close
         self.close()
+
     def send(self, data):
         if self.sock is not None:
             self._write_buffer.append(data)
@@ -71,9 +74,19 @@ class IOStream():
     def get_stream_state(self):
         return self._state
 
+
+    def set_status(self, status):
+        """set stream next loop status which registered in poller
+        """
+        self._state = status
+
     def reading(self):
         return self._reading
 
+    # next loop to continue read
+    def enable_reading(self):
+        self._reading = True
+        self._state = IOLoop.READ | IOLoop.ERROR
 
     def writing(self):
         return self._writing

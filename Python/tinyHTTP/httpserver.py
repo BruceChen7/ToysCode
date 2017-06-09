@@ -27,6 +27,9 @@ class HTTPServer():
     def start(self):
         self._ioloop.loop()
 
+    def enable_logging(self):
+        pass
+
     def _handle_connect(self, fd, event):
         assert fd == self.sock.fileno(), "fd must be listen fd"
         assert event == IOLoop.READ

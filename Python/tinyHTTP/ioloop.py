@@ -81,7 +81,7 @@ class IOLoop():
             callback(fd, event, *args, **kargs)
 
     def add_stream(self, fd, stream):
-        """ Add a iostream to a ioloop
+        """ Add a new iostream to a ioloop
         """
         if not self._streams.get(fd):
             self._streams[fd] = stream
@@ -135,7 +135,10 @@ class IOLoop():
             print "%d fd has been closed", fd
 
     def update_status(self, fd, events):
-        self._poller.modify(fd, events)
+        stream = self._streams.get(fd)
+        if stream:
+            self._poller.modify(fd, events)
+            stream.set_status(events)
 
     def _handle_write(self, fd):
         stream = self._streams.get(fd)
