@@ -1,9 +1,14 @@
-from httpserver import HTTPServer
+
+"""
+main.py this module is the entry of the http server
+"""
 import argparse
 import sys
 import logging
 import logging.handlers
 import time
+
+from httpserver import HTTPServer
 
 try:
     import curses
@@ -37,12 +42,16 @@ def parse_command_line():
 
 # modified from tornado.options.py
 def enable_pretty_logging(options):
+    """ config logging options
+    """
     root_logger = logging.getLogger()
     root_logger.setLevel(options.get("log_level").upper())
+    # log file prefix
     file = options.get("log_file_prefix")
     max_bytes = options.get("log_max_file_size")
     backup_count = options.get("log_file_num_backups")
 
+    # set log in a file
     if options.get("log_file_prefix"):
         channel = logging.handlers.RotatingFileHandler(
             filename=file,
@@ -52,6 +61,7 @@ def enable_pretty_logging(options):
         root_logger.addHandler(channel)
 
     log_to_stderr = options.get("log_to_stderr")
+    
     if (log_to_stderr or
             (log_to_stderr is None and not root_logger.handlers)):
         # Set up color if we are in a tty and curses is installed

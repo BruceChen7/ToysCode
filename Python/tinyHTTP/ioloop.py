@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+ioloop.py
+~~~~~~~
+This module is used to dispatch read/write event for http server
+"""
 import errno
 import select
 
@@ -31,7 +37,7 @@ class IOLoop():
 
 
     def stop(self):
-        self.started = True
+        self._started = True
 
     @classmethod
     def instance(cls):
@@ -42,8 +48,11 @@ class IOLoop():
         return cls._instance
 
     def loop(self):
+        """Event loop
+
+        """
         assert not self._started, " io loop has been started"
-        self.started = True
+        self._started = True
         poll_time = 0.2
 
         while True:
@@ -63,7 +72,7 @@ class IOLoop():
                     fd, event = self._events.popitem()
                     self._callback(fd, event)
             except Exception, e:
-                print e
+                 print e
             if self._stop:
                 return
 
