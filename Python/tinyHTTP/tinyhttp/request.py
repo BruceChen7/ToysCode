@@ -1,3 +1,4 @@
+# -
 from response import HTTPResponse
 
 class Request():
@@ -51,8 +52,7 @@ class Request():
         return self._headers
 
     def get_body(self):
-        return self._body
-
+        return self._body 
 
     def _parse_header_field(self, data):
         header_list = data.splitlines()

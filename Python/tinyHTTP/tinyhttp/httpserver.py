@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+iostream.py
+~~~~~~~
+This module is used to represent a http server
+"""
 import socket
 import errno
 
@@ -11,6 +17,7 @@ class HTTPServer():
     def __init__(self, port=8888, ioloop = None):
         self._port = port
         self._ioloop = ioloop or IOLoop.instance()
+        self.sock = -1;
 
 
     def listen(self, backlog = 128):

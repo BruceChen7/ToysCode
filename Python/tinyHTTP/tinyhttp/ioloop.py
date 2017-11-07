@@ -6,6 +6,7 @@ This module is used to dispatch read/write event for http server
 """
 import errno
 import select
+import logging 
 
 class IOLoop():
     """A class which encapsulate epoll module

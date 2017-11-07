@@ -8,8 +8,7 @@ import logging
 import logging.handlers
 import time
 
-from httpserver import HTTPServer
-
+from tinyhttp.httpserver import HTTPServer
 try:
     import curses
 except:

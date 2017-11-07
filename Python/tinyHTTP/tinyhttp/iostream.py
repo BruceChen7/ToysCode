@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+iostream.py
+~~~~~~~
+This module is used to read or write data  from socket or to socket
+"""
 import  collections
 import socket
 import errno
@@ -5,7 +11,7 @@ from ioloop import IOLoop
 from request import Request
 
 class IOStream():
-    """It's a class to represent socket io stream
+    """用来处理IO输入和输出的类
     """
     def __init__(self, sock, addr, ioloop=None, max_buffer_size=104857600,
                  max_read_buffer = 4096):
@@ -70,7 +76,7 @@ class IOStream():
         if self.sock is not None:
             self._write_buffer.append(data)
             self._writing = True;
-
+            
     def get_stream_state(self):
         return self._state
 
@@ -89,6 +95,9 @@ class IOStream():
         self._state = IOLoop.READ | IOLoop.ERROR
 
     def writing(self):
+        """Is io
+
+        """
         return self._writing
 
     def close(self):
