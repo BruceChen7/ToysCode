@@ -6,7 +6,6 @@ This module is used to represent a http server
 """
 import socket
 import errno
-
 from tinyhttp.ioloop import IOLoop
 from tinyhttp.iostream import IOStream
 
@@ -17,7 +16,7 @@ class HTTPServer():
         self._port = port
         self._ioloop = ioloop or IOLoop.instance()
         self.sock = -1
-
+    
     def listen(self, backlog=128):
         """create listen fd which is non-blocking
         """
@@ -34,7 +33,7 @@ class HTTPServer():
 
     def enable_logging(self):
         pass
-
+        
     def _handle_connect(self, fd, event):
         """accept a new connection
         """
@@ -42,11 +41,10 @@ class HTTPServer():
         assert event == IOLoop.READ
         while True:
             try:
-                connection, address = self.sock.accept() 
-                connection.setblocking(False)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+                connection, address = self.sock.accept()
+                connection.setblocking(False)
             except socket.error, e:
                 if e.args[0] in (errno.EWOULDBLOCK, errno.EAGAIN):
                     return
-
             stream = IOStream(connection, address)
             self._ioloop.add_stream(connection.fileno(), stream)

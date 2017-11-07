@@ -130,8 +130,7 @@ class IOLoop():
                 if state != stream.get_stream_state():
                     self.update_status(fd, state)
             except Exception, e:
-                # FixMe: Use logger module instead
-                print e
+                logging.error(e)
 
     def unregister(self, fd):
         self._poller.unregister(fd)
