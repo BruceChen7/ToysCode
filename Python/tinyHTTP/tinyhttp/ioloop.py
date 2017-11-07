@@ -6,7 +6,7 @@ This module is used to dispatch read/write event for http server
 """
 import errno
 import select
-import logging 
+import logging
 
 class IOLoop():
     """A class which encapsulate epoll module
@@ -73,7 +73,8 @@ class IOLoop():
                     fd, event = self._events.popitem()
                     self._callback(fd, event)
             except Exception, e:
-                 print e
+                 logging.info("something error to pop events")
+
             if self._stop:
                 return
 
@@ -138,11 +139,15 @@ class IOLoop():
         self._handler.pop(fd, None)
 
     def _handle_read(self, fd):
+        """
+        read from the fd
+        """
         stream = self._streams.get(fd)
+
         if stream:
             stream.handle_read(fd)
         else:
-            print "%d fd has been closed", fd
+            logging.info("%d fd has been closed", fd)
 
     def update_status(self, fd, events):
         stream = self._streams.get(fd)
@@ -155,4 +160,4 @@ class IOLoop():
         if stream:
             stream.handle_write(fd)
         else:
-            print "connection has been closed"
+            logging.info("connection has been closed")

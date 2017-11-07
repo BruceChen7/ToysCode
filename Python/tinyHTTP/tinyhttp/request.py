@@ -1,14 +1,20 @@
-# -
-from response import HTTPResponse
+# -*- coding: utf-8 -*-
+from tinyhttp.response import HTTPResponse
 
 class Request():
-
+    """It's a class to represent a http request
+    """
     def __init__(self, addr, data, iostream):
         self._peer_addr = addr
         # just the whole http request data sent from client
         self._data = data
         self._headers = {}
         self._stream = iostream
+        self._is_full_request = True
+        self._body = ""
+        self._method = None
+        self._path = "/"
+        self._version = "1.0"
 
     def _parse_headers(self):
         # HTTP request headers end with "\r\n\r\n"
@@ -34,9 +40,16 @@ class Request():
             self._parse_header_field(data[pos:])
             return True
         else:
-            # there is no enough data which can't be constructed as a httpreqest
+            # There is no enough data which can't be constructed as a http request
+            self._is_full_request = False
+            # enable next round reading event
             self._stream.enable_reading()
             return False
+
+    def is_full_request(self):
+        """whether the reqeust is complete
+        """
+        return self._is_full_request
 
     def get_method(self):
         return self._method
@@ -45,6 +58,8 @@ class Request():
         return self._path
 
     def get_version(self):
+        """ get HTTP version
+        """
         return self._version
 
     def get_header(self):
@@ -66,3 +81,6 @@ class Request():
         if self._parse_headers():
             r = HTTPResponse(self._stream, self)
             r.response()
+        else:
+            # FixMe
+            pass

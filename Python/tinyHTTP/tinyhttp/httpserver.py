@@ -7,20 +7,18 @@ This module is used to represent a http server
 import socket
 import errno
 
-from ioloop import IOLoop
-from iostream import IOStream
+from tinyhttp.ioloop import IOLoop
+from tinyhttp.iostream import IOStream
 
 class HTTPServer():
     """It's a class to represent a http server
-
     """
-    def __init__(self, port=8888, ioloop = None):
+    def __init__(self, port=8888, ioloop=None):
         self._port = port
         self._ioloop = ioloop or IOLoop.instance()
-        self.sock = -1;
+        self.sock = -1
 
-
-    def listen(self, backlog = 128):
+    def listen(self, backlog=128):
         """create listen fd which is non-blocking
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM, 0)
@@ -38,6 +36,8 @@ class HTTPServer():
         pass
 
     def _handle_connect(self, fd, event):
+        """accept a new connection
+        """
         assert fd == self.sock.fileno(), "fd must be listen fd"
         assert event == IOLoop.READ
         while True:

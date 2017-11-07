@@ -1,48 +1,90 @@
+# -*- coding: utf-8 -*-
+"""
+response.py
+~~~~~~~
+This module is used to dispatch read/write event for http server
+"""
 import urllib
 import os
 import stat
+import pystache
+
 
 class HTTPResponse:
-
+    """It's a class to represent a http response
+    """
     ServerString = "Server: toyhttp/0.1\r\n"
     Encoding = {
         "UTF-8": "utf8"
     }
+
+    StatusCode = {
+        100: "Continue",
+        200: "OK",
+        201: "Created",
+        202: "Accepted",
+        300: "Multiple Choice",
+        301: "Moved Permanently",
+        302: "Found",
+        303: "See Other",
+        304: "Not Modified",
+        400: "Bad Request",
+        401: "Unauthorized",
+        402: "Payment Required",
+        403: "Payment Required",
+        404: "Not Found",
+        405: "Method Not Allowed",
+        500: "Internal Server Error",
+        501: "Not Implemented",
+        502: "Bad Gateway",
+        503: "Service Unavailable",
+        505: "HTTP Version Not Supported"
+    }
+ 
+    def read(self, path):
+        """
+        Read and return the contents of a text file as a unicode string.
+        """
+        # This function implementation was chosen to be compatible across Python 2/3.
+        f = open(path, 'rb')
+        # We avoid use of the with keyword for Python 2.4 support.
+        try:
+            b = f.read()
+        finally:
+            f.close()
+        return b.decode(self.Encoding["UTF-8"])
 
     def __init__(self, stream, request):
         self._stream = stream
         self._request = request
 
 
+    def get_header(self, code, des):
+        header = self.ServerString
+        return "HTTP/1.1 " + code + " " + des + " \r\n" + header + "\r\n\r\n"
+    
     def unimplement(self):
-        buf = "HTTP/1.0 501 Method Not Implement\r\n"
-        html = """
-        <html>
-            <head>
-                <title>
-                    Method not Implemented 
-                </title>
-            </head>
-            <body>
-                <p>
-                    HTTP request not method not supported
-                </p>
-            </body>
-        </html>
-        """
-        self._stream.send(buf + HTTPResponse.ServerString + html)
+        head = self.get_header("501", self.StatusCode[501])
+        # read template html
+        html = self.read("htdocs/template.html")
+        value = {
+            "error_code": "501",
+            "error_description": self.StatusCode[501]
+        }
+        html = pystache.render(html, value)
+        self._stream.send(head + html)
 
 
     def not_found(self):
         assert self._stream is not None
-        self._stream.send("HTTP/1.0 404 NOT FOUND \r\n")
-        self._stream.send(HTTPResponse.ServerString)
-        self._stream.send("Content-Type: text/html\r\n")
-        self._stream.send("\r\n\r\n")
-        self._stream.send("<html><title>Not Found</title>\r\n")
-        self._stream.send("""<body><p>the server could not fulfill your request.
-                          because the request you specified file is not existed""")
-        self._stream.send("</body></html>\r\n")
+        head = self.get_header("404", self.StatusCode[404])
+        html = self.read("htdocs/template.html")
+        value = {
+            "error_code": "404 " +  self.StatusCode[404],
+            "error_description":  "Your request resource is not found"
+        }
+        html = pystache.render(html, value)
+        self._stream.send(head + html)
 
     def ok_headers(self):
         self._stream.send("HTTP/1.1 200 OK\r\n")
@@ -134,3 +176,4 @@ class HTTPResponse:
         else:
             self.unimplement()
             return
+    

@@ -11,7 +11,7 @@ from ioloop import IOLoop
 from request import Request
 
 class IOStream():
-    """用来处理IO输入和输出的类
+    """ used to deal with io input or output
     """
     def __init__(self, sock, addr, ioloop=None, max_buffer_size=104857600,
                  max_read_buffer = 4096):
@@ -20,12 +20,13 @@ class IOStream():
         self.sock = sock
         # peer address
         self._addr = addr
-        #  next loop, the stream' status should be IOLoop's READ or WRITE
+        # next loop, the stream' status should be IOLoop's READ or WRITE
         self._state = IOLoop.ERROR
         self._read_buffer = collections.deque()
         self._write_buffer = collections.deque()
         self._max_read_buffer = max_read_buffer
         self._max_buffer_size = max_buffer_size
+        # next round to be listening fd's read event ?
         self._reading = False
         self._writing = False
 
@@ -34,18 +35,18 @@ class IOStream():
         while True:
             try:
                 data = self.sock.recv(self._max_read_buffer)
-                self._reading = True
                 if not data:
                     self.close()
                 else:
                     self._read_buffer.append(data)
             except socket.error, e:
                 if e.args[0] in (errno.EWOULDBLOCK, errno.EAGAIN):
-                    # FixMe: determin
-                    self._reading = False
                     _merge_prefix(self._read_buffer, self._max_read_buffer)
-                    request = Request(self._addr[0],self._read_buffer[0],self)
-                    request.response()
+                    request = Request(self._addr[0], self._read_buffer[0], self)
+                    if request.is_full_request():
+                        request.response()
+                    else:
+                        logging.debug("reading data next round")
                     return
             except Exception:
                 print "something error"
