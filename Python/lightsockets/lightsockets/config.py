@@ -27,6 +27,7 @@ class Config():
             local_addr = data['local_addr']
             password = data['password']
             config = Config(local_addr, local_port, remote_addr, remote_port, password)
+            
             return config
     def saveConfig(self):
         data = {
