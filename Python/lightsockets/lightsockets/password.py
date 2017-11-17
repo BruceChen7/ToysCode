@@ -6,15 +6,13 @@ import base64
 class Password:
     def __init__(self):
         random.seed()
-        password = list(range(256))
+        self.password = bytearray(range(256))
+        random.shuffle(self.password)
+        pass_str = []
         
-        self.password = []
-        self.password_str = ""
-        random.shuffle(password)
-
-        for i in range(len(password)):
-            self.password.append(bytes(password[i]))
-        bytes_pass = bytearray(password) 
+        for i in range(len(self.password)):
+            pass_str.append(chr(self.password[i]))
+        self.pass_str = base64.b64encode(''.join(pass_str))
         
     def getKey(self):
         return self.password

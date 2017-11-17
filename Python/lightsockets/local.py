@@ -10,12 +10,13 @@ from lightsockets.password import Password
 if __name__ == "__main__":
     if os.path.exists(Config.CONFIG_PATH):
         config = Config.readConfig()
+        
         if config.password:
             logging.info("read config file suceed")
         else:
             logging.info("generate key")
             p = Password()
-            config.password = p.password_str
+            config.password = p.pass_str
             config.saveConfig()
     else:
         default_config = parseCommandLine()
