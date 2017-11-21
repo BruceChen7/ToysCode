@@ -1,6 +1,6 @@
 # coding:utf-8
 #!/usr/bin/env python
-
+import base64
 """It's a module to encode or decode data
 """
 class Cipher():
@@ -25,14 +25,12 @@ class Cipher():
 
     @staticmethod
     def newCiper(password):
-        assert len(password) == 256
-        encode_key = []
-        decode_key = []
+        assert len(password) == 256, "password is not correct form"
+        encode_key = [1] * 256
+        decode_key = [1] * 256
 
         for i in range(len(password)):
             v = password[i]
             encode_key[i] = v
             decode_key[v] = i
         return Cipher(encode_key, decode_key)
-
-
