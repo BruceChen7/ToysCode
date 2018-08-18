@@ -1,10 +1,10 @@
 #include <arpa/inet.h>
+#include <errno.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include <errno.h>
 #include <unistd.h>
 
 void str_client(FILE* fp, int sockfd) {
@@ -13,11 +13,11 @@ void str_client(FILE* fp, int sockfd) {
 
     while (fgets(sendline, 512, fp) != NULL) {
         if (write(sockfd, sendline, sizeof(sendline)) == -1) {
-          fputs("can't send line to server", stdout);
+            fputs("can't send line to server", stdout);
         }
 
         if (read(sockfd, recvline, sizeof(recvline)) == 0) {
-          fputs("server exit prematurely", stdout);
+            fputs("server exit prematurely", stdout);
         }
 
         fputs(recvline, stdout);
@@ -43,10 +43,10 @@ int connect_to_server(char* ip, int port) {
         return -1;
     }
 
-    if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+    if (connect(sockfd, (struct sockaddr*)&server_addr, sizeof(server_addr)) ==
+        -1) {
         fprintf(stdout, "can't connect server %s", strerror(errno));
         return -1;
-    } 
+    }
     return sockfd;
 }
-

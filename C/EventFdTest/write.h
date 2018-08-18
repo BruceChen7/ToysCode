@@ -10,7 +10,7 @@ struct Writer {
     int* clientEventFd;
 };
 
-struct Writer* initWriter(int clients, int* clientEventFd,  int writerId);
+struct Writer* initWriter(int clients, int* clientEventFd, int writerId);
 
 int sendMsg(const char* msg, uint64_t client);
 #endif
