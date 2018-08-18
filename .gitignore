@@ -4,7 +4,9 @@ obj
 .ycm_extra_conf.py
 .ycm_extra_conf.pyc
 *.pyc
-Java/DesignPattern/out
+build64_release
+blade-bin
+.Building.lock
 *.class
 target
 tags

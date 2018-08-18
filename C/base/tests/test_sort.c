@@ -30,7 +30,6 @@ static void testBubbleSort() {
 }
 
 static void testSelectSort() {
-    int arr1[] = {1, 5, 3, 4, 2};
     int arr2[] = {2, 1, 4, 3, 5};
     int arr3[] = {1, 1, 1, 1, 1};
     int arr4[] = {5, 4, 3, 2, 1};
@@ -70,12 +69,10 @@ static void testQuickSort() {
 }
 
 static void testMergeSort() {
-    int arr1[] = {1, 5, 3, 4, 2};
     int arr2[] = {2, 1, 4, 3, 5};
     int arr3[] = {1, 1, 1, 1, 1};
     int arr4[] = {5, 4, 3, 2, 1};
     int arr5[] = {6, 2, 1, 3, 4};
-    int arr6[] = {6, 5, 4, 3, 2};    
     mergeSort(arr2, 5);
     mergeSort(arr3, 5);
     mergeSort(arr4, 5);
