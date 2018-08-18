@@ -1,5 +1,5 @@
 add_subdirectory(tests)
-set(NetSrc 
+set(NetSrc
     echo_client.c
     echo_server.c
    )

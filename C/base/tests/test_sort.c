@@ -15,7 +15,6 @@ static void testBubbleSort() {
     int arr4[] = {5, 4, 3, 2, 1};
     int arr5[] = {6, 2, 1, 3, 4};
     int arr6[] = {6, 5, 4, 3, 2};
-    
     bubbleSort(arr1, 5);
     bubbleSort(arr2, 5);
     bubbleSort(arr3, 5);
