@@ -1,14 +1,8 @@
-#include "../toys_list.h"
-#include <string.h> 
-#include <stdio.h>
 #include <assert.h>
-#include <unistd.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include "../toys_list.h"
 
-
-int main() {
-    printf("hello world");
-}
-
-
-
+int main() { printf("hello world"); }

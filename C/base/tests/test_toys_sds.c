@@ -1,7 +1,5 @@
-#include "../toys_sds.h"
-#include <string.h> 
 #include <stdio.h>
+#include <string.h>
+#include "../toys_sds.h"
 
-int main() {
-	return 0;
-}
+int main() { return 0; }

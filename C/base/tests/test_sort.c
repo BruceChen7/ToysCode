@@ -1,8 +1,8 @@
-#include "base/sort.h"
 #include <stdio.h>
+#include "base/sort.h"
 
 static void printArr(int* arr, int n) {
-       for(int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         printf("%d", arr[i]);
     }
     printf("\n");
@@ -89,7 +89,7 @@ static void testHeapSort() {
     int arr3[] = {1, 1, 1, 1, 1};
     int arr4[] = {5, 4, 3, 2, 1};
     int arr5[] = {6, 2, 1, 3, 4};
-    int arr6[] = {6, 5, 4, 3, 2};  
+    int arr6[] = {6, 5, 4, 3, 2};
     heapSort(arr1, 5);
     heapSort(arr2, 5);
     heapSort(arr3, 5);
