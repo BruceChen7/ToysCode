@@ -14,7 +14,7 @@ def main():
             if scanner.Parse():
                 print "parse right"
             else:
-                print "parse error"
+                print "parse error" 
 
     elif len(sys.argv) == 1:
         raw_input(">")

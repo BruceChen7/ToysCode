@@ -20,10 +20,24 @@ class TokenType(Enum):
     IDENTIFIER = 17,
     Assign = 18,
     Num = 19,
-
-
+    
 class Token:
     def __init__(self, type, value, line_num):
         self.type = type
         self.value = value 
         self.line_num = line_num
+    
+    @property
+    def type(self):
+        return self.type
+    
+    @property
+    def value(self):
+        return self.value
+    
+    @property
+    def line_num(self):
+        return self.line_num
+    
+    def __str__(self):
+        return "type " + self.type + ", value " + self.value + ", line_num " + self.line_num;
