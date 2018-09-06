@@ -118,7 +118,6 @@ class Scanner:
             self.tokens.append(t)
 
     def parseBlank(self):
-        print "blank", self.cur_pos
         while self.cur_pos < len(self.script):
             if self.script[self.cur_pos] == " " or self.script[self.cur_pos] == "\r":
                 self.cur_pos += 1
@@ -141,8 +140,6 @@ class Scanner:
         
         self.GetTokenList()
         return not self.has_error
-    
-
 
     def GetTokenList(self):
         for i in range(len(self.tokens)):
