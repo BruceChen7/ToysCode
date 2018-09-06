@@ -140,7 +140,7 @@ class Scanner:
         
         self.GetTokenList()
         return not self.has_error
-
+    
     def GetTokenList(self):
         for i in range(len(self.tokens)):
             print self.tokens[i].type, ",value ", self.tokens[i].value
