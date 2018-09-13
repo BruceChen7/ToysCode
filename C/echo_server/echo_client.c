@@ -1,5 +1,9 @@
+#include "echo_server/echo_client.h"
+
 #include <arpa/inet.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
@@ -49,4 +53,43 @@ int connect_to_server(char* ip, int port) {
         return -1;
     }
     return sockfd;
+}
+
+connectAsyncContext* createConnectAsyncContext(
+    const char* host, int port, OnConnectSuccessFn* success_fn,
+    OnConnectFailFn* fail_fn, AfterConnectSuccessFn* after_success_fn) {
+    connectAsyncContext* ctx = (connectAsyncContext*)(malloc(sizeof(*ctx)));
+    ctx->fd = -1;
+    ctx->server_ip = ip;
+    ctx->server_port = port;
+    ctx->after_sucess_fn = after_success_fn;
+    ctx->success_fn = success_fn;
+    ctx->fail_fn = fail_fn;
+    return ctx;
+}
+
+static void setSocketNonBlocking(int fd) {
+    int flag;
+    if (flag = fcntl(fd, F_GETFD) == -1) {
+        fprintf(stdout, "fcntl error, ");
+    }
+    flag |= O_NONBLOCK;
+    if (fcntl(fd, F_SETFD, flag) == -1) {
+        fprintf(stdout, "fcntl error, ");
+    }
+}
+
+int connectToServerAsync(connectAsyncContext* c) {
+    struct addrinfo hint;
+    struct addrinfo* p;
+    hint.ai_family = AF_INET;
+    hint.ai_protocol = 0;
+    hint.ai_socktype = SOCK_STREAM;
+    char port_in_str[6];
+    snprintf(port_in_str, 6, "%d", port);
+
+    if (getaddrinfo(ip, port, &hint, &p) == -1) {
+        puts("getaddrinfo error");
+        return -1;
+    }
 }

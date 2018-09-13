@@ -21,7 +21,7 @@ class Scanner:
         self.cur_pos =  0
         self.cur_line = 0
         self.has_error = False
-    
+
     def isEndOfLine(self):
         return self.cur_pos >= len(self.script)
 
@@ -44,7 +44,7 @@ class Scanner:
             self.tokens.append(t)
             self.consume(1)
 
-    
+
     def parseMinus(self):
         if self.peek() == "=":
             t = Token(TokenType.MinusEqual, "-=", self.cur_line)
@@ -54,7 +54,7 @@ class Scanner:
             t = Token(TokenType.Minus, "-", self.cur_line)
             self.tokens.append(t)
             consume(1)
-        
+
     def parseNewline(self):
         self.cur_pos += 1
         self.cur_line += 1
@@ -88,7 +88,7 @@ class Scanner:
             t = Token(TokenType.Multiple, "*", self.cur_line)
             self.tokens.append(t)
             self.consume(1)
-       
+
     def parseDivison(self):
         if self.peek() == "=":
             t = Token(TokenType.MultipleEqual, "/=", self.cur_line)
@@ -98,7 +98,7 @@ class Scanner:
             t = Token(TokenType.Multiple, "/", self.cur_line)
             self.tokens.append(t)
             self.consume(1)
-    
+
     def parseNum(self):
         begin_pos = self.cur_pos
         while not self.isEndOfLine():
@@ -123,7 +123,7 @@ class Scanner:
                 self.cur_pos += 1
             else:
                 break
-    
+
     def parseIdentifier(self):
         pass
 
@@ -137,10 +137,10 @@ class Scanner:
     def Parse(self):
         while self.cur_pos < len(self.script):
             self.parse_token_ways.get(self.script[self.cur_pos], self.parseDefault)()
-        
+
         self.GetTokenList()
         return not self.has_error
-    
+
     def GetTokenList(self):
         for i in range(len(self.tokens)):
             print self.tokens[i].type, ",value ", self.tokens[i].value
