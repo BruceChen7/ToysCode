@@ -54,6 +54,7 @@ int connect_to_server(char* ip, int port) {
         fprintf(stdout, "can't connect server %s", strerror(errno));
         return -1;
     }
+
     return sockfd;
 }
 

@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.7)
+project (toys_c)
+include_directories("./")
+add_subdirectory(base)
+add_subdirectory(echo_server echo_server)
+add_subdirectory(Lispy Lispy)
+add_subdirectory(EventFdTest event_fd_test)

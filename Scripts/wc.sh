@@ -1,10 +1,10 @@
 #!/bin/bash
 function usage() {
     cat << END
-    Usage: wc.sh [-sh][file][fold_name] 
+    Usage: wc.sh [-sh][file][fold_name]
             -s skip the file line count if you specified
             -h show this help message
-            file_name count the specified file's line 
+            file_name count the specified file's line
             fold_name count all file regular text file lines in the folders
 END
     exit
@@ -22,7 +22,7 @@ function count_dir_file_line() {
     local skip_file=$2
 
 
-    if ! [[ -d "$fold" ]] || [[ -z "$fold" ]]; then 
+    if ! [[ -d "$fold" ]] || [[ -z "$fold" ]]; then
         return 0
     fi
 
@@ -31,19 +31,19 @@ function count_dir_file_line() {
     local file_arr=($file)
     local line=0
     local length=${#file_arr[@]}
-    
+
     [[ $length -eq 0 ]] && return 0
     local f=""
     for f in ${file_arr[@]}; do
-        
+
         f=$fold"/"$f
-    
+
         if [[ "$skip_file" = "$f" ]]; then
             continue
         fi
 
         # directory
-        if [[ -d $f ]]; then 
+        if [[ -d $f ]]; then
             count_dir_file_line $f $skip_file
             num=$?
             line=$((line + $num))
@@ -51,10 +51,10 @@ function count_dir_file_line() {
         fi
 
         # skip the exec file
-        if [[ -x $f ]]; then 
+        if [[ -x $f ]]; then
             continue
         fi
-       
+
         if [[ -r $f ]]; then
             line_num=`count_line $f`
             printf "%s  %d lines\n" $f, $line_num
@@ -69,7 +69,7 @@ file=
 fold_name=$PWD
 
 while getopts s:h opt
-do 
+do
     case $opt in
     s) skip_file=$OPTARG ;;
     h|?) usage ;
@@ -90,14 +90,14 @@ fi
 
 
 # count the specified file num
-if [[ -n $file_name ]]; then 
-    line=`count_line $file_name` 
+if [[ -n $file_name ]]; then
+    line=`count_line $file_name`
     printf "the file %s you specifled has %d lines \n" $file_name, $line
     exit 0
 fi
 
 [[ $fold_name = $PWD ]] && cat << END
-Scan current working directory to count file lines 
+Scan current working directory to count file lines
 Because you specified directory or file is not existed
 END
 
