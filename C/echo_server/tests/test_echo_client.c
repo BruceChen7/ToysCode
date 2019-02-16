@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
-#include "net/client.h"
+#include "echo_server/echo_client.h"
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         fputs("usage: ./test_echo_client IPAddress\n", stdout);

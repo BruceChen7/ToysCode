@@ -14,3 +14,4 @@ tags
 .idea
 .vscode
 *.rdb
+compile_commands.json

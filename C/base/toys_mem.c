@@ -6,6 +6,7 @@ void *toys_mem_alloc(long nbytes, const char *file, int line) {
     void *ptr;
     TOYS_ASSERT(nbytes > 0,
                 "the size which is allocated must be larger than 0");
+
     ptr = malloc(nbytes);
 
     /* Fix Me by using user-defined exception */

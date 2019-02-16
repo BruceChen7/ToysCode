@@ -24,8 +24,7 @@ void create_echo_server(int port, void (*proc)(int sockfd)) {
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    if (bind(listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) ==
-        -1) {
+    if (bind(listen_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
         fprintf(stdout, "can't bind socket: %s \n", strerror(errno));
         return;
     }
