@@ -21,25 +21,47 @@ static int matchNode(void* m, void* n) {
 }
 
 
-// https://github.com/siu/minunit
-MU_TEST(appendToHead) {
-    List* list = createList();
+static List* list;
+
+// 每个test都会重新调用一次
+void test_setup() {
+    list = createList();
     list->dup = dupNode;
     list->free = freeNode;
     list->match = matchNode;
+    mu_check(list);
+}
+
+void test_teardown() {
+    freeList(list);
+}
+
+// https://github.com/siu/minunit
+MU_TEST(appendToHead) {
     int a = 1;
     addNodeToHead(list, &a);
+    mu_check(*(int *)(list->head->value) == 1);
+    mu_check(*(int *)(list->tail->value) == 1);
     int b = 2;
     mu_check(1 == list->len);
     addNodeToHead(list, &b);
     mu_check(list->len == 2);
     mu_check(*(int *)(list->head->value) == 2);
     mu_check(*(int *)(list->tail->value) == 1);
-    freeList(list);
+}
+
+MU_TEST(appendToTail) {
+    int a = 3;
+    addNodeToTail(list, &a);
+    mu_check(*(int *)(list->tail->value) == 3);
+    mu_check(list->len == 1);
+    mu_check(*(int *)(list->head->value) == 3);
 }
 
 MU_TEST_SUITE(list_suite) {
+    MU_SUITE_CONFIGURE(&test_setup, &test_teardown);
     MU_RUN_TEST(appendToHead);
+    MU_RUN_TEST(appendToTail);
 }
 
 

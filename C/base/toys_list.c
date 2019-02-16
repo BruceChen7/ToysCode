@@ -4,16 +4,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/*
- * On error, NULL is returned
- * On Success,new 'struct List *' pointer is returned
- */
 List*
 createList(void) {
     struct List* list;
 
-    if((list = TOYS_ALLOC(sizeof(*list))) == NULL)
+    if ((list = TOYS_ALLOC(sizeof(*list))) == NULL) {
         return NULL;
+    }
 
     list->head = list->tail = NULL;
     list->len = 0;
@@ -23,21 +20,19 @@ createList(void) {
     return list;
 }
 
-// free the whole the list
 void
 freeList(List *list) {
     unsigned long len = list->len;
     ListNode *cur, *next;
     cur = list->head;
 
-    while(len--)
-    {
+    while (len--) {
         next = cur->next;
 
-        if(list->free)
+        if (list->free) {
             list->free(cur->value);
-        //delete the Node
-        free(cur);
+        }
+        TOYS_FREEfree(cur);
         cur = next;
     }
 
@@ -56,7 +51,7 @@ addNodeToHead(List *list, void *value) {
     }
 
 
-    if(list->len == 0) {
+    if (list->len == 0) {
         list->head  = list->tail = node;
         node->prev = node->next = NULL;
     } else {
@@ -74,10 +69,13 @@ List*
 addNodeToTail(List *list, void *value) {
     ListNode *node = TOYS_ALLOC(sizeof(*node)) ;
 
-    if(node == NULL)
+    if (node == NULL) {
         return NULL;
+    }
 
-    node->value = value;
+    if (list->dup)  {
+        node->value = list->dup(value);
+    }
 
     if (list->len == 0) {
         list->tail = list->head = node;
@@ -98,13 +96,13 @@ List*
 insertNodeBefore(List* list, ListNode* old_node,void *value, int pos) {
     ListNode *node = TOYS_ALLOC(sizeof(*node));
 
-    if(node == NULL) {
+    if (node == NULL) {
         return NULL;
     }
 
     node->value = value;
 
-    if(pos == 0) {
+    if (pos == 0) {
         list->head->prev = node;
         node->next = list->head;
         node->prev = NULL;
@@ -120,15 +118,17 @@ deleteNode(List *list, ListNode *node) {
     /* if Node is the first 'list Node' */
         list->head = node->next;
 
-    if(node->next !=NULL)
+    if (node->next !=NULL) {
         node->next->prev = node->prev;
-    else
+    } else {
         /* if Node is the last 'list Node' */
         list->tail = node->prev;
+    }
 
-    if(list->free)
+    if (list->free) {
         list->free(node->value);
-    free(node);
+    }
+    TOYS_FREE(node);
     list->len--;
 }
 
@@ -140,7 +140,7 @@ indexList(List *list, long index) {
     int i = index;
     node = index >= 0 ? list->head:list->tail;
 
-    if(i >= 0) {
+    if (i >= 0) {
         while(i--) {
             node = node->next;
         }
@@ -158,23 +158,19 @@ searchKey(List *list, void *key) {
     ListNode *node = list->head;
     unsigned long len = list->len;
 
-    while(len--)
-    {
-        if(list->match)
-        {
-            if(list->match(node->value,key))
-            {
+    while (len--) {
+        if(list->match) {
+            if(list->match(node->value, key)) {
                 return node;
             }
         }
-        else if(key == node->value)
-        {
+        else if(key == node->value) {
             return node;
         }
         node = node->next;
     }
 
-    if(len == 0)
+    if (len == 0)
         return NULL;
 
 }
@@ -190,22 +186,19 @@ findCommonNode(List *l1,List *l2) {
 
     int difflen = (len1 > len2 ? len1-len2 : len2-len1);
 
-    ListNode * p_common_node = NULL;
+    ListNode* p_common_node = NULL;
 
-    while(difflen--)
-    {
+    while(difflen--) {
         p_long_head = p_long_head->next;
     }
 
-    while(p_long_head && p_short_head && p_long_head != p_short_head)
-    {
+    while(p_long_head && p_short_head && p_long_head != p_short_head) {
         p_long_head = p_long_head->next;
         p_short_head = p_short_head->next;
     }
 
-    if(p_long_head == p_short_head)
+    if(p_long_head == p_short_head) {
         p_common_node = p_short_head;
-
+    }
     return p_common_node;
-
 }
