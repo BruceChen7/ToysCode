@@ -1,8 +1,6 @@
 #ifndef __QUEUE_H_
 #define __QUEUE_H_
 
-//队列的头,
-//用来管理队列
 #define QUEUE_HEAD(name, type)                                                 \
   struct name {                                                                \
     struct type *first;                                                        \
@@ -11,7 +9,7 @@
 
 #define QUEUE_ENTRY(type)                                                      \
   struct {                                                                     \
-    struct type *prev;                                                         \
+   i struct type *prev;                                                         \
     struct type *next;                                                         \
   }
 

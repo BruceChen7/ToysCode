@@ -1,40 +1,40 @@
 #ifndef __TOYS_LIST_H__
 #define __TOYS_LIST_H__
 
-typedef struct toys_list_node {
-    struct toys_list_node *prev;
-    struct toys_list_node *next; 
-    void *value; 
-}toys_list_node;
+typedef struct ListNode {
+    struct ListNode *prev;
+    struct ListNode *next;
+    void *value;
+} ListNode;
 
-typedef struct toys_list {
-    toys_list_node* head;
-    toys_list_node* tail;
+typedef struct List {
+    ListNode* head;
+    ListNode* tail;
     unsigned long len;
-    void *(*dup)(void *ptr);
-    void (*free)(void *ptr); 
-    int (*match)(void *ptr,void *key); 
-}toys_list;
+    void* (*dup)(void *ptr);
+    void (*free)(void *ptr);
+    int (*match)(void *ptr, void *key);
+} List;
 
-//create a list
-toys_list* toys_list_create(void);
+// create a list
+List* createList(void);
 
-//free the whole list
-void toys_list_release(toys_list *list); 
+// free the whole list
+void freeList(List* list);
 
-toys_list* toys_list_add_node_head(toys_list *list,void *value); 
+List* addNodeToHead(List* list, void *value);
 
-toys_list* toys_list_add_node_tail(toys_list *list,void *value); 
+List* addNodeToTail(List* list, void *value);
 
-toys_list* toys_list_insert_node(toys_list *list, toys_list_node *old_node, void *value,int pos); 
+List* insertNodeBefore(List* list, ListNode *old_node, void *value,int pos);
 
-//delete the specified node from the specified list
-void  toys_list_del_node(toys_list *list,toys_list_node *node); 
+void deleteNode(List *list, ListNode *node);
 
-//find the common node which both the lists have
-toys_list_node* toys_list_find_common_node(toys_list *list1,toys_list *list2);
-toys_list_node* toys_list_index(toys_list* list,long index);
-toys_list_node* toys_list_search_key(toys_list *list,void *key);
+// find the common node which both the lists have
+ListNode* findCommonNode(List *list1,List *list2);
 
-// void toys_list_print(toys_list *list);
-#endif 
+ListNode* indexList(List* list, long index);
+
+ListNode* searchKey(List *list, void *key);
+
+#endif

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.7)
 project(toys_c VERSION 1.21.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED OFF)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(
@@ -26,6 +26,8 @@ toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_sort.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_toys_list.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_toys_sds.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_time.c")
+toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_mem.c")
+toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_util.c")
 
 add_library(toys_c_lib "")
 
@@ -54,4 +56,5 @@ target_sources(toys_c_lib
     "${PROJECT_SOURCE_DIR}/base/toys_utils.h"
     "${PROJECT_SOURCE_DIR}/base/time.c"
     "${PROJECT_SOURCE_DIR}/base/time.h"
+    "${PROJECT_SOURCE_DIR}/base/minunit.h"
     )
