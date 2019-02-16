@@ -25,6 +25,7 @@ endfunction(toys_c_test)
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_sort.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_toys_list.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_toys_sds.c")
+toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_time.c")
 
 add_library(toys_c_lib "")
 
@@ -50,4 +51,7 @@ target_sources(toys_c_lib
     "${PROJECT_SOURCE_DIR}/base/toys_sds.h"
     "${PROJECT_SOURCE_DIR}/base/toys_sds.h"
     "${PROJECT_SOURCE_DIR}/base/toys_utils.h"
+    "${PROJECT_SOURCE_DIR}/base/toys_utils.h"
+    "${PROJECT_SOURCE_DIR}/base/time.c"
+    "${PROJECT_SOURCE_DIR}/base/time.h"
     )
