@@ -1,5 +1,6 @@
 #ifndef __TOYS_LIST_H__
 #define __TOYS_LIST_H__
+#include <stdint.h>
 
 typedef struct ListNode {
     struct ListNode *prev;
@@ -10,7 +11,7 @@ typedef struct ListNode {
 typedef struct List {
     ListNode* head;
     ListNode* tail;
-    unsigned long len;
+    uint32_t len;
     void* (*dup)(void *ptr);
     void (*free)(void *ptr);
     int (*match)(void *ptr, void *key);

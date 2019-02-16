@@ -3,6 +3,7 @@ project(toys_c VERSION 1.21.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+# 用来生成compile_commands.json打开
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(
@@ -32,7 +33,7 @@ toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_util.c")
 add_library(toys_c_lib "")
 
 #======================================================================
-# 定义base下的源文件
+# 定义C目录下的源文件
 #======================================================================
 target_sources(toys_c_lib
   PRIVATE
@@ -57,4 +58,9 @@ target_sources(toys_c_lib
     "${PROJECT_SOURCE_DIR}/base/time.c"
     "${PROJECT_SOURCE_DIR}/base/time.h"
     "${PROJECT_SOURCE_DIR}/base/minunit.h"
+    # 以下是echo_server
+    "${PROJECT_SOURCE_DIR}/echo_server/echo_client.h"
+    "${PROJECT_SOURCE_DIR}/echo_server/echo_client.c"
+    "${PROJECT_SOURCE_DIR}/echo_server/echo_server.c"
+    "${PROJECT_SOURCE_DIR}/echo_server/server.h"
     )

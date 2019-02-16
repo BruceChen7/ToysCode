@@ -1,22 +1,24 @@
 #include "base/toys_list.h"
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "base/minunit.h"
 
-static void* dupNode(void* p) {
+static void*
+dupNode(void* p) {
     int* int_p = (int *)(p);
-    int* res = (int *)malloc(*int_p);
+    int* res = (int *)malloc(sizeof(int));
     *res = *int_p;
 }
 
-static void freeNode(void* p) {
+static void
+freeNode(void* p) {
     free(p);
 }
 
-static int matchNode(void* m, void* n) {
+static int
+matchNode(void* m, void* n) {
     return *(int *)(m) == *(int *)(n);
 }
 
@@ -24,7 +26,8 @@ static int matchNode(void* m, void* n) {
 static List* list;
 
 // 每个test都会重新调用一次
-void test_setup() {
+void
+test_setup() {
     list = createList();
     list->dup = dupNode;
     list->free = freeNode;
@@ -32,7 +35,8 @@ void test_setup() {
     mu_check(list);
 }
 
-void test_teardown() {
+void
+test_teardown() {
     freeList(list);
 }
 
@@ -47,6 +51,12 @@ MU_TEST(appendToHead) {
     addNodeToHead(list, &b);
     mu_check(list->len == 2);
     mu_check(*(int *)(list->head->value) == 2);
+    mu_check(*(int *)(list->tail->value) == 1);
+    int c = 3;
+    addNodeToHead(list, &c);
+    mu_check(3 == list->len);
+    mu_check(*(int *)(list->head->value) == 3);
+    mu_check(*(int *)(list->head->next->value) == 2);
     mu_check(*(int *)(list->tail->value) == 1);
 }
 
@@ -65,7 +75,8 @@ MU_TEST_SUITE(list_suite) {
 }
 
 
-int main(int argc, char* argv[]) {
+int
+main(int argc, char* argv[]) {
     MU_RUN_SUITE(list_suite);
     MU_REPORT();
     return minunit_status;
