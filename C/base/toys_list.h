@@ -20,6 +20,8 @@ typedef struct List {
 // create a list
 List* createList(void);
 
+int32_t listEmpty(List* list);
+
 // free the whole list
 void freeList(List* list);
 
@@ -32,9 +34,9 @@ List* insertNodeBefore(List* list, ListNode *old_node, void *value,int pos);
 void deleteNode(List *list, ListNode *node);
 
 // find the common node which both the lists have
-ListNode* findCommonNode(List *list1,List *list2);
+ListNode* findCommonNode(List *list1, List *list2);
 
-ListNode* indexList(List* list, long index);
+ListNode* indexList(List* list, uint32_t index);
 
 ListNode* searchKey(List *list, void *key);
 

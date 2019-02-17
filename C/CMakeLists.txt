@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # 用来生成compile_commands.json打开
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_C_FLAGS "-g -Werror -Wno-unused-but-set-variable -O2")
+message(STATUS "CMAKE_C_FLAGS = " ${CMAKE_C_FLAGS})
 include_directories(
     "${PROJECT_SOURCE_DIR}"
 )
@@ -29,6 +31,7 @@ toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_toys_sds.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_time.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_mem.c")
 toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_util.c")
+toys_c_test("${PROJECT_SOURCE_DIR}/base/tests/test_vec.c")
 
 add_library(toys_c_lib "")
 
@@ -58,6 +61,10 @@ target_sources(toys_c_lib
     "${PROJECT_SOURCE_DIR}/base/time.c"
     "${PROJECT_SOURCE_DIR}/base/time.h"
     "${PROJECT_SOURCE_DIR}/base/minunit.h"
+    "${PROJECT_SOURCE_DIR}/base/vec.h"
+    "${PROJECT_SOURCE_DIR}/base/vec.c"
+    "${PROJECT_SOURCE_DIR}/base/mutex.c"
+    "${PROJECT_SOURCE_DIR}/base/mutex.h"
     # 以下是echo_server
     "${PROJECT_SOURCE_DIR}/echo_server/echo_client.h"
     "${PROJECT_SOURCE_DIR}/echo_server/echo_client.c"

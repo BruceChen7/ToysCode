@@ -1,15 +1,22 @@
 #ifndef __TOYS_UTILS_H__
 #define __TOYS_UTILS_H__
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define TOYS_ASSERT(_exp, _msg)                                               \
-    do {                                                                      \
-        if (!(_exp)) {                                                        \
-            fprintf(stderr, "Assertion Failed : %s in line %d of %s\n", _msg, \
-                    __LINE__, __FILE__);                                      \
-            abort();                                                          \
-        }                                                                     \
-    } while (0)
 
+#include "minunit.h"
+
+void systemCall(int32_t error_code, const char* msg) {
+    if (error_code != 0) {
+        printf("%s\n", msg);
+        abort();
+    }
+}
+
+#define CHECK(test, msg) MU__SAFE_BLOCK( \
+    if (!(test)) { \
+        printf("function %s, line %d : %s\n", __FUNCTION__, __LINE__, msg); \
+        abort(); \
+    })
 #endif

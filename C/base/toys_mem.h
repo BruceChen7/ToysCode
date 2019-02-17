@@ -1,36 +1,24 @@
 #ifndef __TOYS_MEM_H__
 #define __TOYS_MEM_H__
 
+#include <pthread.h>
 #include <string.h>
 #include <stdint.h>
 
-struct MemBlock {
-    char magic_header[2];
-    uint32_t total_size;
-    uint32_t in_use_size;
-    void* data;
-};
+#include "base/toys_list.h"
 
-// Prototypes
-void* toys_mem_alloc(long nbytes,const char *file,int line);
-void* toys_mem_calloc(long count,long nbytes, const char *file,int line);
-void toys_mem_free(void *ptr,const char *file, int line);
-void* toys_mem_resize(void *ptr,long nbytes,const char *file,int line);
+#define MAX_MEM_BLOCK 16
+#define KILO_BYTES  1024
+#define MEBI_BYTES  1024 * 1024
 
-// Macro
-#define TOYS_ALLOC(nbytes) \
-    toys_mem_alloc((nbytes),__FILE__,__LINE__)
+typedef struct MemPool {
+    List* block_list[MAX_MEM_BLOCK];
+} MemPool;
 
-#define TOYS_CALLOC(count,nbytes) \
-    toys_mem_calloc((count),(nbytes),__FILE__,__LINE__)
+MemPool* memPoolInit();
 
-#define TOYS_FREE(ptr) do                \
-{                                        \
-    toys_mem_free(ptr,__FILE__,__LINE__);\
-    ptr = 0;                             \
-}while(0)
+void* memPoolAlloc(uint32_t bytes);
 
-#define RESIZE(ptr,nbytes)              \
-     toys_mem_resize(ptr,nbytes,__FILE__,__LINE__); \
+void memPoolFree(void* p);
 
 #endif

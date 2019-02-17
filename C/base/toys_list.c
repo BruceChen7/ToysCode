@@ -8,7 +8,7 @@ List*
 createList(void) {
     struct List* list;
 
-    if ((list = TOYS_ALLOC(sizeof(*list))) == NULL) {
+    if ((list = malloc(sizeof(*list))) == NULL) {
         return NULL;
     }
 
@@ -32,18 +32,18 @@ freeList(List* list) {
         if (list->free) {
             list->free(cur->value);
         }
-        TOYS_FREE(cur);
+        free(cur);
         cur = next;
     }
 
-    TOYS_FREE(list);
+    free(list);
 }
 
 List*
 addNodeToHead(List* list, void *value) {
     ListNode *node;
 
-    if ((node = TOYS_ALLOC(sizeof(*node))) == NULL)
+    if ((node = malloc(sizeof(*node))) == NULL)
         return NULL;
 
     if (list->dup) {
@@ -67,7 +67,7 @@ addNodeToHead(List* list, void *value) {
 
 List*
 addNodeToTail(List *list, void *value) {
-    ListNode *node = TOYS_ALLOC(sizeof(*node)) ;
+    ListNode *node = malloc(sizeof(*node)) ;
 
     if (node == NULL) {
         return NULL;
@@ -94,7 +94,7 @@ addNodeToTail(List *list, void *value) {
 
 List*
 insertNodeBefore(List* list, ListNode* old_node, void *value, int pos) {
-    ListNode *node = TOYS_ALLOC(sizeof(*node));
+    ListNode *node = malloc(sizeof(*node));
 
     if (node == NULL) {
         return NULL;
@@ -128,17 +128,17 @@ deleteNode(List *list, ListNode *node) {
     if (list->free) {
         list->free(node->value);
     }
-    TOYS_FREE(node);
+    free(node);
     list->len--;
 }
 
 ListNode*
-indexList(List *list, long index) {
+indexList(List *list, uint32_t index) {
 
     ListNode *node = NULL;
-    long len = list->len;
-    int i = index;
-    node = index >= 0 ? list->head:list->tail;
+    uint32_t len = list->len;
+    uint32_t i = index;
+    node = index >= 0 ? list->head : list->tail;
 
     if (i >= 0) {
         while(i--) {
@@ -201,3 +201,8 @@ findCommonNode(List *l1, List *l2) {
     }
     return p_common_node;
 }
+
+int32_t listEmpty(List* list) {
+    return (list->len == 0);
+}
+
