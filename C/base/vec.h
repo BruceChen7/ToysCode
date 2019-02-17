@@ -20,4 +20,6 @@ void pushBack(Vec* vec, void* value);
 
 void freeVec(Vec* vec);
 
+int32_t findInVec(Vec* vec, void* data);
+
 #endif

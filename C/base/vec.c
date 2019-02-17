@@ -7,6 +7,7 @@
 Vec*
 createVec() {
     Vec* vec = (Vec*)(malloc(sizeof(*vec)));
+    CHECK(vec, "allocated memory error");
     vec->capacity = 0;
     vec->size = 0;
     vec->dup = NULL;
@@ -74,8 +75,8 @@ pushBack(Vec* vec, void* value) {
 void
 freeVec(Vec* vec) {
     checkVec(vec);
-    for (uint32_t i = 0; i < vec->size; ++i) {
-        if (vec->free) {
+    if (vec->free) {
+        for (uint32_t i = 0; i < vec->size; ++i) {
             vec->free(vec->arr[i]);
         }
     }
@@ -88,5 +89,26 @@ indexVec(Vec* vec, uint32_t i) {
     CHECK(i < vec->size, "index i larger than vec->size");
     checkVec(vec);
     return vec->arr[i];
+}
+
+int32_t
+findInVec(Vec* vec, void* data) {
+    checkVec(vec);
+    if (!vec->arr) {
+        return 0;
+    }
+
+    for (uint32_t i = 0; i < vec->size; ++i) {
+        if (vec->match) {
+            if (vec->match(vec->arr[i], data)) {
+                return 1;
+            }
+        } else {
+            if (vec->arr[i] == data) {
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 

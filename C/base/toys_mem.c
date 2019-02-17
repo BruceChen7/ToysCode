@@ -45,6 +45,8 @@ memPoolInit() {
         kMemInUse->block_list[i]->free = free;
     }
 
+    kMemInUse->allocated_chunk = createVec();
+
     return kMemInUse;
 }
 
@@ -86,4 +88,9 @@ memPoolAlloc(uint32_t bytes) {
 
 void
 memPoolFree(void* p) {
+    CHECK(kMemInUse->allocated_chunk, "allocated_chunk can not be null, call memPoolInit first");
+
+    if (findInVec(kMemInUse->allocated_chunk, p)) {
+
+    }
 }

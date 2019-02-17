@@ -69,6 +69,8 @@ MU_TEST(vecPushback) {
     mu_check(*(int *)(e) == 3);
     mu_check(vec->size == 3);
     mu_check(vec->capacity == 4);
+
+    mu_check(findInVec(vec, e) == 1);
 }
 
 MU_TEST_SUITE(vec_suite) {
