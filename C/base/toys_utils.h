@@ -7,16 +7,22 @@
 
 #include "minunit.h"
 
-void systemCall(int32_t error_code, const char* msg) {
-    if (error_code != 0) {
-        printf("%s\n", msg);
-        abort();
-    }
-}
+void systemCall(int32_t error_code, const char* msg);
 
 #define CHECK(test, msg) MU__SAFE_BLOCK( \
     if (!(test)) { \
         printf("function %s, line %d : %s\n", __FUNCTION__, __LINE__, msg); \
         abort(); \
     })
+
+// 获取便宜量
+#define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
+
+
 #endif
+
+
+
+
+
+

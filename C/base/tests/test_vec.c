@@ -73,10 +73,34 @@ MU_TEST(vecPushback) {
     mu_check(findInVec(vec, e) == 1);
 }
 
+static int32_t matchInt(void* a, void* b) {
+    return *(int *)a == *(int *)b;
+}
+MU_TEST(findInVecTest) {
+    int a = 0;
+    pushBack(vec, &a);
+    mu_check(vec->size == 1);
+    mu_check(vec->capacity == 1);
+
+    vec->match = matchInt;
+    int b = 0;
+
+    mu_check(findInVec(vec, &b) == 1);
+
+    int c = 1;
+
+    mu_check(findInVec(vec, &c) == 0);
+
+    vec->match = NULL;
+    mu_check(findInVec(vec, &b) == 0);
+    mu_check(findInVec(vec, &a) == 1);
+
+}
 MU_TEST_SUITE(vec_suite) {
     MU_SUITE_CONFIGURE(&test_setup, &test_teardown);
     MU_RUN_TEST(vecInit);
     MU_RUN_TEST(vecPushback);
+    MU_RUN_TEST(findInVecTest);
 }
 
 int main() {
