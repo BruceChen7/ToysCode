@@ -12,7 +12,8 @@ createList(void) {
         return NULL;
     }
 
-    list->head = list->tail = NULL;
+    list->head = NULL;
+    list->tail = NULL;
     list->len = 0;
     list->dup = NULL;
     list->free = NULL;

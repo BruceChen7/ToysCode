@@ -6,7 +6,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 # 用来生成compile_commands.json打开
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_C_FLAGS "-g -Werror -Wno-unused-but-set-variable -O2")
+set(CMAKE_C_FLAGS "-g -Werror -Wno-unused-but-set-variable")
 message(STATUS "CMAKE_C_FLAGS = " ${CMAKE_C_FLAGS})
 include_directories(
     "${PROJECT_SOURCE_DIR}"

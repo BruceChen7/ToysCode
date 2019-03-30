@@ -15,6 +15,7 @@ typedef struct MemBlock {
 } MemBlock;
 
 #define MAX_ALLOC_SIZE ((2 << (MAX_MEM_BLOCK - 1)) * KILO_BYTES)
+#define MAX_CACHED_BLOCK 16
 
 static void
 initMemBlock(MemBlock* b) {
@@ -31,7 +32,7 @@ getPromoteSize(uint32_t total_size) {
         return total_size;
     }
 
-    uint32_t size = 0;
+    uint32_t size = KILO_BYTES;
 
     for (uint32_t i = 1; i < MAX_MEM_BLOCK; ++i) {
         if (size >= total_size) {
@@ -44,18 +45,14 @@ getPromoteSize(uint32_t total_size) {
 
 static MemBlock*
 createMemBlock(uint32_t total_size) {
-    MemBlock* block = (MemBlock*)malloc(sizeof(*block));
+    uint32_t alloc_size = total_size + sizeof(MemBlock);
+    MemBlock* block = (MemBlock*)malloc(alloc_size);
     initMemBlock(block);
-    block->data = malloc(sizeof(total_size));
+    int32_t offset = OFFSETOF(MemBlock, data);
+    block->data = ((char *)block + sizeof(MemBlock));
     block->allocated_size = getPromoteSize(total_size);
     block->in_use = 1;
     return block;
-}
-
-
-void
-destroyMemBlock(MemBlock* block) {
-    free(block->data);
 }
 
 static MemPool* kMemInUse = NULL;
@@ -66,11 +63,11 @@ memPoolInit() {
         kMemInUse = (MemPool*)malloc(sizeof(MemPool));
         for (uint32_t i = 0; i < MAX_MEM_BLOCK; ++i) {
             kMemInUse->block_list[i] = createList();
-            kMemInUse->block_list[i]->free = free;
         }
     }
 
 }
+
 
 static uint32_t
 getBlockIndex(uint32_t bytes) {
@@ -101,7 +98,7 @@ memPoolAlloc(uint32_t bytes) {
     uint32_t index = getBlockIndex(bytes);
     CHECK(index >= 0 && index < MAX_MEM_BLOCK, "invalid index");
     CHECK(kMemInUse != NULL, "kMemInUse must be init, call memPoolInit first");
-    List* list = (kMemInUse->block_list)[index];
+    List* list = kMemInUse->block_list[index];
 
     if (listEmpty(list)) {
         MemBlock* block = createMemBlock(bytes);
@@ -109,7 +106,7 @@ memPoolAlloc(uint32_t bytes) {
     }
 
     MemBlock* b = (MemBlock *)list->head->value;
-    CHECK(b->in_use == 0, "block in use, that's wrong");
+    CHECK(b->in_use == 1, "block in use, that's wrong");
     CHECK(b->magic_header[0] == 'M', "magic header not right");
     CHECK(b->magic_header[1] == 'A', "magic header not right");
 
@@ -120,23 +117,35 @@ memPoolAlloc(uint32_t bytes) {
 
 void
 memPoolFree(void* p) {
-   int32_t offset = OFFSETOF(MemBlock, data);
-   MemBlock * b = (MemBlock*)((char *)p  - offset);
-   printf("data %p, block %p\n", p, b);
-   CHECK(b->in_use == 1, "block must be used");
+    int32_t offset = sizeof(MemBlock);
+    MemBlock* b = (MemBlock*)((char *)p  - offset);
 
-   if (b->allocated_size > MAX_ALLOC_SIZE) {
-       destroyMemBlock(b);
-       free(b);
-       return;
-   }
+    CHECK(b->in_use == 1, "block must be used");
+
+    uint32_t allocated_size = b->allocated_size;
+    if (allocated_size > MAX_ALLOC_SIZE) {
+        free(b);
+        return;
+    }
+    uint32_t index = getBlockIndex(allocated_size);
+    CHECK(index >= 0 && index < MAX_MEM_BLOCK, "not valid index");
+    List* list = kMemInUse->block_list[index];
+    // 如果已经有足够多的缓存
+    if (list->len > MAX_CACHED_BLOCK) {
+        free(b);
+        return;
+    }
+    b->in_use = 0;
+    addNodeToTail(list, b);
 }
 
 void
 memPoolDestroy() {
     CHECK(kMemInUse != NULL, "can't be null");
+
     for (uint32_t i = 0; i < MAX_MEM_BLOCK; ++i) {
         freeList((kMemInUse->block_list)[i]);
     }
     free(kMemInUse);
+    kMemInUse = NULL;
 }

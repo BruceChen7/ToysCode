@@ -116,8 +116,6 @@ MU_TEST(deleteNodeInList) {
 }
 
 MU_TEST(searchNodeInList) {
-
-
 }
 
 MU_TEST_SUITE(list_suite) {

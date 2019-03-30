@@ -4,29 +4,26 @@
 #include "base/minunit.h"
 #include "base/toys_utils.h"
 
-void
-test_setup() {
+void testOneByte() {
     memPoolInit();
-}
-
-void
-test_teardown() {
+    char* p = (char *)memPoolAlloc(1);
+    CHECK(p != NULL, "can not be null");
+    *p = 'c';
+    printf("%c\n", *p);
+    memPoolFree(p);
     memPoolDestroy();
 }
 
-MU_TEST(allocateLargeMem) {
+void testLarger() {
+    memPoolInit();
     void* p = memPoolAlloc(128 * 1024 * 1024);
     CHECK(p != NULL, "can not be null");
     memPoolFree(p);
-}
-
-MU_TEST_SUITE(mem_suite) {
-    MU_RUN_TEST(allocateLargeMem);
+    memPoolDestroy();
 }
 
 int main() {
-    MU_SUITE_CONFIGURE(&test_setup, &test_teardown);
-    MU_RUN_SUITE(mem_suite);
-    MU_REPORT();
-    return minunit_status;
+    testOneByte();
+    testLarger();
+    return 0;
 }
