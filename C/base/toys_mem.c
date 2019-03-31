@@ -63,6 +63,7 @@ memPoolInit() {
         kMemInUse = (MemPool*)malloc(sizeof(MemPool));
         for (uint32_t i = 0; i < MAX_MEM_BLOCK; ++i) {
             kMemInUse->block_list[i] = createList();
+            kMemInUse->block_list[i]->free = free;
         }
     }
 
@@ -106,13 +107,14 @@ memPoolAlloc(uint32_t bytes) {
     }
 
     MemBlock* b = (MemBlock *)list->head->value;
-    CHECK(b->in_use == 1, "block in use, that's wrong");
+    CHECK(b->in_use == 0, "block is in use, that's wrong");
     CHECK(b->magic_header[0] == 'M', "magic header not right");
     CHECK(b->magic_header[1] == 'A', "magic header not right");
 
+    b->in_use = 1;
     ListNode* head = list->head;
-    deleteNode(list, head);
-    return ((MemBlock*)(head->value))->data;
+    releaseValueFromNode(list, head);
+    return b->data;
 }
 
 void
@@ -142,7 +144,6 @@ memPoolFree(void* p) {
 void
 memPoolDestroy() {
     CHECK(kMemInUse != NULL, "can't be null");
-
     for (uint32_t i = 0; i < MAX_MEM_BLOCK; ++i) {
         freeList((kMemInUse->block_list)[i]);
     }

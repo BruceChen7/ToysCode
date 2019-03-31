@@ -14,7 +14,6 @@
 // 返回当前的毫秒数
 long long timeInMilliseconds();
 
-
 #define startBenchMark() start = timeInMilliseconds()
 #define endBenchMark(msg) do  {  \
     elapsed = timeInMilliseconds() - start ;  \

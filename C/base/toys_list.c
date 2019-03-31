@@ -49,8 +49,9 @@ addNodeToHead(List* list, void *value) {
 
     if (list->dup) {
         node->value = list->dup(value);
+    } else {
+        node->value = value;
     }
-
 
     if (list->len == 0) {
         list->head  = list->tail = node;
@@ -68,14 +69,11 @@ addNodeToHead(List* list, void *value) {
 
 List*
 addNodeToTail(List *list, void *value) {
-    ListNode *node = malloc(sizeof(*node)) ;
-
-    if (node == NULL) {
-        return NULL;
-    }
-
+    ListNode* node = malloc(sizeof(*node)) ;
     if (list->dup)  {
         node->value = list->dup(value);
+    } else {
+        node->value = value;
     }
 
     if (list->len == 0) {
@@ -111,11 +109,10 @@ insertNodeBefore(List* list, ListNode* old_node, void *value, int pos) {
 }
 
 void
-deleteNode(List *list, ListNode *node) {
+deleteNode(List* list, ListNode *node) {
     if (node->prev != NULL) {
         node->prev->next = node->next;
-    }
-    else {
+    } else {
         list->head = node->next;
     }
 
@@ -131,6 +128,27 @@ deleteNode(List *list, ListNode *node) {
     }
     free(node);
     list->len--;
+}
+
+void*
+releaseValueFromNode(List* list, ListNode* node) {
+    if (node->prev != NULL) {
+        node->prev->next = node->next;
+    } else {
+        list->head = node->next;
+    }
+
+    if (node->next !=NULL) {
+        node->next->prev = node->prev;
+    } else {
+        /* if Node is the last 'list Node' */
+        list->tail = node->prev;
+    }
+
+    void* val = node->value;
+    free(node);
+    list->len--;
+    return val;
 }
 
 ListNode*

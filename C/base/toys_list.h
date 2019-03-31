@@ -31,7 +31,11 @@ List* addNodeToTail(List* list, void *value);
 
 List* insertNodeBefore(List* list, ListNode *old_node, void *value,int pos);
 
+// 删除节点，node对应的value也释放
 void deleteNode(List *list, ListNode *node);
+
+// 从链表中释放该节点，获取该节点的值。
+void* releaseValueFromNode(List *list, ListNode *node);
 
 // find the common node which both the lists have
 ListNode* findCommonNode(List *list1, List *list2);
