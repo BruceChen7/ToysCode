@@ -31,7 +31,7 @@ void
 test_setup() {
     list = createList();
     list->dup = dupNode;
-    list->free = freeNode;
+    list->free = NULL;
     list->match = matchNode;
     mu_check(list);
 }
@@ -86,10 +86,10 @@ MU_TEST(appendToTail) {
 MU_TEST(deleteNodeInList) {
     int a = 1;
     addNodeToHead(list, &a);
-    a = 2;
-    addNodeToHead(list, &a);
-    a = 3;
-    addNodeToHead(list, &a);
+    int b = 2;
+    addNodeToHead(list, &b);
+    int c = 3;
+    addNodeToHead(list, &c);
 
     // 查找2，然后删掉
     ListNode* node = indexList(list, 1);

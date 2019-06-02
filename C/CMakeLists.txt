@@ -40,15 +40,9 @@ add_library(toys_c_lib "")
 #======================================================================
 target_sources(toys_c_lib
   PRIVATE
-    "${PROJECT_SOURCE_DIR}/base/binary_tree.c"
-    "${PROJECT_SOURCE_DIR}/base/binary_tree.h"
-    "${PROJECT_SOURCE_DIR}/base/graph.c"
-    "${PROJECT_SOURCE_DIR}/base/graph.h"
     "${PROJECT_SOURCE_DIR}/base/queue.h"
     "${PROJECT_SOURCE_DIR}/base/sort.c"
     "${PROJECT_SOURCE_DIR}/base/sort.h"
-    "${PROJECT_SOURCE_DIR}/base/string_.c"
-    "${PROJECT_SOURCE_DIR}/base/string_.h"
     "${PROJECT_SOURCE_DIR}/base/toys_list.c"
     "${PROJECT_SOURCE_DIR}/base/toys_list.h"
     "${PROJECT_SOURCE_DIR}/base/toys_mem.c"
@@ -65,6 +59,11 @@ target_sources(toys_c_lib
     "${PROJECT_SOURCE_DIR}/base/vec.c"
     "${PROJECT_SOURCE_DIR}/base/mutex.c"
     "${PROJECT_SOURCE_DIR}/base/mutex.h"
+    "${PROJECT_SOURCE_DIR}/base/mutex.c"
+    "${PROJECT_SOURCE_DIR}/base/thread_pool.h"
+    "${PROJECT_SOURCE_DIR}/base/thread_pool.c"
+    "${PROJECT_SOURCE_DIR}/base/logger.h"
+    "${PROJECT_SOURCE_DIR}/base/logger.c"
     # 以下是echo_server
     "${PROJECT_SOURCE_DIR}/echo_server/echo_client.h"
     "${PROJECT_SOURCE_DIR}/echo_server/echo_client.c"

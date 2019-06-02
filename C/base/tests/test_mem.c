@@ -6,7 +6,7 @@
 #include "base/toys_utils.h"
 
 void benchmarkMalloc() {
-    long long start, elapsed;
+    long long start = 0, elapsed = 0;
     long long count = 10000000;
     for (uint32_t i = 0; i < count; i++) {
         void* p = malloc(1);

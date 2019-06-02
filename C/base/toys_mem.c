@@ -69,7 +69,6 @@ memPoolInit() {
 
 }
 
-
 static uint32_t
 getBlockIndex(uint32_t bytes) {
     uint32_t size = KILO_BYTES;

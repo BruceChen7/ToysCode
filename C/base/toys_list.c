@@ -47,11 +47,7 @@ addNodeToHead(List* list, void *value) {
     if ((node = malloc(sizeof(*node))) == NULL)
         return NULL;
 
-    if (list->dup) {
-        node->value = list->dup(value);
-    } else {
-        node->value = value;
-    }
+    node->value = value;
 
     if (list->len == 0) {
         list->head  = list->tail = node;
@@ -70,11 +66,8 @@ addNodeToHead(List* list, void *value) {
 List*
 addNodeToTail(List *list, void *value) {
     ListNode* node = malloc(sizeof(*node)) ;
-    if (list->dup)  {
-        node->value = list->dup(value);
-    } else {
-        node->value = value;
-    }
+
+    node->value = value;
 
     if (list->len == 0) {
         list->tail = list->head = node;

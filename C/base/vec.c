@@ -52,23 +52,12 @@ pushBack(Vec* vec, void* value) {
             }
             new_arr[i] = copy_elem;
         }
-
-        // 删除以前的元素
-        for (uint32_t i = 0; i < vec->size; ++i) {
-            if (vec->free) {
-                vec->free(vec->arr[i]);
-            }
-        }
         free(vec->arr);
         vec->arr = new_arr;
         vec->capacity = new_size;
     }
 
-    if (vec->dup) {
-        vec->arr[vec->size++] = vec->dup(value);
-    } else {
-        vec->arr[vec->size++] = value;
-    }
+    vec->arr[vec->size++] = value;
 }
 
 

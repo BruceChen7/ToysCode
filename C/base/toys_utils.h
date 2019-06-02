@@ -1,6 +1,7 @@
 #ifndef __TOYS_UTILS_H__
 #define __TOYS_UTILS_H__
 
+#include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,6 +19,7 @@ void systemCall(int32_t error_code, const char* msg);
 // 获取便宜量
 #define OFFSETOF(TYPE, ELEMENT) ((size_t)&(((TYPE *)0)->ELEMENT))
 
+uint32_t getLogiCpuNum();
 
 #endif
 
