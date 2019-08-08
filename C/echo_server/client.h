@@ -1,5 +1,5 @@
 #ifndef __C_NET_CLIENT__
-#define __C_NET_CLIENT___
+#define __C_NET_CLIENT__
 
 int connect_to_server(char* ip, int port);
 void str_client(FILE* fp, int sockfd);

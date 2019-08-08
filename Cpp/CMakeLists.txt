@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(Cpp CXX) 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 set(CMAKE_CXX_COMPILER "clang++")
@@ -11,6 +12,5 @@ include_directories(${PROJECT_SOURCE_DIR})
 
 add_subdirectory(Utilities)
 add_subdirectory(Stone)
-add_subdirectory(Compiler)
 
 enable_testing()

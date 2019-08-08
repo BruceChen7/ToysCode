@@ -14,7 +14,7 @@ if __name__ == "__main__":
     if os.path.exists(Config.CONFIG_PATH):
         config = Config.readConfig()
         key = []
-        
+
         if config.password:
             logging.info("read config file suceed")
             key = list(Password.decodePassword(config.password))
