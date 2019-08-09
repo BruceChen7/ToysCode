@@ -52,9 +52,10 @@ class SubNode(object):
 
 
 class Node(object):
-    def __init__(self, node_name, child_node_list):
+    def __init__(self, node_name, child_node_list, port = 0):
         self.node_name =  node_name
         self.child_node = child_node_list
+        self.port = port
 
     @classmethod
     def createNode(cls, line):
@@ -64,31 +65,32 @@ class Node(object):
         child_node_list = []
 
         for i in range(len(node_list)):
-            # 第一个是头
+            if len(node_list[i]) == 0:
+                continue
+
+            split_res = node_list[i].split(":")
+            child_node_name = split_res[0]
+            port = 0
+            using_port = False;
+            using_gray_background = False
+
+            # 第一个节点默认使用灰色的背景
             if i == 0:
-                node_name = node_list[i]
-            else:
-                if len(node_list[i]) == 0:
-                    continue
+                using_gray_background = True
+                node_name = child_node_name
 
-                split_res = node_list[i].split(":")
-                child_node_name = split_res[0]
-                port = 0
-                using_port = False;
+            if len(split_res) > 1:
+                port = split_res[1]
+                using_port = True
 
-                if len(split_res) > 1:
-                    port = split_res[1]
-                    using_port = True
+            if len(split_res) > 2:
+                gray_background = split_res[2]
 
-                using_gray_background = False
-                if len(split_res) > 2:
-                    gray_background = split_res[2]
+                if gray_background.strip() == "*":
+                    using_gray_background = True
 
-                    if gray_background.strip() == "*":
-                        using_gray_background = True
-
-                child_node = SubNode(child_node_name, port, using_port, using_gray_background)
-                child_node_list.append(child_node)
+            child_node = SubNode(child_node_name, port, using_port, using_gray_background)
+            child_node_list.append(child_node)
 
         return Node(node_name, child_node_list)
 
@@ -99,7 +101,7 @@ class Node(object):
             child_node_dot += child.toDot();
 
         res = ""
-        res += dot_body.format(self.node_name, child_node_dot) 
+        res += dot_body.format(self.node_name, child_node_dot)
         return res
 
 
@@ -115,7 +117,7 @@ def generateDot(lines, direction):
     for node in node_list:
         nodes_str += node.toDot()
 
-    print nodes_str
+    #print nodes_str
     dot_str = dot_head.format('{', direction, nodes_str, "}")
     print dot_str
 
