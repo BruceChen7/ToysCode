@@ -77,7 +77,10 @@ class Node(object):
             # 第一个节点默认使用灰色的背景
             if i == 0:
                 using_gray_background = True
-                node_name = child_node_name
+                node_name = child_node_name.strip()
+                # 按照空格区分
+                strip_space_node_name = node_name.split(" ")
+                node_name = strip_space_node_name[0]
 
             if len(split_res) > 1:
                 port = split_res[1]
@@ -96,12 +99,14 @@ class Node(object):
 
     def toDot(self):
         child_node_dot = ""
+        global node_num
 
         for child in self.child_node:
             child_node_dot += child.toDot();
 
         res = ""
-        res += dot_body.format(self.node_name, child_node_dot)
+        res += dot_body.format(self.node_name + str(node_num), child_node_dot)
+        node_num += 1
         return res
 
 
